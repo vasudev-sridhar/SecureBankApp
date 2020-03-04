@@ -6,7 +6,7 @@ import com.asu.secureBankApp.Response.LoginResponse;
 
 public interface LoginService {
 	
-	public LoginResponse login(LoginRequest loginRequest);
+	LoginResponse login(LoginRequest loginRequest);
 	
-	public LoginResponse logout(LogoutRequest logoutRequest);
+	LoginResponse logout(LogoutRequest logoutRequest);
 }
