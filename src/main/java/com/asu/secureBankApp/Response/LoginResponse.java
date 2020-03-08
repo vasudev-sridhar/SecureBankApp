@@ -1,11 +1,18 @@
 package com.asu.secureBankApp.Response;
 
-import org.springframework.web.bind.annotation.ResponseBody;
-
-
 public class LoginResponse {
 
+	int userId;
+	
 	Boolean isSuccess;
+	
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 
 	public Boolean getIsSuccess() {
 		return isSuccess;
