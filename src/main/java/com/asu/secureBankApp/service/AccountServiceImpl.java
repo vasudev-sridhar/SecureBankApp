@@ -3,6 +3,7 @@ package com.asu.secureBankApp.service;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import com.asu.secureBankApp.Request.UpdateInterestRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,30 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
+	@Transactional
+	public StatusResponse updateInterest(@Valid UpdateInterestRequest updateInterestRequest) {
+		StatusResponse response = new StatusResponse();
+		AccountDAO account = accountRepository.findById(updateInterestRequest.getAccountNo()).orElse(null);
+		if (account == null) {
+			response.setIsSuccess(false);
+			response.setMsg(ErrorCodes.ID_NOT_FOUND);
+			return response;
+		}
+		boolean approvalRequired = false;
+		if (approvalRequired) {
+			// Submit request
+		} else {
+			double interest = account.getInterest();
+			interest += updateInterestRequest.getInterest();
+			account.setBalance(interest);
+			accountRepository.save(account);
+			response.setIsSuccess(true);
+			response.setMsg(ErrorCodes.SUCCESS);
+		}
+		return response;
+	}
+
+	@Override
 	public StatusResponse saveAccount(AccountDAO account) {
 
 		StatusResponse response = new StatusResponse();
@@ -61,5 +86,7 @@ public class AccountServiceImpl implements AccountService {
 
 		return response;
 	}
+
+
 
 }

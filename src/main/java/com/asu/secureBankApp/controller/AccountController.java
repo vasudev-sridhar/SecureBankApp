@@ -2,12 +2,10 @@ package com.asu.secureBankApp.controller;
 
 import javax.validation.Valid;
 
+import com.asu.secureBankApp.Request.UpdateInterestRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.Request.UpdateBalanceRequest;
@@ -50,4 +48,8 @@ public class AccountController {
 
 	}
 
+	@PatchMapping(value = "/updateInterest", consumes = { "application/json"})
+	public @ResponseBody StatusResponse updateInterest(@RequestBody @Valid UpdateInterestRequest updateInterestRequest) {
+		return accountService.updateInterest(updateInterestRequest);
+	}
 }
