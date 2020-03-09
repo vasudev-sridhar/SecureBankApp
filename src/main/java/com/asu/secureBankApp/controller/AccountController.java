@@ -30,26 +30,15 @@ public class AccountController {
 		return accountService.updateBalance(updateBalanceRequest);
 	}
 
-	@PostMapping(value = "/create", consumes = { "application/json" })
-	public @ResponseBody String createNewAccount(@RequestBody @Valid CreateAccountReqDAO createAccountReqDAO) {
-		String userName = createAccountReqDAO.getUserName();
-		String response = "fail";
-		AccountDAO account = new AccountDAO();
-		UserDAO user = userRepository.findByUsername(userName);
-		if (user == null)
-			return response;
-		account.setUser(user);
-		account.setBalance(100.0);
-		account.setAccountType(createAccountReqDAO.getAccountType());
-		account.setInterest(0.0);
-		StatusResponse status = accountService.saveAccount(account);
-		response = "success";
+	@PostMapping(value = "/createAccount", consumes = { "application/json" })
+	public @ResponseBody StatusResponse createNewAccount(@RequestBody @Valid CreateAccountReqDAO createAccountReqDAO) {
+		StatusResponse response = accountService.createAccount(createAccountReqDAO);
 		return response;
-
 	}
 
-	@PatchMapping(value = "/updateInterest", consumes = { "application/json"})
-	public @ResponseBody StatusResponse updateInterest(@RequestBody @Valid UpdateInterestRequest updateInterestRequest) {
+	@PatchMapping(value = "/updateInterest", consumes = { "application/json" })
+	public @ResponseBody StatusResponse updateInterest(
+			@RequestBody @Valid UpdateInterestRequest updateInterestRequest) {
 		return accountService.updateInterest(updateInterestRequest);
 	}
 }

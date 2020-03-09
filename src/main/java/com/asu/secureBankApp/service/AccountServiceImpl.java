@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.asu.secureBankApp.Repository.AccountRepository;
+import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.Request.UpdateBalanceRequest;
 import com.asu.secureBankApp.Response.StatusResponse;
 import com.asu.secureBankApp.dao.AccountDAO;
+import com.asu.secureBankApp.dao.CreateAccountReqDAO;
+import com.asu.secureBankApp.dao.UserDAO;
 
 import constants.ErrorCodes;
 
@@ -19,6 +22,9 @@ public class AccountServiceImpl implements AccountService {
 
 	@Autowired
 	AccountRepository accountRepository;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	@Override
 	@Transactional
@@ -70,14 +76,21 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public StatusResponse saveAccount(AccountDAO account) {
-
+	@Transactional
+	public StatusResponse createAccount(CreateAccountReqDAO createAccountReqDAO) {
 		StatusResponse response = new StatusResponse();
-		if (account == null) {
+		String userName = createAccountReqDAO.getUserName();
+		AccountDAO account = new AccountDAO();
+		UserDAO user = userRepository.findByUsername(userName);
+		if (user == null) {
 			response.setIsSuccess(false);
 			response.setMsg(ErrorCodes.ID_NOT_FOUND);
 			return response;
 		}
+		account.setUser(user);
+		account.setBalance(100.0);
+		account.setAccountType(createAccountReqDAO.getAccountType());
+		account.setInterest(0.0);
 
 		accountRepository.save(account);
 
@@ -86,7 +99,5 @@ public class AccountServiceImpl implements AccountService {
 
 		return response;
 	}
-
-
 
 }
