@@ -61,7 +61,7 @@ public class AccountServiceImpl implements AccountService {
 		} else {
 			double interest = account.getInterest();
 			interest += updateInterestRequest.getInterest();
-			account.setBalance(interest);
+			account.setInterest(interest);
 			accountRepository.save(account);
 			response.setIsSuccess(true);
 			response.setMsg(ErrorCodes.SUCCESS);
