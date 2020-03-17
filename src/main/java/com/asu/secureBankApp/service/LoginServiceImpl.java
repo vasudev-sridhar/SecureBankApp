@@ -15,6 +15,7 @@ import com.asu.secureBankApp.Request.LogoutRequest;
 import com.asu.secureBankApp.Response.LoginResponse;
 import com.asu.secureBankApp.dao.AuthUserDAO;
 import com.asu.secureBankApp.dao.UserDAO;
+import com.asu.secureBankApp.Config.Constants;
 
 import constants.Status;
 
@@ -26,6 +27,9 @@ public class LoginServiceImpl implements LoginService {
 	
 	@Autowired
 	private AuthUserRepository authUserRepository;
+
+	@Autowired
+	private SystemLoggerService systemLoggerService;
 	
 	@Transactional
 	public LoginResponse login(@Valid LoginRequest loginRequest) {
@@ -43,7 +47,7 @@ public class LoginServiceImpl implements LoginService {
 		cal.add(Calendar.MINUTE, 10);
 		authUser.setExpiry(cal.getTime());
 		authUserRepository.save(authUser);
-		
+		systemLoggerService.log(user.getId(), "User logged in", Constants.LOGIN_TIME);
 		response.setIsSuccess(true);
 		response.setUserId(user.getId());
 		return response;
