@@ -4,7 +4,7 @@
 angular.module('Authentication', []);
 angular.module('Home', []);
 
-angular.module('BasicHttpAuthExample', [
+angular.module('SecureBankApp', [
     'Authentication',
     'Home',
     'ngRoute',
@@ -16,13 +16,15 @@ angular.module('BasicHttpAuthExample', [
     $routeProvider
         .when('/login', {
             controller: 'LoginController',
-            templateUrl: 'modules/authentication/views/login.html',
+            templateUrl: 'modules/authentication/views/login_page.html',
+            
             hideMenus: true
         })
  
         .when('/', {
             controller: 'HomeController',
-            templateUrl: 'modules/home/views/home.html'
+            templateUrl: '../webapp/modules/home/views/home.html',
+            crossOrigin: null
         })
  
         .otherwise({ redirectTo: '/login' });
