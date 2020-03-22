@@ -20,23 +20,19 @@ public class SecureBankAppApplication extends SpringBootServletInitializer {
       return application.sources(SecureBankAppApplication.class);
    }
 	
-	@Bean
-    public FilterRegistrationBean httpServletRequestReplacedRegistration() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new RequestInterceptor());
-        registration.addUrlPatterns("/*");
-        registration.addInitParameter("paramName", "paramValue");
-        registration.setName("RequestInterceptor");
-        registration.setOrder(1);
-        return registration;
-    }
+//	@Bean
+//    public FilterRegistrationBean httpServletRequestReplacedRegistration() {
+//        FilterRegistrationBean registration = new FilterRegistrationBean();
+//        registration.setFilter(new RequestInterceptor());
+//        registration.addUrlPatterns("/*");
+//        registration.addInitParameter("paramName", "paramValue");
+//        registration.setName("RequestInterceptor");
+//        registration.setOrder(1);
+//        return registration;
+//    }
 	
 	public static void main(String[] args) {
 		SpringApplication.run(SecureBankAppApplication.class, args);
 	}
-	
-	@RequestMapping(value = "/")
-	   public String hello() {
-	      return "Hello World from Tomcat";
-	   }
+
 }

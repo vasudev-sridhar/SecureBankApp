@@ -4,17 +4,12 @@ package com.asu.secureBankApp.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.asu.secureBankApp.Repository.UserRepository;
-import com.asu.secureBankApp.security.CustomAuthenticationProvider;
 import com.asu.secureBankApp.security.CustomWebAuthenticationDetailsSource;
 import com.asu.secureBankApp.security.MyUserDetailsService;
  
@@ -44,21 +39,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     @Override
     protected void configure(HttpSecurity http) throws Exception 
     {
-        http
-        .authorizeRequests()
-         
-         .antMatchers("/").permitAll()
-			.antMatchers("/login").permitAll()
-         .antMatchers("/login**").permitAll()
-         .anyRequest().authenticated()
-        .and()
-        .csrf().disable()
-        .formLogin()
-        .loginPage("/login")
-        .defaultSuccessUrl("/index.html")
-        .failureUrl("/login?error=true")
-        .usernameParameter("username")
-		.passwordParameter("password")
+    	http.httpBasic().disable();
+//        http
+//        .authorizeRequests()
+//         
+//         .antMatchers("/").permitAll()
+//			.antMatchers("/login").permitAll()
+//         .antMatchers("/login**").permitAll()
+//         .anyRequest().authenticated()
+//        .and()
+//        .csrf().disable()
+//        .formLogin()
+//        .loginPage("/login")
+//        .defaultSuccessUrl("/index.html")
+//        .failureUrl("/login?error=true")
+//        .usernameParameter("username")
+//		.passwordParameter("password")
 ////        .successHandler(myAuthenticationSuccessHandler)
 ////        .failureHandler(authenticationFailureHandler)
 //        .authenticationDetailsSource(authenticationDetailsSource);
@@ -69,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 		//.exceptionHandling()
 		//.accessDeniedPage("/access-denied");
         ;
-    }
+        }
   
 //    @Autowired
 //    public void configureGlobal(AuthenticationManagerBuilder auth) 
@@ -80,28 +76,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 //            .password("{noop}password")
 //            .roles("USER");
 //    }
-    @Override
-    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-    	System.out.println("In AuthenticationManagerBuilder");
-        auth.authenticationProvider(authProvider());
-    }
+//    @Override
+//    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+//    	System.out.println("In AuthenticationManagerBuilder");
+//        auth.authenticationProvider(authProvider());
+//    }
     
-    @Bean
-    public DaoAuthenticationProvider authProvider() {
-    	System.out.println("In DaoAuthenticationProvider");
-        final CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        // authProvider.setPasswordEncoder(encoder());
-        return authProvider;
-    }
+//    @Bean
+//    public DaoAuthenticationProvider authProvider() {
+//    	System.out.println("In DaoAuthenticationProvider");
+//        final CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider();
+//        authProvider.setUserDetailsService(userDetailsService);
+//        // authProvider.setPasswordEncoder(encoder());
+//        return authProvider;
+//    }
     
     @Bean
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder(11);
     }
     
-    @Override
-	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**").antMatchers(HttpMethod.POST, "/login");;
-	}
+//    @Override
+//	public void configure(WebSecurity web) throws Exception {
+//		web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**").antMatchers(HttpMethod.POST, "/login");;
+//	}
 }

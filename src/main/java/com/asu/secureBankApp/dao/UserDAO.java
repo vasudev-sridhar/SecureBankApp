@@ -2,8 +2,10 @@ package com.asu.secureBankApp.dao;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -40,9 +42,8 @@ public class UserDAO {
 	
 	private String address;
 	
-	@NotNull
-	@ManyToOne
 	@JoinColumn(name = "auth_role_id", nullable = false, foreignKey = @ForeignKey(name="FK_user_role"))
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private AuthRoleDAO authRole;
 	
 	private Date created;

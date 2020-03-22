@@ -113,28 +113,28 @@ public class RequestInterceptor extends HandlerInterceptorAdapter implements Fil
 	@Override
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
-		System.out.println("doFilter");
-		RequestWrapper requestWrapper = null;
-        if(request instanceof HttpServletRequest) {
-            requestWrapper = new RequestWrapper((HttpServletRequest) request);
-        }
-        //Get the stream in the request, convert the fetched string into a stream, and put it into the new request object.
-                 // Pass the new request object in the chain.doFiler method
-        String test = "";
-        if ("POST".equalsIgnoreCase(requestWrapper.getMethod())) {
-			//test = IOUtils.toString(request2.getReader());
-			 Scanner s = new Scanner(requestWrapper.getInputStream(), "UTF-8").useDelimiter("\\A");
-	         test = s.hasNext() ? s.next() : "";
-			test = requestWrapper.getBody();
-			body = test;
-		}
-        System.out.println(test);
-        System.out.println(requestWrapper.getRequestURL());
-        if(requestWrapper == null) {
-            chain.doFilter(request, response);
-        } else {
-            chain.doFilter(requestWrapper, response);
-        }
+//		System.out.println("doFilter");
+//		RequestWrapper requestWrapper = null;
+//        if(request instanceof HttpServletRequest) {
+//            requestWrapper = new RequestWrapper((HttpServletRequest) request);
+//        }
+//        //Get the stream in the request, convert the fetched string into a stream, and put it into the new request object.
+//                 // Pass the new request object in the chain.doFiler method
+//        String test = "";
+//        if ("POST".equalsIgnoreCase(requestWrapper.getMethod())) {
+//			//test = IOUtils.toString(request2.getReader());
+//			 Scanner s = new Scanner(requestWrapper.getInputStream(), "UTF-8").useDelimiter("\\A");
+//	         test = s.hasNext() ? s.next() : "";
+//			test = requestWrapper.getBody();
+//			body = test;
+//		}
+//        System.out.println(test);
+//        System.out.println(requestWrapper.getRequestURL());
+//        if(requestWrapper == null) {
+              chain.doFilter(request, response);
+//        } else {
+//            chain.doFilter(requestWrapper, response);
+//        }
     }
 
 }

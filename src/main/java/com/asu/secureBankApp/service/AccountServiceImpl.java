@@ -1,15 +1,18 @@
 package com.asu.secureBankApp.service;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import com.asu.secureBankApp.Request.UpdateInterestRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.asu.secureBankApp.Repository.AccountRepository;
 import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.Request.UpdateBalanceRequest;
+import com.asu.secureBankApp.Request.UpdateInterestRequest;
+import com.asu.secureBankApp.Response.AccountResponses;
 import com.asu.secureBankApp.Response.StatusResponse;
 import com.asu.secureBankApp.dao.AccountDAO;
 import com.asu.secureBankApp.dao.CreateAccountReqDAO;
@@ -97,6 +100,17 @@ public class AccountServiceImpl implements AccountService {
 		response.setIsSuccess(true);
 		response.setMsg(ErrorCodes.SUCCESS);
 
+		return response;
+	}
+
+	@Override
+	public AccountResponses getAccounts(String userId) {
+		AccountResponses response = new AccountResponses();
+		List<AccountDAO> accounts = accountRepository.findByUserId(Integer.valueOf(userId));
+		for(AccountDAO account : accounts) {
+			account.setUser(null);
+		}
+		response.setAccounts(accounts);
 		return response;
 	}
 

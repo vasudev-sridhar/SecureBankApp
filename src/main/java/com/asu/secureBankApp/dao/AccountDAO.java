@@ -2,8 +2,10 @@ package com.asu.secureBankApp.dao;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,8 +21,8 @@ public class AccountDAO {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	
-	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name="FK_ACCOUNT_USER"))
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private UserDAO user;
 	
 	private Double balance;

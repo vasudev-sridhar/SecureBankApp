@@ -1,101 +1,122 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>Dashboard</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <link href="modules/resources/css/axure_rp_page.css" type="text/css" rel="stylesheet"/>
-    <link href="modules/resources/data/styles.css" type="text/css" rel="stylesheet"/>
-    <link href="modules/resources/files/dashboard/styles.css" type="text/css" rel="stylesheet"/>
-    <script src="modules/resources/scripts/jquery-3.2.1.min.js"></script>
-    <script src="modules/resources/scripts/axure/axQuery.js"></script>
-    <script src="modules/resources/scripts/axure/globals.js"></script>
-    <script src="modules/resources/scripts/axutils.js"></script>
-    <script src="modules/resources/scripts/axure/annotation.js"></script>
-    <script src="modules/resources/scripts/axure/axQuery.std.js"></script>
-    <script src="modules/resources/scripts/axure/doc.js"></script>
-    <script src="modules/resources/scripts/messagecenter.js"></script>
-    <script src="modules/resources/scripts/axure/events.js"></script>
-    <script src="modules/resources/scripts/axure/recording.js"></script>
-    <script src="modules/resources/scripts/axure/action.js"></script>
-    <script src="modules/resources/scripts/axure/expr.js"></script>
-    <script src="modules/resources/scripts/axure/geometry.js"></script>
-    <script src="modules/resources/scripts/axure/flyout.js"></script>
-    <script src="modules/resources/scripts/axure/model.js"></script>
-    <script src="modules/resources/scripts/axure/repeater.js"></script>
-    <script src="modules/resources/scripts/axure/sto.js"></script>
-    <script src="modules/resources/scripts/axure/utils.temp.js"></script>
-    <script src="modules/resources/scripts/axure/variables.js"></script>
-    <script src="modules/resources/scripts/axure/drag.js"></script>
-    <script src="modules/resources/scripts/axure/move.js"></script>
-    <script src="modules/resources/scripts/axure/visibility.js"></script>
-    <script src="modules/resources/scripts/axure/style.js"></script>
-    <script src="modules/resources/scripts/axure/adaptive.js"></script>
-    <script src="modules/resources/scripts/axure/tree.js"></script>
-    <script src="modules/resources/scripts/axure/init.temp.js"></script>
-    <script src="modules/resources/scripts/axure/legacy.js"></script>
-    <script src="modules/resources/scripts/axure/viewer.js"></script>
-    <script src="modules/resources/scripts/axure/math.js"></script>
-    <script src="modules/resources/scripts/axure/jquery.nicescroll.min.js"></script>
-    <script src="modules/resources/data/document.js"></script>
-    <script src="modules/resources/files/dashboard/data.js"></script>
-    <script type="text/javascript">
-      $axure.utils.getTransparentGifPath = function() { return 'modules/resources/images/transparent.gif'; };
-      $axure.utils.getOtherPath = function() { return 'modules/resources/Other.html'; };
-      $axure.utils.getReloadPath = function() { return 'modules/resources/reload.html'; };
-    </script>
-  </head>
-  <body>
-    <div id="base" class="">
+<title>Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+</style>
+<body class="w3-light-grey">
 
-      <!-- Unnamed (Rectangle) -->
-      <div id="u22" class="ax_default box_1">
-        <div id="u22_div" class=""></div>
-        <div id="u22_text" class="text " style="display:none; visibility: hidden">
-          <p></p>
-        </div>
-      </div>
+<div class="container; background-color: w3-light-gray" style = "position:fixed; left:-10px; width: 100%;">
+<div ng-include="'modules/sidebar.html'"></div>
 
-      <!-- Unnamed (Rectangle) -->
-      <div id="u23" class="ax_default button">
-        <div id="u23_div" class=""></div>
-        <div id="u23_text" class="text ">
-          <p><span>BUTTON</span></p>
-        </div>
-      </div>
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
-      <!-- Unnamed (Rectangle) -->
-      <div id="u24" class="ax_default label">
-        <div id="u24_div" class=""></div>
-        <div id="u24_text" class="text ">
-          <p><span>Link</span></p>
-        </div>
-      </div>
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
 
-      <!-- Unnamed (Rectangle) -->
-      <div id="u25" class="ax_default label">
-        <div id="u25_div" class=""></div>
-        <div id="u25_text" class="text ">
-          <p><span>Link</span></p>
-        </div>
-      </div>
+  <!-- Header -->
+  <header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fa fa-dashboard"></i> My Dashboard</b></h5>
+  </header>
 
-      <!-- Unnamed (Rectangle) -->
-      <div id="u26" class="ax_default label">
-        <div id="u26_div" class=""></div>
-        <div id="u26_text" class="text ">
-          <p><span>Link</span></p>
+  <div class="w3-row-padding w3-margin-bottom">
+    <div class="w3-quarter" ng-repeat="account in accountList">
+      <div class="w3-container w3-blue w3-padding-16">
+        <!-- <div class="w3-left"><i class="fa fa-eye w3-xxxlarge"></i></div> -->
+        <div class="w3-right">
+          <h3>${{account.balance}}</h3>
         </div>
-      </div>
-
-      <!-- Unnamed (Rectangle) -->
-      <div id="u27" class="ax_default label">
-        <div id="u27_div" class=""></div>
-        <div id="u27_text" class="text ">
-          <p><span>Link</span></p>
-        </div>
+        <div class="w3-clear"></div>
+        <h4>Account No: {{account.id}}</h4>
       </div>
     </div>
-    <script src="modules/resources/scripts/axure/ios.js"></script>
-  </body>
+  </div>
+
+  <div class="w3-panel">
+    <div class="w3-row-padding" style="margin:0 -16px">
+      <div class="w3-twothird">
+        <h5>Requests</h5>
+        <table class="w3-table w3-striped w3-white">
+          <tr>
+            <td><i class="fa fa-user w3-text-blue w3-large"></i></td>
+            <td>New record, over 90 views.</td>
+            <td><i>10 mins</i></td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
+            <td>Database error.</td>
+            <td><i>15 mins</i></td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-users w3-text-yellow w3-large"></i></td>
+            <td>New record, over 40 users.</td>
+            <td><i>17 mins</i></td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-comment w3-text-red w3-large"></i></td>
+            <td>New comments.</td>
+            <td><i>25 mins</i></td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-bookmark w3-text-blue w3-large"></i></td>
+            <td>Check transactions.</td>
+            <td><i>28 mins</i></td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-laptop w3-text-red w3-large"></i></td>
+            <td>CPU overload.</td>
+            <td><i>35 mins</i></td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-share-alt w3-text-green w3-large"></i></td>
+            <td>New shares.</td>
+            <td><i>39 mins</i></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <hr>
+
+  <!-- Footer -->
+  <footer class="w3-container w3-padding-16 w3-light-grey">
+    <h4>FOOTER</h4>
+    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+  </footer>
+
+  <!-- End page content -->
+</div>
+</div>
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
 </html>

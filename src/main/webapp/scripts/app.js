@@ -2,46 +2,46 @@
 
 // declare modules
 angular.module('Authentication', []);
-angular.module('Home', []);
+angular.module('Dashboard', []);
 
 angular.module('SecureBankApp', [
     'Authentication',
-    'Home',
-    'ngRoute',
+    'Dashboard',
+    'ui.router',
     'ngCookies'
 ])
  
-.config(['$routeProvider', function ($routeProvider) {
-
-    $routeProvider
-        .when('/login', {
+.config(['$stateProvider','$urlRouterProvider',function ($stateProvider, $urlRouterProvider) {
+	console.log("$stateProvider")
+	$stateProvider 
+        .state('Login', {
+        	url: '/login',
+        	templateUrl: 'modules/authentication/views/login.html',
             controller: 'LoginController',
-            templateUrl: 'modules/authentication/views/login_page.html',
-            
-            hideMenus: true
         })
  
-        .when('/', {
-            controller: 'HomeController',
-            templateUrl: '../webapp/modules/home/views/home.html',
-            crossOrigin: null
-        })
+        .state('Dashboard', {
+        	url: '/dashboard',
+        	templateUrl: 'modules/dashboard/views/dashboard.html',
+            controller: 'DashboardController'
+        });
  
-        .otherwise({ redirectTo: '/login' });
+	$urlRouterProvider.otherwise("/login"); 
 }])
  
 .run(['$rootScope', '$location', '$cookieStore', '$http',
     function ($rootScope, $location, $cookieStore, $http) {
         // keep user logged in after page refresh
+	console.log("run")
         $rootScope.globals = $cookieStore.get('globals') || {};
         if ($rootScope.globals.currentUser) {
             $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
         }
  
-        $rootScope.$on('$locationChangeStart', function (event, next, current) {
-            // redirect to login page if not logged in
-            if ($location.path() !== '/login' && !$rootScope.globals.currentUser) {
-                $location.path('/login');
-            }
-        });
+//        $rootScope.$on('$locationChangeStart', function (event, next, current) {
+//            // redirect to login page if not logged in
+//            if ($location.path() !== '/login' && !$rootScope.globals.currentUser) {
+//                $location.path('/login');
+//            }
+//        });
     }]);
