@@ -36,11 +36,11 @@ public class LoginController {
 //	}
 	
 	@RequestMapping(value = { "/login" }, method = RequestMethod.GET)
-	public ModelAndView login() {
+	public String login() {
 		System.out.println("In loginController2");
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("login"); // resources/template/login.html
-		return modelAndView;
+		return "/login";
 	}
 	
 //	@GetMapping(value = "/login", consumes = { "application/json" })
