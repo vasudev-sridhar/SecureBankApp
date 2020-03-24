@@ -16,7 +16,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.security.CustomWebAuthenticationDetailsSource;
@@ -64,35 +66,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     @Override
     protected void configure(HttpSecurity http) throws Exception 
     {
-//    	http.httpBasic().disable();
-//        http
 		http.formLogin().authenticationDetailsSource(authenticationDetailsSource);
 		http.authorizeRequests()
-//        .authorizeRequests()
-         
-        .antMatchers("/").permitAll()
-		.antMatchers("/login").permitAll()
-        .antMatchers("/login**").permitAll()
-        .anyRequest().authenticated()
-        .and()
-        .csrf().disable()
-        .formLogin()
-        .loginPage("/login")
-        .defaultSuccessUrl("/index.html")
-        .failureUrl("/login?error=true")
-        .usernameParameter("username")
-		.passwordParameter("password")
-		.successHandler(successHandler)
-//        .failureHandler(authenticationFailureHandler)
-        .authenticationDetailsSource(authenticationDetailsSource)
-        .and()
-		.logout()
-		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-		.logoutSuccessUrl("/").and()
-		.exceptionHandling()
-		.accessDeniedPage("/access-denied");
-        ;
-        }
+	        .antMatchers("/").permitAll()
+			.antMatchers("/login").permitAll()
+	        .antMatchers("/login**").permitAll()
+	        .anyRequest().authenticated()
+	        .and()
+	        .csrf()
+	        .and()
+	        .formLogin().loginPage("/login")
+	        .failureUrl("/login?error=true")
+	        .successHandler(successHandler)
+	        .usernameParameter("username")
+			.passwordParameter("password")
+			.and()
+			.logout()
+	//        .failureHandler(authenticationFailureHandler)
+//	        .authenticationDetailsSource(authenticationDetailsSource)
+//	        .and()
+//			.logout()
+			.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+			.logoutSuccessUrl("/").and()
+			.exceptionHandling()
+			.accessDeniedPage("/access-denied");
+		
+		 http.sessionManagement()
+		.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+		.maximumSessions(1);
+	        
+	        }
   
 //    @Autowired
 //    public void configureGlobal(AuthenticationManagerBuilder auth) 
@@ -118,10 +121,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 //        return authProvider;
 //    }
     
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder(11);
-    }
+    @Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
+	}
+
+	@Bean
+	public HttpSessionEventPublisher httpSessionEventPublisher() {
+		return new HttpSessionEventPublisher();
+	}
     
 	@Bean
 	public DaoAuthenticationProvider authProvider() {
@@ -129,6 +137,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 		authProvider.setUserDetailsService(userDetailsService);
 		authProvider.setPasswordEncoder(encoder());
 		return authProvider;
+	}
+	
+	@Bean
+	public PasswordEncoder encoder() {
+		return new BCryptPasswordEncoder();
 	}
     
 //    @Override
