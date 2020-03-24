@@ -1,5 +1,6 @@
 package com.asu.secureBankApp.dao;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -27,12 +28,15 @@ public class AuthUserDAO {
 	@JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name="FK_auth_user_user"))
 	private UserDAO user;
 	
+    @Column(name = "email")
+    private String email;
+	
 	@Enumerated(EnumType.STRING)
 	private Status status;
 	
 	private Integer otp;
 	
-	private Date expiry;
+	private Timestamp expiry;
 
 	public Integer getId() {
 		return id;
@@ -66,12 +70,20 @@ public class AuthUserDAO {
 		this.otp = otp;
 	}
 
-	public Date getExpiry() {
+	public Timestamp getExpiry() {
 		return expiry;
 	}
 
-	public void setExpiry(Date expiry) {
+	public void setExpiry(Timestamp expiry) {
 		this.expiry = expiry;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 }

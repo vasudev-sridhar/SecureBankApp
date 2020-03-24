@@ -48,10 +48,10 @@ public class SetupDataLoader implements
         	return;
         }
         rolePermissionsMap = new HashMap<>();
-        for(AuthRoleDAO role : roles) {
-        	rolePermissionsMap.put(role, role.getPermissions());
-        	System.out.println("Role: " + role.getRoleType() + " permission: " + role.getPermissions().get(0).getAuthPermission().getId());
-        }
+//        for(AuthRoleDAO role : roles) {
+//        	rolePermissionsMap.put(role, role.getPermissions());
+//        	System.out.println("Role: " + role.getRoleType() + " permission: " + role.getPermissions().get(0).getAuthPermission().getId());
+//        }
         System.out.println("rolePermissionsMap done");
  
         alreadySetup = true;

@@ -5,21 +5,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+
 
 import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.security.CustomWebAuthenticationDetailsSource;
 import com.asu.secureBankApp.security.MyUserDetailsService;
  
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter
 {
 	
-	@Autowired
-    private MyUserDetailsService userDetailsService;
-
+//	@Autowired
+//	
+//    private MyUserDetailsService userDetailsService;
+//
 //    @Autowired
 //    private AuthenticationSuccessHandler myAuthenticationSuccessHandler;
 //
@@ -28,42 +39,58 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 //
 //    @Autowired
 //    private AuthenticationFailureHandler authenticationFailureHandler;
-
-    @Autowired
-    private CustomWebAuthenticationDetailsSource authenticationDetailsSource;
-
-    @Autowired
-    private UserRepository userRepository;
+//
+//    @Autowired
+//    private CustomWebAuthenticationDetailsSource authenticationDetailsSource;
+//
+//    @Autowired
+//    private UserRepository userRepository;
+//    
     
-    
+	@Autowired
+	private CustomLoginSuccessHandler successHandler;
+	
+	@Autowired
+	private UserDetailsService userDetailsService;
+	
+	@Autowired
+	private CustomWebAuthenticationDetailsSource authenticationDetailsSource;
+	
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.authenticationProvider(authProvider());
+	}
+	
     @Override
     protected void configure(HttpSecurity http) throws Exception 
     {
-    	http.httpBasic().disable();
+//    	http.httpBasic().disable();
 //        http
+		http.formLogin().authenticationDetailsSource(authenticationDetailsSource);
+		http.authorizeRequests()
 //        .authorizeRequests()
-//         
-//         .antMatchers("/").permitAll()
-//			.antMatchers("/login").permitAll()
-//         .antMatchers("/login**").permitAll()
-//         .anyRequest().authenticated()
-//        .and()
-//        .csrf().disable()
-//        .formLogin()
-//        .loginPage("/login")
-//        .defaultSuccessUrl("/index.html")
-//        .failureUrl("/login?error=true")
-//        .usernameParameter("username")
-//		.passwordParameter("password")
-////        .successHandler(myAuthenticationSuccessHandler)
-////        .failureHandler(authenticationFailureHandler)
-//        .authenticationDetailsSource(authenticationDetailsSource);
-//        .and()
-//		.logout()
-//		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-//		.logoutSuccessUrl("/").and()
-		//.exceptionHandling()
-		//.accessDeniedPage("/access-denied");
+         
+        .antMatchers("/").permitAll()
+		.antMatchers("/login").permitAll()
+        .antMatchers("/login**").permitAll()
+        .anyRequest().authenticated()
+        .and()
+        .csrf().disable()
+        .formLogin()
+        .loginPage("/login")
+        .defaultSuccessUrl("/index.html")
+        .failureUrl("/login?error=true")
+        .usernameParameter("username")
+		.passwordParameter("password")
+		.successHandler(successHandler)
+//        .failureHandler(authenticationFailureHandler)
+        .authenticationDetailsSource(authenticationDetailsSource)
+        .and()
+		.logout()
+		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+		.logoutSuccessUrl("/").and()
+		.exceptionHandling()
+		.accessDeniedPage("/access-denied");
         ;
         }
   
@@ -95,6 +122,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder(11);
     }
+    
+	@Bean
+	public DaoAuthenticationProvider authProvider() {
+		CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider();
+		authProvider.setUserDetailsService(userDetailsService);
+		authProvider.setPasswordEncoder(encoder());
+		return authProvider;
+	}
     
 //    @Override
 //	public void configure(WebSecurity web) throws Exception {

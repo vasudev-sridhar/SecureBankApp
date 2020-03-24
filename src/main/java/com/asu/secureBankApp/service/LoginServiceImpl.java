@@ -1,5 +1,6 @@
 package com.asu.secureBankApp.service;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 
 import javax.transaction.Transactional;
@@ -45,7 +46,7 @@ public class LoginServiceImpl implements LoginService {
 		authUser.setStatus(Status.ACTIVE);
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MINUTE, 10);
-		authUser.setExpiry(cal.getTime());
+		authUser.setExpiry(new Timestamp(System.currentTimeMillis()));
 		authUserRepository.save(authUser);
 		systemLoggerService.log(user.getId(), "User logged in", Constants.LOGIN_TIME);
 		response.setIsSuccess(true);
@@ -64,7 +65,7 @@ public class LoginServiceImpl implements LoginService {
 		AuthUserDAO authUser = new AuthUserDAO();
 		authUser.setUser(user);
 		authUser.setStatus(Status.LOGGED_OUT);
-		authUser.setExpiry(Calendar.getInstance().getTime());
+		authUser.setExpiry(new Timestamp(System.currentTimeMillis()));
 		authUserRepository.save(authUser);
 		
 		response.setIsSuccess(true);

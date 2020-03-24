@@ -1,5 +1,6 @@
 package com.asu.secureBankApp.controller;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -56,7 +57,7 @@ public class MainController {
 		authUser.setStatus(Status.ACTIVE);
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MINUTE, 10);
-		authUser.setExpiry(cal.getTime());
+		authUser.setExpiry(new Timestamp(System.currentTimeMillis()));
 		authUserRepository.save(authUser);
 		return response;
 
