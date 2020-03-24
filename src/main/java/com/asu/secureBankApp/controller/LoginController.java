@@ -16,7 +16,7 @@ import com.asu.secureBankApp.Response.LoginResponse;
 import com.asu.secureBankApp.service.LoginService;
 
 @RestController
-@RequestMapping("/api")
+//@RequestMapping("/api")
 public class LoginController {
 
 	@Autowired
