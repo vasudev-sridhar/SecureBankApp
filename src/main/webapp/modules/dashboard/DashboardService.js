@@ -22,7 +22,7 @@ angular.module('Dashboard')
 
             /* Use this for real authentication
              ----------------------------------------------*/
-            $http.get('/account/get/' + userid)
+            $http.get('/api/account/get/' + userid)
                 .success(function (response) {
                 	console.log(response);
 //                	if(!response.isSuccess) {

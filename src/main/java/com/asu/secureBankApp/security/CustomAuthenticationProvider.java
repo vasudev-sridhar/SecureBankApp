@@ -10,6 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.dao.UserDAO;
 
+
 public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
 
     @Autowired
@@ -45,7 +46,7 @@ public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
                 auth_user.getEmailId(), result.getCredentials(), result.getAuthorities());
     }
 
-    //@Override
+    @Override
     public boolean supports(Class<?> authentication) {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }

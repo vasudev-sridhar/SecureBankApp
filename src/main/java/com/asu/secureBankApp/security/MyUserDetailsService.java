@@ -1,27 +1,38 @@
 package com.asu.secureBankApp.security;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
-import javax.management.relation.Role;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.asu.secureBankApp.Config.SetupDataLoader;
+import com.asu.secureBankApp.Config.SetupDataLoader.RPMap;
 import com.asu.secureBankApp.Repository.UserRepository;
+import com.asu.secureBankApp.dao.AuthRoleDAO;
+import com.asu.secureBankApp.dao.AuthRolePermissionDAO;
 import com.asu.secureBankApp.dao.UserDAO;
+
+import constants.RoleType;
 
 @Service("userDetailsService")
 @Transactional
+//@ComponentScan({"com.asu.secureBankApp"})
+//@EntityScan("com.asu.secureBankApp")
+@Configuration
+@Component
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
@@ -33,6 +44,12 @@ public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private HttpServletRequest request;
 
+    @Autowired
+    private RPMap rpMap;
+    
+//    @Autowired
+//    SetupDataLoader setupData;
+    
     public MyUserDetailsService() {
         super();
     }
@@ -53,8 +70,15 @@ public class MyUserDetailsService implements UserDetailsService {
             if (user == null) {
                 throw new UsernameNotFoundException("No user found with username: " + email);
             }
-
-            return new org.springframework.security.core.userdetails.User(user.getEmailId(), user.getPassword(), /*user.isEnabled()*/true, true, true, true, getAuthorities(null));//user.getRoles()));
+            Map<RoleType, List<AuthRolePermissionDAO>> rolePermissionsMap = SetupDataLoader.rpMap.rpMap;
+            System.out.println(rolePermissionsMap);
+            for(Map.Entry<RoleType, List<AuthRolePermissionDAO>> entry : rolePermissionsMap.entrySet()) {
+            	System.out.println("Key,val:" + entry.getKey() + " " + entry.getValue().size());
+            }
+            System.out.println(user.getAuthRole().getRoleType());
+            List<AuthRolePermissionDAO> perms = rolePermissionsMap.get(user.getAuthRole().getRoleType());
+            System.out.println("Size: " + perms.size());
+            return new org.springframework.security.core.userdetails.User(user.getEmailId(), user.getPassword(), /*user.isEnabled()*/true, true, true, true, getAuthorities(perms));
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
@@ -62,28 +86,15 @@ public class MyUserDetailsService implements UserDetailsService {
 
     // UTIL
 
-    private final Collection<? extends GrantedAuthority> getAuthorities(final Collection<Role> roles) {
-        return getGrantedAuthorities(getPrivileges(roles));
+    private final Collection<? extends GrantedAuthority> getAuthorities(final List<AuthRolePermissionDAO> privileges) {
+        return getGrantedAuthorities(privileges);
     }
 
-    private final List<String> getPrivileges(final Collection<Role> roles) {
-        final List<String> privileges = new ArrayList<String>();
-//        final List<Privilege> collection = new ArrayList<Privilege>();
-//        for (final Role role : roles) {
-//            collection.addAll(role.getPrivileges());
-//        }
-//        for (final Privilege item : collection) {
-//            privileges.add(item.getName());
-//        }
-        privileges.add("READ");
-        return privileges;
-    }
-
-    private final List<GrantedAuthority> getGrantedAuthorities(final List<String> privileges) {
+    private final List<GrantedAuthority> getGrantedAuthorities(final List<AuthRolePermissionDAO> privileges) {
         final List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-//        for (final String privilege : privileges) {
-//            authorities.add(new SimpleGrantedAuthority(privilege));
-//        }
+        for (final AuthRolePermissionDAO privilege : privileges) {
+            authorities.add(new SimpleGrantedAuthority(privilege.getAuthPermission().getPermName()));
+        }
         authorities.add(new SimpleGrantedAuthority("READ"));
         return authorities;
     }

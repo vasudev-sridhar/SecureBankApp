@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,7 +26,7 @@ import com.asu.secureBankApp.dao.CreateAccountReqDAO;
 import com.asu.secureBankApp.service.AccountService;
 
 @Controller
-@RequestMapping("/account")
+@RequestMapping("/api//account")
 public class AccountController {
 
 	@Autowired
@@ -38,8 +39,10 @@ public class AccountController {
 	AccountService accountService;
 
 	@GetMapping(value = "/get/{user_id}")
-	public @ResponseBody AccountResponses getAccounts(@PathVariable(value = "user_id") String userId) {
+	public @ResponseBody AccountResponses getAccounts(@PathVariable(value = "user_id") String userId, Authentication auth) {
 		AccountResponses response = new AccountResponses();
+		System.out.println("Auth1:" + auth);
+		System.out.println("Auth: " + auth.getName() + " " + auth.getAuthorities().size());
 		List<AccountDAO> accounts = accountRepository.findByUserId(Integer.valueOf(userId));
 		for(AccountDAO account : accounts) {
 			account.setUser(null);

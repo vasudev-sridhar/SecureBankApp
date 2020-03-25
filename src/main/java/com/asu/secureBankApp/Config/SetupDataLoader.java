@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,10 @@ import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.dao.AuthRoleDAO;
 import com.asu.secureBankApp.dao.AuthRolePermissionDAO;
 
+import constants.RoleType;
+
 @Component
+@Configuration
 public class SetupDataLoader implements
   ApplicationListener<ContextRefreshedEvent> {
  
@@ -34,7 +38,8 @@ public class SetupDataLoader implements
 	 * @Autowired private PasswordEncoder passwordEncoder;
 	 */
   
-    private Map<AuthRoleDAO, List<AuthRolePermissionDAO>> rolePermissionsMap;
+    //@Resource(name="rolePermissionsMap")
+    public static RPMap rpMap;
     
     @Override
     @Transactional
@@ -47,14 +52,22 @@ public class SetupDataLoader implements
         	System.out.println("Empty roles. Exiting...");
         	return;
         }
-        rolePermissionsMap = new HashMap<>();
+        Map<RoleType, List<AuthRolePermissionDAO>> rolePermissionsMap = new HashMap<>();
         for(AuthRoleDAO role : roles) {
-        	rolePermissionsMap.put(role, role.getPermissions());
+        	rolePermissionsMap.put(role.getRoleType(), role.getPermissions());
         	System.out.println("Role: " + role.getRoleType() + " permission: " + role.getPermissions().get(0).getAuthPermission().getId());
         }
         System.out.println("rolePermissionsMap done");
+        rpMap = new RPMap(rolePermissionsMap);
  
         alreadySetup = true;
     }
-
+    
+    @Component
+    public static class RPMap {
+    	public Map<RoleType, List<AuthRolePermissionDAO>> rpMap;
+    	public RPMap(Map<RoleType, List<AuthRolePermissionDAO>> r) {
+    		rpMap = r;  		
+    	}
+    }
 }
