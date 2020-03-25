@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 @Entity(name = "Transaction")
-public class Transaction {
+public class TransactionDAO {
 	@Id
 	@Column(name = "transaction_no")
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,7 +19,7 @@ public class Transaction {
 	
     @NotNull(message="Account number cannot be empty")
     @Column(name="account_no")
-    private Long account_no;
+    private int account_no;
 
     @Column(name="balance")
     private float balance;
@@ -51,11 +51,11 @@ public class Transaction {
 		this.transaction_amt = transaction_amt;
 	}
 
-	public Long getAccount_no() {
+	public int getAccount_no() {
 		return account_no;
 	}
 
-	public void setAccount_no(Long account_no) {
+	public void setAccount_no(int account_no) {
 		this.account_no = account_no;
 	}
 
