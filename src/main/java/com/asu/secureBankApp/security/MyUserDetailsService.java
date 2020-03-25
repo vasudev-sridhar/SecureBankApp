@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.asu.secureBankApp.Config.SetupDataLoader;
 import com.asu.secureBankApp.Config.SetupDataLoader.RPMap;
 import com.asu.secureBankApp.Repository.UserRepository;
-import com.asu.secureBankApp.dao.AuthRoleDAO;
 import com.asu.secureBankApp.dao.AuthRolePermissionDAO;
 import com.asu.secureBankApp.dao.UserDAO;
 
@@ -29,8 +28,6 @@ import constants.RoleType;
 
 @Service("userDetailsService")
 @Transactional
-//@ComponentScan({"com.asu.secureBankApp"})
-//@EntityScan("com.asu.secureBankApp")
 @Configuration
 @Component
 public class MyUserDetailsService implements UserDetailsService {
@@ -47,25 +44,20 @@ public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private RPMap rpMap;
     
-//    @Autowired
-//    SetupDataLoader setupData;
-    
     public MyUserDetailsService() {
         super();
     }
-
-    // API
 
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
     	System.out.println("In UserDetailService loadUserByUsername");
         final String ip = getClientIP();
         if (loginAttemptService.isBlocked(ip)) {
+        	System.out.println("User blocked");
             throw new RuntimeException("blocked");
         }
 
         try {
-            // final UserDAO user = userRepository.findByEmailId(email);
         	final UserDAO user = userRepository.findByUsername(email);
             if (user == null) {
                 throw new UsernameNotFoundException("No user found with username: " + email);
@@ -83,8 +75,6 @@ public class MyUserDetailsService implements UserDetailsService {
             throw new RuntimeException(e);
         }
     }
-
-    // UTIL
 
     private final Collection<? extends GrantedAuthority> getAuthorities(final List<AuthRolePermissionDAO> privileges) {
         return getGrantedAuthorities(privileges);

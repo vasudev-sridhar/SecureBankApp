@@ -34,11 +34,6 @@ public class LoginController {
 
 	@PostMapping(value = "/login", consumes = { "application/json" })
 	public @ResponseBody LoginResponse login(@RequestBody @Valid LoginRequest loginRequest, final HttpServletRequest request) {
-//		System.out.println("In loginController");
-//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//		auth.setAuthenticated(true);
-//		SecurityContextHolder.getContext().setAuthentication(auth);
-//		return loginService.login(loginRequest);
 		UsernamePasswordAuthenticationToken authReq =
 	            new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
         Authentication auth = authManager.authenticate(authReq);
@@ -48,26 +43,6 @@ public class LoginController {
         session.setAttribute("SPRING_SECURITY_CONTEXT", sc);
         return loginService.login(loginRequest);
 	}
-
-//	@GetMapping(value = "/login", consumes = { "application/json" })
-//	public @ResponseBody LoginResponse login2() {
-//		System.out.println("In loginController");
-//		return loginService.login(new LoginRequest());
-//	}
-
-//	@RequestMapping(value = { "/login" }, method = RequestMethod.GET)
-//	public ModelAndView login() {
-//		System.out.println("In loginController2");
-//		ModelAndView modelAndView = new ModelAndView();
-//		modelAndView.setViewName("login"); // resources/template/login.html
-//		return modelAndView;
-//	}
-
-//	@GetMapping(value = "/login", consumes = { "application/json" })
-//	public @ResponseBody LoginResponse login(@RequestBody @Valid LoginRequest loginRequest) {
-//		System.out.println("GET In loginController");
-//		return loginService.login(loginRequest);
-//	}
 
 	@PostMapping(value = "/logout", consumes = { "application/json" })
 	public @ResponseBody LoginResponse logout(@RequestBody @Valid LogoutRequest logoutRequest) {

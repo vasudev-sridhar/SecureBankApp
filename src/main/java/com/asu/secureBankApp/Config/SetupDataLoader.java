@@ -13,7 +13,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import com.asu.secureBankApp.Repository.AuthRoleRepository;
-import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.dao.AuthRoleDAO;
 import com.asu.secureBankApp.dao.AuthRolePermissionDAO;
 
@@ -25,20 +24,10 @@ public class SetupDataLoader implements
   ApplicationListener<ContextRefreshedEvent> {
  
     boolean alreadySetup = false;
- 
-    @Autowired
-    private UserRepository userRepository;
   
     @Autowired
     private AuthRoleRepository roleRepository;
-  
-	/*
-	 * @Autowired private PrivilegeRepository privilegeRepository;
-	 * 
-	 * @Autowired private PasswordEncoder passwordEncoder;
-	 */
-  
-    //@Resource(name="rolePermissionsMap")
+    
     public static RPMap rpMap;
     
     @Override

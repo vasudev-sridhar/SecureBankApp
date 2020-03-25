@@ -12,20 +12,18 @@ import com.google.common.cache.LoadingCache;
 @Service
 public class LoginAttemptService {
 
-    private final int MAX_ATTEMPT = 10;
+    private final int MAX_ATTEMPT = 2;
     private LoadingCache<String, Integer> attemptsCache;
 
     public LoginAttemptService() {
         super();
-        attemptsCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.DAYS).build(new CacheLoader<String, Integer>() {
+        attemptsCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES).build(new CacheLoader<String, Integer>() {
             @Override
             public Integer load(final String key) {
                 return 0;
             }
         });
     }
-
-    //
 
     public void loginSucceeded(final String key) {
         attemptsCache.invalidate(key);
