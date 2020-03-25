@@ -11,5 +11,7 @@ public interface BankUserService {
     List<AccountDAO> getAccountsByEmail(String data);
 
     List<AccountDAO> getAccountsByContact(String phoneNo);
+    
+    UserDAO getUserByEmail(String email);
 
 }
