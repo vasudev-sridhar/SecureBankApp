@@ -1,11 +1,19 @@
 package com.asu.secureBankApp.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import com.asu.secureBankApp.Repository.AccountRepository;
@@ -17,6 +25,9 @@ import com.asu.secureBankApp.Response.StatusResponse;
 import com.asu.secureBankApp.dao.AccountDAO;
 import com.asu.secureBankApp.dao.CreateAccountReqDAO;
 import com.asu.secureBankApp.dao.UserDAO;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import constants.ErrorCodes;
 
@@ -113,5 +124,46 @@ public class AccountServiceImpl implements AccountService {
 		response.setAccounts(accounts);
 		return response;
 	}
+	
+	public Page<AccountDAO> getPaginated(Pageable pageable) {
+		return getPatinations(pageable);
+	}
+	
+	public Page<AccountDAO> getPatinations(Pageable pageable) {
+		return accountRepository.findAll(pageable);
+	}
+
+	@Override
+	public HashMap<String, Object> getListPage(Authentication authentication, int page) {
+		
+		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        
+        HashMap<String, Object> response = new HashMap<>();
+        
+        List<String> roles = new ArrayList<String>();
+        for(GrantedAuthority a : authorities) {
+            roles.add(a.getAuthority());
+        }
+        if(roles.contains("TIER1")){
+            response.put("view","account_list");
+        }else{
+            response.put("view","account_list_tier2");
+        }
+
+        PageRequest pageable = PageRequest.of(page - 1, 15);
+        Page<AccountDAO> accountPage = getPaginated(pageable);
+        int totalPages = accountPage.getTotalPages();
+        if(totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1,totalPages).boxed().collect(Collectors.toList());
+            response.put("pageNumbers", pageNumbers);
+            
+        }
+        response.put("accountList", accountPage.getContent());
+        AccountDAO account = new AccountDAO();
+        response.put("account", account);
+		
+		return null;
+	}
+	
 
 }
