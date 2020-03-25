@@ -1,17 +1,9 @@
 package com.asu.secureBankApp.dao;
 
 import java.util.Date;
+import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity(name = "user")
@@ -45,7 +37,12 @@ public class UserDAO {
 	@JoinColumn(name = "auth_role_id", nullable = false, foreignKey = @ForeignKey(name="FK_user_role"))
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private AuthRoleDAO authRole;
-	
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable=false, insertable = false, updatable = false)
+	private List<AccountDAO> accounts;
+
+
 	private Date created;
 
 	public Integer getId() {
@@ -126,6 +123,14 @@ public class UserDAO {
 
 	public void setCreated(Date created) {
 		this.created = created;
+	}
+
+	public List<AccountDAO> getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(List<AccountDAO> accounts) {
+		this.accounts = accounts;
 	}
 	
 }
