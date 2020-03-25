@@ -1,0 +1,14 @@
+CREATE VIEW user_mask AS
+SELECT
+user_id,
+username,
+CONCAT(SUBSTR(password, 0, 0), REPEAT('*',  10)) AS password,
+name,
+CONCAT(SUBSTR(dob, 0, 1), REPEAT('*', CHAR_LENGTH(dob) - 1)) AS dob,
+CONCAT(SUBSTR(contact, 1, 3), REPEAT('*', CHAR_LENGTH(contact) - 3)) AS contact,
+email_id,
+address,
+user_type,
+created
+FROM user;
+
