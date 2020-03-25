@@ -34,5 +34,11 @@ public class BankUserServiceImpl implements BankUserService {
         }
         return accountsByContact;
     }
+    
+    @Override
+	public UserDAO getUserByEmail(String emailId) {
+		UserDAO user = userRepository.findByEmailId(emailId);
+		return user;
+	}
 
 }
