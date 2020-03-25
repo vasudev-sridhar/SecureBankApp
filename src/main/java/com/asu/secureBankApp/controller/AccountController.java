@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -23,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.asu.secureBankApp.Config.Constants;
 import com.asu.secureBankApp.Repository.AccountRepository;
 import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.Request.UpdateBalanceRequest;
@@ -32,6 +35,7 @@ import com.asu.secureBankApp.Response.AccountResponses;
 import com.asu.secureBankApp.Response.StatusResponse;
 import com.asu.secureBankApp.dao.AccountDAO;
 import com.asu.secureBankApp.dao.CreateAccountReqDAO;
+import com.asu.secureBankApp.dao.Transaction;
 import com.asu.secureBankApp.service.AccountService;
 import org.springframework.security.core.Authentication;
 
@@ -50,6 +54,9 @@ public class AccountController {
 
 	@Autowired
 	AccountService accountService;
+	
+//	@Autowired
+//	UserService userService;
 	
 	@RequestMapping(value="/list/{page}", method= RequestMethod.GET)
     public HashMap<String, Object> getList(@PathVariable("page") int page, Authentication authentication, @ModelAttribute("message") String message) {
@@ -80,6 +87,52 @@ public class AccountController {
 		StatusResponse response = accountService.createAccount(createAccountReqDAO);
 		return response;
 	}
+	
+    @RequestMapping(value="/delete/{acc_no}", method= RequestMethod.POST)
+    public HashMap<String, Object> deleteAccount(@PathVariable("account_no")int acc_no) {
+        
+    	HashMap<String, Object> response = new HashMap<String, Object>();
+    	accountRepository.deleteById(acc_no);
+    	response.put("redirect", "/account/list/1");
+        return response;
+    }
+    
+    @RequestMapping(value="/deposit", method= RequestMethod.POST)
+    public ModelAndView depositPost(@Valid Transaction transaction, BindingResult bindingResult,Authentication authentication,  RedirectAttributes redirectAttributes) {
+
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        List<String> roles = new ArrayList<String>();
+        for(GrantedAuthority a : authorities) {
+            roles.add(a.getAuthority());
+        }
+        String name;
+        int role;
+        ModelAndView modelAndView;
+        HashMap<String, Object> response = new HashMap<String, Object>();
+        
+        Long id = userService.findUserByEmail(authentication.getName());
+        name = userService.getEmployeeById(id).getEmployee_name();
+        role = Constants.TIER1;
+        
+        if(roles.contains("TIER1")){
+        	response.put("redirect", "redirect:/account/deposit");
+//            modelAndView = new ModelAndView("redirect:/account/deposit");
+        }else{
+        	response.put("redirect", "redirect:/account/deposit1");
+//            modelAndView = new ModelAndView("redirect:/account/deposit1");
+        }
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("message","Please fix the errors");
+            return modelAndView;
+        }
+        String message = depositandwithdraw(Config.CREDIT, transaction,name, role, authentication);
+        if(message.contains("Success")){
+            logService.saveLog(authentication.getName(), "Deposited money for account "+transaction.getAccount_no()+" $"+transaction.getTransaction_amount());
+        }
+        redirectAttributes.addFlashAttribute("message", message);
+        return modelAndView;
+    }
+    
 
 	@PatchMapping(value = "/updateInterest", consumes = { "application/json" })
 	public @ResponseBody StatusResponse updateInterest(
