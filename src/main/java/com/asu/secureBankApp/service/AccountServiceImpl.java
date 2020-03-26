@@ -15,7 +15,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.asu.secureBankApp.Config.Constants;
 import com.asu.secureBankApp.Repository.AccountRepository;
 import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.Request.UpdateBalanceRequest;
@@ -24,6 +28,7 @@ import com.asu.secureBankApp.Response.AccountResponses;
 import com.asu.secureBankApp.Response.StatusResponse;
 import com.asu.secureBankApp.dao.AccountDAO;
 import com.asu.secureBankApp.dao.CreateAccountReqDAO;
+import com.asu.secureBankApp.dao.Transaction;
 import com.asu.secureBankApp.dao.UserDAO;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
@@ -39,6 +44,15 @@ public class AccountServiceImpl implements AccountService {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	BankUserService userService;
+	
+	@Autowired
+	AccountService accountService;
+	
+	@Autowired
+	SystemLoggerImpl logService;
 
 	@Override
 	@Transactional
@@ -163,6 +177,154 @@ public class AccountServiceImpl implements AccountService {
         response.put("account", account);
 		
 		return null;
+	}
+
+	@Override
+	public HashMap<String, Object> depositPost(Transaction transaction, BindingResult bindingResult,
+			Authentication authentication, RedirectAttributes redirectAttributes) {
+		
+		HashMap<String, Object> response = new HashMap<String, Object>();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        List<String> roles = new ArrayList<String>();
+        for(GrantedAuthority a : authorities) {
+            roles.add(a.getAuthority());
+        }
+        String name;
+        int role;
+        ModelAndView modelAndView;
+        
+        UserDAO user = userService.getUserByEmail(authentication.getName());
+        int id = user.getId();
+        name = user.getName();
+        
+        if(roles.contains("TIER1")){
+        	role = Constants.TIER1;
+        	response.put("redirect", "redirect:/account/deposit");
+        }else{
+        	role = Constants.USER;
+        	response.put("redirect", "redirect:/account/deposit1");
+        }
+//        if (bindingResult.hasErrors()) {
+//            redirectAttributes.addFlashAttribute("message","Please fix the errors");
+//            return modelAndView;
+//        }
+        String message = depositWithdraw(transaction, name, role, authentication, Constants.CREDIT);
+        if(message.contains("Success")){
+            logService.log(user.getId(), "Deposited money for account "+transaction.getAccount_no()+" $"+transaction.getTransaction_amt(), "Deposit");
+        }
+        response.put("message", message);
+		return response;
+	}
+	
+	String depositWithdraw(Transaction transaction, String name, int role, Authentication authentication, int type) {
+		
+		boolean isUser = checkUser(role);
+		UserDAO user;
+		if(isUser) {
+			boolean validUserAccount = false;
+			user = userService.getUserByEmail(authentication.getName());
+			List<AccountDAO> userAccounts = user.getAccounts();
+			for(int i=0; i<userAccounts.size(); i++) {
+				if(transaction.getAccount_no().equals(userAccounts.get(i).getId())) {
+					validUserAccount = true;
+				}
+			}
+			if(!validUserAccount)
+				return "User is not Authorized or Invalid Account Number";
+		}
+		AccountDAO account;
+		try{
+			account = accountService.getAccountByAccountNo(transaction.getAccount_no());
+        }
+        catch(Exception e){
+        	String response = "Please enter a valid Account Number!";
+        	return response;
+        }
+		if(transaction.getTransaction_amt()<0) {
+			String response = "Transaction Amount cannot be negative";
+			return response;
+		}
+		Double bal = account.getBalance();
+		if(type == Constants.DEBIT) {
+			if(checkInsufficient(bal, transaction.getTransaction_amt())) {
+				return "Insufficient Balance";
+			}
+			else {
+				Double remainingBalance = bal - transaction.getTransaction_amt();
+				account.setBalance(remainingBalance);
+				transaction = setTransaction(transaction, remainingBalance, Constants.DEBIT);
+			}
+		}
+		else {
+			Double addBalance = bal + transaction.getTransaction_amt();
+			account.setBalance(addBalance);
+			transaction = setTransaction(transaction, addBalance, Constants.DEBIT);
+		}
+		
+		if(transaction.getTransaction_amt()<Constants.LIMIT && role == Constants.USER) {
+            transaction.setStatus(Constants.APPROVED);
+            accountService.saveOrUpdate(account);
+		}
+		else {
+			
+		}
+		
+		
+		return null;
+	}
+	
+	private Transaction setTransaction(Transaction transaction, Double addBalance, int debit) {
+		transaction.setBalance(addBalance);
+		transaction.setTransaction_type(debit);
+		return transaction;
+	}
+
+	private boolean checkInsufficient(Double bal, Double transaction_amt) {
+		if(bal - transaction_amt < 0)
+			return false;
+		else
+			return true;
+	}
+
+	boolean checkUser(int role) {
+		if(role == Constants.USER) {
+			return true;
+		}
+		else
+			return false;
+	}
+
+	@Override
+	public AccountDAO getAccountByAccountNo(Integer accNo) {
+		return accountRepository.findById(accNo).get();
+	}
+
+	@Override
+	public AccountDAO saveOrUpdate(AccountDAO account) {
+		return accountRepository.save(account);
+	}
+
+	@Override
+	public HashMap<String, Object> depositTier1(String message) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+    	response.put("modelAndView", "deposit");
+        Transaction transaction = new Transaction();
+        response.put("transaction", transaction);
+        response.put("message", message);
+		return response;
+	}
+
+	@Override
+	public HashMap<String, Object> depositUser(String message, Authentication authentication) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+    	response.put("modelAndView", "deposit_user");
+        Transaction transaction = new Transaction();
+        response.put("transaction", transaction);
+        response.put("message", message);
+        List<AccountDAO> accounts = userService.getAccountsByEmail(authentication.getName());
+        response.put("accounts", accounts);
+		
+		return response;
 	}
 	
 

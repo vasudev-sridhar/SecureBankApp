@@ -36,7 +36,11 @@ import com.asu.secureBankApp.Response.StatusResponse;
 import com.asu.secureBankApp.dao.AccountDAO;
 import com.asu.secureBankApp.dao.CreateAccountReqDAO;
 import com.asu.secureBankApp.dao.Transaction;
+import com.asu.secureBankApp.dao.UserDAO;
 import com.asu.secureBankApp.service.AccountService;
+import com.asu.secureBankApp.service.BankUserService;
+import com.asu.secureBankApp.service.SystemLoggerImpl;
+
 import org.springframework.security.core.Authentication;
 
 import java.util.stream.Collectors;
@@ -55,8 +59,11 @@ public class AccountController {
 	@Autowired
 	AccountService accountService;
 	
-//	@Autowired
-//	UserService userService;
+	@Autowired
+	BankUserService userService;
+	
+	@Autowired
+	SystemLoggerImpl logService;
 	
 	@RequestMapping(value="/list/{page}", method= RequestMethod.GET)
     public HashMap<String, Object> getList(@PathVariable("page") int page, Authentication authentication, @ModelAttribute("message") String message) {
@@ -93,47 +100,28 @@ public class AccountController {
         
     	HashMap<String, Object> response = new HashMap<String, Object>();
     	accountRepository.deleteById(acc_no);
-    	response.put("redirect", "/account/list/1");
+    	response.put("redirect", "redirect:/account/list/1");
         return response;
     }
     
-    @RequestMapping(value="/deposit", method= RequestMethod.POST)
-    public ModelAndView depositPost(@Valid Transaction transaction, BindingResult bindingResult,Authentication authentication,  RedirectAttributes redirectAttributes) {
-
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        List<String> roles = new ArrayList<String>();
-        for(GrantedAuthority a : authorities) {
-            roles.add(a.getAuthority());
-        }
-        String name;
-        int role;
-        ModelAndView modelAndView;
-        HashMap<String, Object> response = new HashMap<String, Object>();
-        
-        Long id = userService.findUserByEmail(authentication.getName());
-        name = userService.getEmployeeById(id).getEmployee_name();
-        role = Constants.TIER1;
-        
-        if(roles.contains("TIER1")){
-        	response.put("redirect", "redirect:/account/deposit");
-//            modelAndView = new ModelAndView("redirect:/account/deposit");
-        }else{
-        	response.put("redirect", "redirect:/account/deposit1");
-//            modelAndView = new ModelAndView("redirect:/account/deposit1");
-        }
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("message","Please fix the errors");
-            return modelAndView;
-        }
-        String message = depositandwithdraw(Config.CREDIT, transaction,name, role, authentication);
-        if(message.contains("Success")){
-            logService.saveLog(authentication.getName(), "Deposited money for account "+transaction.getAccount_no()+" $"+transaction.getTransaction_amount());
-        }
-        redirectAttributes.addFlashAttribute("message", message);
-        return modelAndView;
+    @RequestMapping(value="/depositTier1", method= RequestMethod.GET)
+    public HashMap<String, Object> deposit(@ModelAttribute("message") String message) {
+    	HashMap<String, Object> response = accountService.depositTier1(message);;
+        return response;
     }
     
+    @RequestMapping(value="/depositUser", method= RequestMethod.GET)
+    public HashMap<String, Object> deposit1(@ModelAttribute("message") String message, Authentication authentication) {
+    	HashMap<String, Object> response = accountService.depositUser(message,authentication);
+        return response;
+    }
 
+    @RequestMapping(value="/deposit", method= RequestMethod.POST)
+    public HashMap<String, Object> depositPost(@Valid Transaction transaction, BindingResult bindingResult,Authentication authentication,  RedirectAttributes redirectAttributes) {        
+        HashMap<String, Object> response = accountService.depositPost(transaction,  bindingResult, authentication, redirectAttributes);
+        return response;
+    }
+ 
 	@PatchMapping(value = "/updateInterest", consumes = { "application/json" })
 	public @ResponseBody StatusResponse updateInterest(
 			@RequestBody @Valid UpdateInterestRequest updateInterestRequest) {

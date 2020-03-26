@@ -15,17 +15,20 @@ public class Transaction {
 	private Integer id;
 	
 	@Column(name = "transaction_amt")
-	private int transaction_amt;
+	private Double transaction_amt;
 	
     @NotNull(message="Account number cannot be empty")
     @Column(name="account_no")
-    private Long account_no;
+    private Integer account_no;
 
     @Column(name="balance")
-    private float balance;
+    private Double balance;
     
     @Column(name="transaction_type")
     private float transaction_type;
+    
+    @Column(name="status")
+    private Integer status;
 
 	public float getTransaction_type() {
 		return transaction_type;
@@ -43,28 +46,36 @@ public class Transaction {
 		this.id = id;
 	}
 
-	public int getTransaction_amt() {
+	public Double getTransaction_amt() {
 		return transaction_amt;
 	}
 
-	public void setTransaction_amt(int transaction_amt) {
+	public void setTransaction_amt(Double transaction_amt) {
 		this.transaction_amt = transaction_amt;
 	}
 
-	public Long getAccount_no() {
+	public Integer getAccount_no() {
 		return account_no;
 	}
 
-	public void setAccount_no(Long account_no) {
+	public void setAccount_no(Integer account_no) {
 		this.account_no = account_no;
 	}
 
-	public float getBalance() {
+	public Double getBalance() {
 		return balance;
 	}
 
-	public void setBalance(float balance) {
+	public void setBalance(Double balance) {
 		this.balance = balance;
+	}
+	
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
     
 }
