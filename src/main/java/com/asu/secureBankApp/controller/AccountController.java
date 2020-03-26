@@ -50,11 +50,6 @@ public class AccountController {
 		response.setAccounts(accounts);
 		return response;
 	}
-	
-	@PostMapping(value = "/balance", consumes = { "application/json" })
-	public @ResponseBody StatusResponse updateBalance(@RequestBody @Valid UpdateBalanceRequest updateBalanceRequest) {
-		return accountService.updateBalance(updateBalanceRequest);
-	}
 
 	@PostMapping(value = "/createAccount", consumes = { "application/json" })
 	public @ResponseBody StatusResponse createNewAccount(@RequestBody @Valid CreateAccountReqDAO createAccountReqDAO) {

@@ -40,9 +40,12 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
     private HttpServletRequest request;
-
+//
+//    @Autowired
+//    private RPMap rpMap;
+    
     @Autowired
-    private RPMap rpMap;
+    SetupDataLoader setupData;
     
     public MyUserDetailsService() {
         super();
@@ -70,7 +73,7 @@ public class MyUserDetailsService implements UserDetailsService {
             System.out.println(user.getAuthRole().getRoleType());
             List<AuthRolePermissionDAO> perms = rolePermissionsMap.get(user.getAuthRole().getRoleType());
             System.out.println("Size: " + perms.size());
-            return new org.springframework.security.core.userdetails.User(user.getEmailId(), user.getPassword(), /*user.isEnabled()*/true, true, true, true, getAuthorities(perms));
+            return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(), /*user.isEnabled()*/true, true, true, true, getAuthorities(perms));
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }

@@ -35,7 +35,7 @@ public class UserDAO {
 	private String address;
 	
 	@JoinColumn(name = "auth_role_id", nullable = false, foreignKey = @ForeignKey(name="FK_user_role"))
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private AuthRoleDAO authRole;
 
 	@OneToMany(fetch = FetchType.LAZY)

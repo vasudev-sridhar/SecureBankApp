@@ -4,7 +4,7 @@ public class TransferRequest {
 
 	private int fromAccNo;
 	private int toAccNo;
-	private Double transferAmount;
+	private Float transferAmount;
 	
 	public int getFromAccNo() {
 		return fromAccNo;
@@ -18,10 +18,10 @@ public class TransferRequest {
 	public void setToAccNo(int toAccNo) {
 		this.toAccNo = toAccNo;
 	}
-	public Double getTransferAmount() {
+	public Float getTransferAmount() {
 		return transferAmount;
 	}
-	public void setTransferAmount(Double transferAmount) {
+	public void setTransferAmount(Float transferAmount) {
 		this.transferAmount = transferAmount;
 	}
 }

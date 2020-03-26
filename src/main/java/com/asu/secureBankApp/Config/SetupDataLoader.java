@@ -46,7 +46,6 @@ public class SetupDataLoader implements
         	rolePermissionsMap.put(role.getRoleType(), role.getPermissions());
         	System.out.println("Role: " + role.getRoleType() + " permission: " + role.getPermissions().get(0).getAuthPermission().getId());
         }
-        rolePermissionsMap = new HashMap<>();
         System.out.println("rolePermissionsMap done");
         rpMap = new RPMap(rolePermissionsMap);
  

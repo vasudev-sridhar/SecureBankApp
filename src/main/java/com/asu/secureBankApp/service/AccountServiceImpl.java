@@ -31,31 +31,6 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	@Transactional
-	public StatusResponse updateBalance(@Valid UpdateBalanceRequest updateBalanceRequest) {
-		StatusResponse response = new StatusResponse();
-		AccountDAO account = accountRepository.findById(updateBalanceRequest.getAccountNo()).orElse(null);
-		if (account == null) {
-			response.setIsSuccess(false);
-			response.setMsg(ErrorCodes.ID_NOT_FOUND);
-			return response;
-		}
-		boolean approvalRequired = false;
-		if (approvalRequired) {
-			// Submit request
-		} else {
-			double bal = account.getBalance();
-			bal += updateBalanceRequest.getAmount();
-			account.setBalance(bal);
-			accountRepository.save(account);
-
-			response.setIsSuccess(true);
-			response.setMsg(ErrorCodes.SUCCESS);
-		}
-		return response;
-	}
-
-	@Override
-	@Transactional
 	public StatusResponse updateInterest(@Valid UpdateInterestRequest updateInterestRequest) {
 		StatusResponse response = new StatusResponse();
 		AccountDAO account = accountRepository.findById(updateInterestRequest.getAccountNo()).orElse(null);
