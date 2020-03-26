@@ -44,6 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 			.antMatchers("/").permitAll()
 			.antMatchers("/index.html").permitAll()
 			.antMatchers("/api/login").permitAll()
+			.antMatchers("/api/transaction/balance", "/api/transaction/transfer", "/api/transaction/get*").hasAnyAuthority("AUTHORIZE_CUSTOMER_TRANSFER_REQUEST")
+			.antMatchers("/api/transaction/approve/*","/api/transaction/reject/*").hasAnyAuthority("AUTHORIZE_CRITICAL_TRANSACTIONS")
 			.antMatchers("/api/**").hasAnyAuthority("ADMIN", "TIER1", "TIER2", "USER", "MERCHANT","VIEW_CUSTOMER_ACCOUNT")
 			.anyRequest().authenticated()
         .and()

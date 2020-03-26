@@ -23,7 +23,7 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
 	@Autowired
 	ActiveUserStore activeUserStore;
 
-	private final int maxInactiveInterval = 30; // seconds
+	private final int maxInactiveInterval = 30 * 60; // seconds
 
 	@Override
 	public void onApplicationEvent(final AuthenticationSuccessEvent e) {

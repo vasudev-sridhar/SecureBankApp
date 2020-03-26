@@ -43,7 +43,7 @@ public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
 //        }
         Authentication result = super.authenticate(auth);
         return new UsernamePasswordAuthenticationToken(
-                auth_user.getEmailId(), result.getCredentials(), result.getAuthorities());
+                auth_user.getUsername(), result.getCredentials(), result.getAuthorities());
     }
 
     @Override

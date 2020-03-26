@@ -29,6 +29,8 @@ CREATE TABLE bank.user (
 
 INSERT INTO `bank`.`user` (`user_id`, `auth_role_id`,`username`,`password`,`name`,`dob`, `contact`, `email_id`, `address`, `created`) VALUES 
 (1, 1, 'bhargavi', 'b12345', 'Bhargavi Hopper', NOW(),'4802863456', 'bhargavineti@gmail.com', 'Agave', NOW());
+INSERT INTO `sample`.`user` (`user_id`, `auth_role_id`,`username`,`password`,`name`,`dob`, `contact`, `email_id`, `address`, `created`) VALUES 
+(2, 4, 'noob', '12345', 'Noob Noober', NOW(),'4802743516', 'vsridh20@asu.edu', 'Thrive', NOW());
 
 CREATE TABLE bank.auth_user (
   auth_user_id int(11) NOT NULL AUTO_INCREMENT,
@@ -74,6 +76,7 @@ SELECT * FROM ACCOUNT;
 
 INSERT INTO `bank`.`ACCOUNT` (`account_no`, `user_id`, `balance`, `account_type`, `interest`, `created`, `updated`) VALUES (1, 1, 998.10, 0, 0, NOW(), NOW());
 INSERT INTO `bank`.`ACCOUNT` (`account_no`, `user_id`, `balance`, `account_type`, `interest`, `created`, `updated`) VALUES (2, 1, 15, 0, 0, NOW(), NOW());
+INSERT INTO `sample`.`ACCOUNT` (`account_no`, `user_id`, `balance`, `account_type`, `interest`, `created`, `updated`) VALUES (3, 2, 100, 0, 0, NOW(), NOW());
 
 INSERT INTO `bank`.`auth_permission` (`perm_name`) VALUES ('VIEW_CUSTOMER_ACCOUNT');
 INSERT INTO `bank`.`auth_permission` (`perm_name`) VALUES ('CREATE_CUSTOMER_ACCOUNT');
@@ -123,5 +126,24 @@ INSERT INTO `bank`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`)
 
 INSERT INTO `bank`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (5, 14);
 
+DROP TABLE IF EXISTS sample.transaction;
+CREATE TABLE sample.transaction (
+  transaction_id int(11) unsigned NOT NULL AUTO_INCREMENT,
+  transaction_amount decimal(10,2) NOT NULL,
+  transaction_timestamp timestamp,
+  type varchar(10) NOT NULL,
+  status varchar(10),
+  created_by int(11) NOT NULL,
+  approved_by int(11),
+  approved_at timestamp null,
+  from_account int(11) NOT NULL,
+  to_account int(11),
+  critical int(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (transaction_id),
+  CONSTRAINT FK_TRANSACTION_ACCOUNT_FROM FOREIGN KEY (from_account) REFERENCES account(account_no),
+  CONSTRAINT FK_TRANSACTION_ACCOUNT_TO FOREIGN KEY (to_account) REFERENCES account(account_no),
+  CONSTRAINT FK_TRANSACTION_USER_APPROVED FOREIGN KEY (approved_by) REFERENCES user(user_id),
+  CONSTRAINT FK_TRANSACTION_USER_CREATED FOREIGN KEY (created_by) REFERENCES user(user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #CONSTRAINT FK_auth_user_role FOREIGN KEY (auth_role_id) REFERENCES auth_role (auth_role_id)

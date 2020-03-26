@@ -5,6 +5,5 @@ public enum RoleType {
 	TIER1,
 	TIER2,
 	USER,
-	MERCHANT,
-	Administrator
+	MERCHANT
 }

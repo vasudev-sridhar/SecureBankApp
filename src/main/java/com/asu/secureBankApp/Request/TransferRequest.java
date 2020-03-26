@@ -1,10 +1,15 @@
 package com.asu.secureBankApp.Request;
 
+import javax.validation.constraints.NotNull;
+
 public class TransferRequest {
 
+	@NotNull
 	private int fromAccNo;
 	private int toAccNo;
-	private Double transferAmount;
+	
+	@NotNull
+	private Float transferAmount;
 	
 	public int getFromAccNo() {
 		return fromAccNo;
@@ -18,10 +23,10 @@ public class TransferRequest {
 	public void setToAccNo(int toAccNo) {
 		this.toAccNo = toAccNo;
 	}
-	public Double getTransferAmount() {
+	public Float getTransferAmount() {
 		return transferAmount;
 	}
-	public void setTransferAmount(Double transferAmount) {
+	public void setTransferAmount(Float transferAmount) {
 		this.transferAmount = transferAmount;
 	}
 }

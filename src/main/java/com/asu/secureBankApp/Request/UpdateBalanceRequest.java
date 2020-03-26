@@ -8,7 +8,7 @@ public class UpdateBalanceRequest {
 	private Integer accountNo;
 	
 	@NotNull
-	private Double amount;
+	private Float amount;
 	
 	public Integer getAccountNo() {
 		return accountNo;
@@ -18,11 +18,11 @@ public class UpdateBalanceRequest {
 		this.accountNo = accountNo;
 	}
 
-	public Double getAmount() {
+	public Float getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Double amount) {
+	public void setAmount(Float amount) {
 		this.amount = amount;
 	}
 	
