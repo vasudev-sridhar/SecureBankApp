@@ -3,8 +3,19 @@ package com.asu.secureBankApp.dao;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity(name = "user")
 public class UserDAO {
@@ -34,10 +45,12 @@ public class UserDAO {
 	
 	private String address;
 	
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@JoinColumn(name = "auth_role_id", nullable = false, foreignKey = @ForeignKey(name="FK_user_role"))
 	@ManyToOne(fetch = FetchType.LAZY)
 	private AuthRoleDAO authRole;
 
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable=false, insertable = false, updatable = false)
 	private List<AccountDAO> accounts;

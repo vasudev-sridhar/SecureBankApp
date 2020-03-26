@@ -1,6 +1,8 @@
 package com.asu.secureBankApp.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -42,7 +44,7 @@ public class TransactionServiceImpl implements TransactionService {
 	private AccountService accountService;
 
 	@Transactional
-	public StatusResponse transfer(TransferRequest transferReq, Authentication auth, boolean isApproved) {
+	public StatusResponse transfer(@Valid TransferRequest transferReq, Authentication auth, boolean isApproved) {
 		StatusResponse response = new StatusResponse();
 		response.setIsSuccess(false);
 
@@ -199,7 +201,8 @@ public class TransactionServiceImpl implements TransactionService {
 			response.setMsg(ErrorCodes.INVALID_ACCESS);
 			return response; 
 		}
-		TransactionDAO transaction = transactionRepository.findById(Integer.parseInt(transactionId)).orElseGet(null);
+		System.out.println(Integer.parseInt(transactionId));
+		TransactionDAO transaction = transactionRepository.findByTransactionId(Integer.parseInt(transactionId));
 		transaction.setApprovedAt(Calendar.getInstance().getTime());
 		transaction.setApprovedBy(user);
 		transaction.setStatus(TransactionStatus.APPROVED);
@@ -228,6 +231,100 @@ public class TransactionServiceImpl implements TransactionService {
 			}
 		}
 		return response;
+	}
+
+	@Override
+	@Transactional
+	public StatusResponse rejectTransaction(String transactionId, Authentication auth) {
+		StatusResponse response = new StatusResponse();
+		response.setIsSuccess(false);
+		TransactionDAO transaction = transactionRepository.findByTransactionId(Integer.parseInt(transactionId));
+		UserDAO user = userRepository.findByUsername(auth.getPrincipal().toString());
+		if(transaction == null) {
+			response.setMsg(ErrorCodes.ID_NOT_FOUND);
+			return response;
+		}
+		transaction.setStatus(TransactionStatus.DECLINED);
+		transaction.setApprovedAt(Calendar.getInstance().getTime());
+		transaction.setApprovedBy(user);
+		transactionRepository.save(transaction);
+		response.setIsSuccess(true);
+		response.setMsg(ErrorCodes.SUCCESS);
+		return response;
+	}
+
+	@Override
+	public List<TransactionDAO> getTransaction(Integer type, Integer status, Authentication auth) throws Exception {
+		TransactionType tType = null;
+		if(type != null) {
+			switch(type) {
+			case 1:
+				tType = TransactionType.CREDIT;
+				break;
+			case 2:
+				tType = TransactionType.DEBIT;
+				break;
+			case 3:
+				tType = TransactionType.TRANSFER;
+				break;
+			default:
+				throw new Exception("Type should be between 1,3");				
+			}
+		}
+		TransactionStatus tStatus = null;
+		if(status != null) {
+			switch(status) {
+			case 1:
+				tStatus = TransactionStatus.APPROVED;
+				break;
+			case 2:
+				tStatus = TransactionStatus.DECLINED;
+				break;
+			case 3:
+				tStatus = TransactionStatus.PENDING;
+				break;
+			default:
+				throw new Exception("Status should be between 1,3");
+			}
+			
+		}
+		UserDAO user = userRepository.findByUsername(auth.getPrincipal().toString());
+		if(tStatus == TransactionStatus.APPROVED || tStatus == TransactionStatus.DECLINED) {
+			RoleType authRoleType = user.getAuthRole()
+					.getRoleType();
+			if(!Util.isEmployee(authRoleType)) {
+				throw new Exception(ErrorCodes.INVALID_ACCESS);
+			}
+		}
+		List<TransactionStatus> statuses = new ArrayList<>();
+		if(tStatus == null) {
+			statuses.add(TransactionStatus.APPROVED);
+			statuses.add(TransactionStatus.COMPLETED);
+		} else {
+			statuses.add(tStatus);
+		}
+		List<TransactionDAO> responses= null;
+		if(tStatus == TransactionStatus.APPROVED || tStatus == TransactionStatus.DECLINED)
+			responses = transactionRepository.findByApprovedByAndStatusIn(user, statuses);
+		else if (tStatus == TransactionStatus.PENDING)
+			responses = transactionRepository.findByStatusIn(statuses);
+		else
+			responses = transactionRepository.findByFromAccount_User(user);
+		for(TransactionDAO t : responses) {
+			System.out.println("fixing...");
+			UserDAO createdBy = t.getCreatedBy(); 
+			createdBy.setAccounts(null);
+			createdBy.setAuthRole(null);
+			t.setCreatedBy(createdBy);
+			t.getFromAccount().setUser(null);;
+			if(t.getToAccount() != null)
+				t.getToAccount().setUser(null);
+			if(t.getApprovedBy() != null) {
+				t.getApprovedBy().setAuthRole(null);
+				t.getApprovedBy().setAccounts(null);
+			}
+		}
+		return responses;
 	}
 
 

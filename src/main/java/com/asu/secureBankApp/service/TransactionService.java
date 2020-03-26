@@ -1,5 +1,7 @@
 package com.asu.secureBankApp.service;
 
+import java.util.List;
+
 import org.springframework.security.core.Authentication;
 
 import com.asu.secureBankApp.Request.TransferRequest;
@@ -17,5 +19,9 @@ public interface TransactionService {
 	
 	StatusResponse approveTransaction(String transactionId, Authentication auth);
 	
+	StatusResponse rejectTransaction(String transactionId, Authentication auth);
+	
 	StatusResponse submitTransactionRequest(TransactionDAO transactionDAO);
+	
+	List<TransactionDAO> getTransaction(Integer type, Integer status, Authentication auth) throws Exception;
 }

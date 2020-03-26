@@ -1,9 +1,14 @@
 package com.asu.secureBankApp.Request;
 
+import javax.validation.constraints.NotNull;
+
 public class TransferRequest {
 
+	@NotNull
 	private int fromAccNo;
 	private int toAccNo;
+	
+	@NotNull
 	private Float transferAmount;
 	
 	public int getFromAccNo() {

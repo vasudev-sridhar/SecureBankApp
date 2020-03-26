@@ -39,11 +39,11 @@ public class TransactionDAO {
     private TransactionStatus status;
 
     @JoinColumn(name = "created_by", nullable = false, foreignKey = @ForeignKey(name="FK_TRANSACTION_USER_CREATED"))
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private UserDAO createdBy;
     
     @JoinColumn(name = "approved_by", nullable = false, foreignKey = @ForeignKey(name="FK_TRANSACTION_USER_APPROVED"))
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private UserDAO approvedBy;
     
     @Column(name="approved_at")
@@ -51,11 +51,11 @@ public class TransactionDAO {
     
     @NotNull(message="Account number cannot be empty")
     @JoinColumn(name = "from_account", nullable = false, foreignKey = @ForeignKey(name="FK_TRANSACTION_ACCOUNT_FROM"))
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@ManyToOne(fetch = FetchType.EAGER)
     private AccountDAO fromAccount;
 
     @JoinColumn(name = "to_account", nullable = false, foreignKey = @ForeignKey(name="FK_TRANSACTION_ACCOUNT_TO"))
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@ManyToOne(fetch = FetchType.EAGER)
     private AccountDAO toAccount;
 
     public Integer getTransactionId() {
