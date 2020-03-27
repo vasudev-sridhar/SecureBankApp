@@ -1,16 +1,18 @@
 package com.asu.secureBankApp.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.asu.secureBankApp.Repository.AccountRepository;
 import com.asu.secureBankApp.Repository.UserRepository;
-import com.asu.secureBankApp.Request.UpdateBalanceRequest;
 import com.asu.secureBankApp.Request.UpdateInterestRequest;
 import com.asu.secureBankApp.Response.AccountResponses;
 import com.asu.secureBankApp.Response.StatusResponse;
@@ -28,6 +30,8 @@ public class AccountServiceImpl implements AccountService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
 	@Transactional
@@ -87,6 +91,16 @@ public class AccountServiceImpl implements AccountService {
 		}
 		response.setAccounts(accounts);
 		return response;
+	}
+
+	@Override
+	public String accountToString(Map<String, Object> accountMap) throws JsonProcessingException {
+		return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(accountMap);
+	}
+
+	@Override
+	public AccountDAO stringToAccount(String accountString) throws JsonProcessingException {
+		return objectMapper.readValue(accountString, AccountDAO.class);
 	}
 
 }

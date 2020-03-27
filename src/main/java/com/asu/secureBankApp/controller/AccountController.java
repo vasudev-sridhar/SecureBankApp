@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
 import com.asu.secureBankApp.Repository.AccountRepository;
 import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.Request.UpdateBalanceRequest;
@@ -55,6 +56,10 @@ public class AccountController {
 	public @ResponseBody StatusResponse createNewAccount(@RequestBody @Valid CreateAccountReqDAO createAccountReqDAO) {
 		StatusResponse response = accountService.createAccount(createAccountReqDAO);
 		return response;
+	}
+
+	@PostMapping(value = "/newAccount", consumes =  {"application/json"})
+	public @ResponseBody void startNewAccount (AccountDAO account, Authentication authentication) {
 	}
 
 	@PatchMapping(value = "/updateInterest", consumes = { "application/json" })
