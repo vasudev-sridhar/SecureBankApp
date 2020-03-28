@@ -41,7 +41,7 @@ public class NewAccountRequestController {
     public HashMap<String, Object> decline(@PathVariable("id") int id, Authentication authentication)  throws IOException {
 		
 		AccountRequestDAO accountRequest = accountRequestService.getAccountRequestByReqId(new Long(id));
-		HashMap<String, Object> response = accountRequestService.getApproval(accountRequest, authentication);
+		HashMap<String, Object> response = accountRequestService.decline(accountRequest, authentication);
         
         return response;
     }

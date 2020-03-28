@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import com.asu.secureBankApp.Config.Constants;
 import com.asu.secureBankApp.Repository.AccountRepository;
 import com.asu.secureBankApp.Repository.AccountRequestRepository;
+import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.dao.AccountDAO;
 import com.asu.secureBankApp.dao.AccountRequestDAO;
 import com.asu.secureBankApp.dao.UserDAO;
@@ -46,6 +47,9 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 	
 	@Autowired
 	SystemLoggerService systemLoggerService;
+	
+	@Autowired
+	UserRepository userRepository;
 
 	@Override
 	public HashMap<String, Object> getList(int page, Authentication authentication) {
@@ -89,7 +93,8 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 	@Override
 	public HashMap<String, Object> getApproval(AccountRequestDAO accountRequest, Authentication authentication) {
 		
-		UserDAO user = bankUserService.getUserByEmail(authentication.getName());
+		
+		UserDAO user = userRepository.findByUsername(authentication.getName());
 		HashMap<String, Object> response = new HashMap<>();
 //		Long userId =  employeeService.findUserByEmail(authentication.getName());
 //        String name = employeeService.getEmployeeById(userId).getEmployee_name();
@@ -99,13 +104,13 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 			try {
 				attributes = accountService.stringToAccount(accountString);
 	            AccountDAO account = new AccountDAO();
-	            account.setId((int)attributes.get("accountNo"));
 	            account.setUser(user);
-	            double balance = (double)attributes.get("balance");
-	            account.setBalance((double)balance);
+//	            int balance = (int) attributes.get("balance");
+	            account.setBalance(new Double(attributes.get("balance").toString()));
 	            account.setRoutingNo((int)attributes.get("routingNo"));
 	            account.setAccountType((Integer)attributes.get("accountType"));
-	            double interest = (double)attributes.get("interest");
+//	            int attrInterest = (int) attributes.get("interest");
+	            double interest = (new Double(attributes.get("interest").toString()));
 	            account.setInterest((double)interest);
 	            Timestamp ts=new Timestamp(System.currentTimeMillis());  
 	            Date date = new Date(ts.getTime());
@@ -138,8 +143,8 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 
 	@Override
 	public HashMap<String, Object> decline(AccountRequestDAO accountRequest, Authentication authentication) {
-		
-		UserDAO user = bankUserService.getUserByEmail(authentication.getName());
+
+		UserDAO user = userRepository.findByUsername(authentication.getName());
 		HashMap<String, Object> response = new HashMap<>();
         Timestamp ts=new Timestamp(System.currentTimeMillis());
         Date approvedAt = new Date(ts.getTime());

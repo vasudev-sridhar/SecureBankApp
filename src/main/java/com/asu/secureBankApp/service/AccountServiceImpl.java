@@ -165,8 +165,8 @@ public class AccountServiceImpl implements AccountService {
 		accountMap.put("accountType", account.getAccountType());
 		accountMap.put("routingNo", routingNumber);
 		accountMap.put("userId", userId);
-		accountMap.put("balance", 0);
-		accountMap.put("interest", 10);
+		accountMap.put("balance", 0.0);
+		accountMap.put("interest", 10.0);
 		return accountMap;
 	}
 
