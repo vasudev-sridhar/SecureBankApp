@@ -31,7 +31,7 @@ import com.asu.secureBankApp.dao.CreateAccountReqDAO;
 import com.asu.secureBankApp.service.AccountService;
 
 @Controller
-@RequestMapping("/api/account")
+@RequestMapping("/account")
 public class AccountController {
 
 	@Autowired
