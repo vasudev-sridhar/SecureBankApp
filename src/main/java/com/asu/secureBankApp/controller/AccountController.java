@@ -50,7 +50,7 @@ public class AccountController {
 		AccountResponses response = new AccountResponses();
 		System.out.println("Auth1:" + auth);
 		System.out.println("Auth: " + auth.getName() + " " + auth.getAuthorities().size());
-		List<AccountDAO> accounts = accountRepository.findByUserId(Integer.valueOf(userId));
+		List<AccountDAO> accounts = accountRepository.findByUserId(Long.parseLong(userId));
 		for(AccountDAO account : accounts) {
 			account.setUser(null);
 		}

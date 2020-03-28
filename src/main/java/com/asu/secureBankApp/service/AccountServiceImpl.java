@@ -101,7 +101,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public AccountResponses getAccounts(String userId) {
 		AccountResponses response = new AccountResponses();
-		List<AccountDAO> accounts = accountRepository.findByUserId(Integer.valueOf(userId));
+		List<AccountDAO> accounts = accountRepository.findByUserId(Long.parseLong(userId));
 		for(AccountDAO account : accounts) {
 			account.setUser(null);
 		}

@@ -13,6 +13,6 @@ import com.asu.secureBankApp.dao.AccountRequestDAO;
 @Repository
 public interface AccountRepository extends JpaRepository<AccountDAO, Integer> {
 
-	List<AccountDAO> findByUserId(int userId);
+	List<AccountDAO> findByUserId(Long userId);
 	
 }
