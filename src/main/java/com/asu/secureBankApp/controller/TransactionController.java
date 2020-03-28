@@ -28,32 +28,33 @@ public class TransactionController {
 	@Autowired
 	private TransactionService transactionService;
 
-	@PostMapping(value = "/transfer", consumes = { "application/json" })
+	@PostMapping(value = "/transfer")
 	public StatusResponse transfer(@RequestBody @Valid TransferRequest transferReq, Authentication auth) {
 		return transactionService.transfer(transferReq, auth, false);
 	}
 
-	@PostMapping(value = "/balance", consumes = { "application/json" })
+	@PostMapping(value = "/balance")
 	public @ResponseBody StatusResponse updateBalance(@RequestBody @Valid UpdateBalanceRequest updateBalanceRequest,
 			Authentication auth) {
 		return transactionService.updateBalance(updateBalanceRequest, auth, false);
 	}
 
-	@PostMapping(value = "/approve/{transaction_id}", consumes = { "application/json" })
+	@PostMapping(value = "/approve/{transaction_id}")
 	public @ResponseBody StatusResponse approveTransaction(@PathVariable(value = "transaction_id") String transactionId,
 			Authentication auth) {
 		return transactionService.approveTransaction(transactionId, auth);
 	}
 
-	@PostMapping(value = "/reject/{transaction_id}", consumes = { "application/json" })
+	@PostMapping(value = "/reject/{transaction_id}")
 	public @ResponseBody StatusResponse rejectTransaction(@PathVariable(value = "transaction_id") String transactionId,
 			Authentication auth) {
 		return transactionService.rejectTransaction(transactionId, auth);
 	}
 
-	@GetMapping(value = "/get", consumes = { "application/json" })
+	@GetMapping(value = "/get")
 	public @ResponseBody List<TransactionDAO> getTransaction(@RequestParam(required = false) Integer type,
-			@RequestParam(required = false) Integer status, Authentication auth) throws Exception {
-		return transactionService.getTransaction(type, status, auth);
+			@RequestParam(required = false) Integer status, @RequestParam(required = false) String userName,
+			Authentication auth) throws Exception {
+		return transactionService.getTransaction(type, status,  userName, auth);
 	}
 }

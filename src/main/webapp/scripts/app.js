@@ -3,12 +3,17 @@
 // declare modules
 angular.module('Authentication', []);
 angular.module('Dashboard', []);
+angular.module('TransactionRequest', []);
+angular.module('CreditDebit', []);
 
 angular.module('SecureBankApp', [
     'Authentication',
     'Dashboard',
+    'TransactionRequest',
+    'CreditDebit',
     'ui.router',
-    'ngCookies'
+    'ngCookies',
+    'anguFixedHeaderTable'
 ])
  
 .config(['$stateProvider','$urlRouterProvider',function ($stateProvider, $urlRouterProvider) {
@@ -24,7 +29,18 @@ angular.module('SecureBankApp', [
         	url: '/dashboard',
         	templateUrl: 'modules/dashboard/views/dashboard.html',
             controller: 'DashboardController'
-        });
+        })
+        .state('Transaction', {
+        	url: '/transaction',
+        	templateUrl: 'modules/TransactionRequest/views/transaction_request_page.html',
+            controller: 'TransactionRequestController',
+        })
+        .state('CreditDebit', {
+        	url: '/credit_debit',
+        	templateUrl: 'modules/credit_debit/views/credit_debit.html',
+            controller: 'CreditDebitController',
+        })
+        ;  //credit_debit/CreditDebitController.js
  
 	$urlRouterProvider.otherwise("/login"); 
 }])

@@ -254,7 +254,7 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public List<TransactionDAO> getTransaction(Integer type, Integer status, Authentication auth) throws Exception {
+	public List<TransactionDAO> getTransaction(Integer type, Integer status, String userName, Authentication auth) throws Exception {
 		TransactionType tType = null;
 		if(type != null) {
 			switch(type) {
@@ -288,7 +288,14 @@ public class TransactionServiceImpl implements TransactionService {
 			}
 			
 		}
-		UserDAO user = userRepository.findByUsername(auth.getPrincipal().toString());
+		UserDAO user = null;
+		// For Technical Account Access where authUserId != userId
+		if(userName == null)
+			user = userRepository.findByUsername(auth.getPrincipal().toString());
+		else
+			user = userRepository.findByUsername(userName);
+		if(user == null)
+			throw new Exception(ErrorCodes.ID_NOT_FOUND);
 		if(tStatus == TransactionStatus.APPROVED || tStatus == TransactionStatus.DECLINED) {
 			RoleType authRoleType = user.getAuthRole()
 					.getRoleType();

@@ -3,13 +3,13 @@
 angular.module('Dashboard')
  
 .controller('DashboardController',
-    ['$scope', '$state','DashboardService',
-    function ($scope, $state, DashboardService) {
+    ['$scope', '$rootScope','$state','DashboardService',
+    function ($scope, $rootScope, $state, DashboardService) {
       console.log("DashboardService")
       $scope.accountList = [];
       $scope.getAccounts = function() {
     	  $scope.dataLoading = true;
-    	  DashboardService.getAccounts(1, function(response) {
+    	  DashboardService.getAccounts($rootScope.userId, function(response) {
     		  console.log("controller response")
     		  console.log(response)
     		  if(response) {
@@ -19,9 +19,21 @@ angular.module('Dashboard')
     	  })
       }
       
-      $scope.logout = function() {
+      $rootScope.goLogout = function() {
     	  //call Logout
     	  $state.go('Login')
+      }
+      
+      $rootScope.goTransaction = function() {
+    	  $state.go('Transaction')
+      }
+      
+      $rootScope.goDashboard = function() {
+    	  $state.go('Dashboard')
+      }
+      
+      $rootScope.goCreditDebit = function() {
+    	  $state.go('CreditDebit')
       }
       
       $scope.getAccounts();

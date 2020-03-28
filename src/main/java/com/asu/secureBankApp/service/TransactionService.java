@@ -23,5 +23,5 @@ public interface TransactionService {
 	
 	StatusResponse submitTransactionRequest(TransactionDAO transactionDAO);
 	
-	List<TransactionDAO> getTransaction(Integer type, Integer status, Authentication auth) throws Exception;
+	List<TransactionDAO> getTransaction(Integer type, Integer status, String userName, Authentication auth) throws Exception;
 }
