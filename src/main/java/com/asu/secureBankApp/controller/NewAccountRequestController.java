@@ -1,7 +1,9 @@
 package com.asu.secureBankApp.controller;
 
+import com.asu.secureBankApp.dao.AccountRequestDAO;
 import com.asu.secureBankApp.service.NewAccountRequestService;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,23 @@ public class NewAccountRequestController {
 		HashMap<String, Object> response = accountRequestService.getList(page, authentication);
 		return response;
 	}
+	
+	@RequestMapping(value="/approve/{id}", method= RequestMethod.POST)	
+    public HashMap<String, Object> approve(@PathVariable("id") int id, Authentication authentication)  throws IOException {
+		
+		AccountRequestDAO accountRequest = accountRequestService.getAccountRequestByReqId(new Long(id));
+		HashMap<String, Object> response = accountRequestService.getApproval(accountRequest, authentication);
         
+        return response;
+    }
+    
+	@RequestMapping(value="/decline/{id}", method= RequestMethod.POST)	
+    public HashMap<String, Object> decline(@PathVariable("id") int id, Authentication authentication)  throws IOException {
+		
+		AccountRequestDAO accountRequest = accountRequestService.getAccountRequestByReqId(new Long(id));
+		HashMap<String, Object> response = accountRequestService.getApproval(accountRequest, authentication);
+        
+        return response;
+    }
 	
 }

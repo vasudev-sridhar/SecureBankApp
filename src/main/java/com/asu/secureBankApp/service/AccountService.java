@@ -21,7 +21,10 @@ public interface AccountService {
 
 	String accountToString(Map<String, Object> accountMap) throws JsonProcessingException;
 
-	AccountDAO stringToAccount(String accountString) throws JsonProcessingException;
+	Map<String, Object> stringToAccount(String accountString) throws JsonProcessingException;
 
 	HashMap<String, String> createNewAccount(AccountDAO account, Authentication authentication) throws JsonProcessingException;
+	
+	AccountDAO saveOrUpdate(AccountDAO account);
+	
 }

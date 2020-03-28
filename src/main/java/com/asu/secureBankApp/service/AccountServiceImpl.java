@@ -115,8 +115,8 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public AccountDAO stringToAccount(String accountString) throws JsonProcessingException {
-		return objectMapper.readValue(accountString, AccountDAO.class);
+	public Map<String, Object> stringToAccount(String accountString) throws JsonProcessingException {
+		return objectMapper.readValue(accountString, Map.class);
 	}
 
 	@Override
@@ -151,6 +151,11 @@ public class AccountServiceImpl implements AccountService {
 		accountRequestRepository.save(accountRequest);
 		responseMap.put("message", "success");
 		return responseMap;
+	}
+
+	@Override
+	public AccountDAO saveOrUpdate(AccountDAO account) {
+		return accountRepository.save(account);
 	}
 
 }

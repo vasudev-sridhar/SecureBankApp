@@ -13,5 +13,9 @@ public class Constants {
 
     public static final int NEW_ACCOUNT_REQUEST_TYPE = 0;
     public static final int ADDITIONAL_ACCOUNT_REQUEST_TYPE = 1;
+    
+    public static final int STATUS_PENDING = 0;
+    public static final int STATUS_APPROVED = 1;
+    public static final int STATUS_DECLINED = 2;
 
 }
