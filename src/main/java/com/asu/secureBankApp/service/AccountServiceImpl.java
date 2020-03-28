@@ -2,6 +2,7 @@ package com.asu.secureBankApp.service;
 
 import java.security.SecureRandom;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -145,7 +146,9 @@ public class AccountServiceImpl implements AccountService {
 		accountRequest.setAccount(accountString);
 		accountRequest.setCreated_by(name);
 		accountRequest.setStatus_id(2);
-		accountRequest.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        Timestamp ts=new Timestamp(System.currentTimeMillis());
+        Date createdAt = new Date(ts.getTime());
+		accountRequest.setCreatedAt(createdAt);
 		accountRequest.setType(Constants.NEW_ACCOUNT_REQUEST_TYPE);
 		accountRequest.setRole(2);
 		accountRequestRepository.save(accountRequest);

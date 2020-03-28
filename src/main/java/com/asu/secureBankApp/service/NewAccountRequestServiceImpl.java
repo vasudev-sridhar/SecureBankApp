@@ -117,7 +117,9 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 				response.put("modelAndView", "Failed");
 			}
         }
-        accountRequest.setApproved_at(new Timestamp(System.currentTimeMillis()));
+        Timestamp ts=new Timestamp(System.currentTimeMillis());
+        Date date = new Date(ts.getTime());
+        accountRequest.setApprovedAt(date);
         accountRequest.setApproved_by(user.getName());
         accountRequest.setStatus_id(Constants.STATUS_APPROVED);
         saveOrUpdate(accountRequest);
@@ -140,7 +142,9 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 		
 		UserDAO user = bankUserService.getUserByEmail(authentication.getName());
 		HashMap<String, Object> response = new HashMap<>();
-		accountRequest.setApproved_at((new Timestamp(System.currentTimeMillis())));
+        Timestamp ts=new Timestamp(System.currentTimeMillis());
+        Date approvedAt = new Date(ts.getTime());
+		accountRequest.setApprovedAt(approvedAt);
 		accountRequest.setApproved_by(user.getName());
 		accountRequest.setStatus_id(Constants.STATUS_DECLINED);
 		saveOrUpdate(accountRequest);

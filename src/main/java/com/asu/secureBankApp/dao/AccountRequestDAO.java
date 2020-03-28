@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Map;
 
 @Entity(name = "account_request")
@@ -21,10 +22,10 @@ public class AccountRequestDAO {
     private Integer status_id;
 
     @Column(name="created_at")
-    private Timestamp created_at;
+    private Date createdAt;
 
     @Column(name="approved_at")
-    private Timestamp approved_at;
+    private Date approvedAt;
 
     @Column(name="type")
     private int type;
@@ -63,20 +64,20 @@ public class AccountRequestDAO {
 		this.status_id = status_id;
 	}
 
-	public Timestamp getCreated_at() {
-		return created_at;
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setCreated_at(Timestamp created_at) {
-		this.created_at = created_at;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 
-	public Timestamp getApproved_at() {
-		return approved_at;
+	public Date getApprovedAt() {
+		return approvedAt;
 	}
 
-	public void setApproved_at(Timestamp approved_at) {
-		this.approved_at = approved_at;
+	public void setApprovedAt(Date approvedAt) {
+		this.approvedAt = approvedAt;
 	}
 
 	public int getType() {
