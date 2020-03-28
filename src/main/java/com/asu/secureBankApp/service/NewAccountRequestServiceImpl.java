@@ -104,11 +104,12 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 	            account.setUser(user);
 	            double balance = (double)attributes.get("balance");
 	            account.setBalance((double)balance);
-//	            account.setRoutingNo((Integer)attributes.get("routing_no"));
+	            account.setRoutingNo((int)attributes.get("routing_no"));
 	            account.setAccountType((Integer)attributes.get("account_type"));
 	            double interest = (double)attributes.get("interest");
 	            account.setInterest((double)interest);
-	            Date date = new Date();
+	            Timestamp ts=new Timestamp(System.currentTimeMillis());  
+	            Date date = new Date(ts.getTime());
 	            account.setCreated(date);
 	            account.setUpdated(date);
 	            AccountDAO new_account = accountService.saveOrUpdate(account);
