@@ -1,14 +1,21 @@
 package com.asu.secureBankApp.service;
 
+import java.security.SecureRandom;
+import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import com.asu.secureBankApp.Config.Constants;
+import com.asu.secureBankApp.Repository.AccountRequestRepository;
+import com.asu.secureBankApp.dao.AccountRequestDAO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.asu.secureBankApp.Repository.AccountRepository;
@@ -29,7 +36,16 @@ public class AccountServiceImpl implements AccountService {
 	AccountRepository accountRepository;
 
 	@Autowired
+	AccountRequestRepository accountRequestRepository;
+
+	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	AccountService accountService;
+
+	@Autowired
+	BankUserService bankUserService;
 
 	ObjectMapper objectMapper = new ObjectMapper();
 
@@ -101,6 +117,40 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public AccountDAO stringToAccount(String accountString) throws JsonProcessingException {
 		return objectMapper.readValue(accountString, AccountDAO.class);
+	}
+
+	@Override
+	public HashMap<String, String> createNewAccount(AccountDAO account, Authentication authentication) throws JsonProcessingException {
+		HashMap<String, String> responseMap = new HashMap<>();
+		if(account.getAccountType() < 0 || account.getAccountType() > 2) {
+			responseMap.put("message", "You have selected the wrong account type");
+			responseMap.put("redirect", "redirect:/user");
+			return responseMap;
+		}
+		String emailId = authentication.getName();
+		SecureRandom routingRandomizer = new SecureRandom();
+		int routingNumber = routingRandomizer.nextInt(100000);
+		Long id = bankUserService.getUserByEmail(emailId).getId();
+		String name = bankUserService.getUserByUserId(id).getName();
+		AccountRequestDAO accountRequest = new AccountRequestDAO();
+		HashMap<String, Object> accountMap = new HashMap<>();
+		accountMap.put("account_no", null);
+		accountMap.put("user_id", id);
+		accountMap.put("balance", 0);
+		accountMap.put("account_type", account.getAccountType());
+		accountMap.put("routing_no", routingNumber);
+		accountMap.put("interest", 10);
+		String accountString = accountService.accountToString(accountMap);
+		accountRequest.setDescription("New Account for " +name+" : " +authentication.getName());
+		accountRequest.setAccount(accountString);
+		accountRequest.setCreated_by(name);
+		accountRequest.setStatus_id(2);
+		accountRequest.setCreated_at(new Timestamp(System.currentTimeMillis()));
+		accountRequest.setType(Constants.NEW_ACCOUNT_REQUEST_TYPE);
+		accountRequest.setRole(2);
+		accountRequestRepository.save(accountRequest);
+		responseMap.put("message", "success");
+		return responseMap;
 	}
 
 }

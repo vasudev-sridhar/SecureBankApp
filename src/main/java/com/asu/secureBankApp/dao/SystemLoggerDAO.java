@@ -15,10 +15,10 @@ public class SystemLoggerDAO {
     @Id
     @Column(name = "log_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer logId;
+    private Long logId;
 
     @Column(name = "user_id")
-    private Integer userId;
+    private Long userId;
 
     @Column(name = "log_time")
     private long logTime;
@@ -29,19 +29,19 @@ public class SystemLoggerDAO {
     @Column(name = "log_dump")
     private String logDump;
 
-    public Integer getLogId() {
+    public Long getLogId() {
         return logId;
     }
 
-    public void setLogId(Integer logId) {
+    public void setLogId(Long logId) {
         this.logId = logId;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

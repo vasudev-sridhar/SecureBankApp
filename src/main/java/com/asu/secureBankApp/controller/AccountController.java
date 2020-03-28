@@ -1,9 +1,13 @@
 package com.asu.secureBankApp.controller;
 
+import java.security.SecureRandom;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -27,7 +31,7 @@ import com.asu.secureBankApp.dao.CreateAccountReqDAO;
 import com.asu.secureBankApp.service.AccountService;
 
 @Controller
-@RequestMapping("/api//account")
+@RequestMapping("/api/account")
 public class AccountController {
 
 	@Autowired
@@ -38,6 +42,8 @@ public class AccountController {
 
 	@Autowired
 	AccountService accountService;
+
+	SecureRandom randomInt = new SecureRandom();
 
 	@GetMapping(value = "/get/{user_id}")
 	public @ResponseBody AccountResponses getAccounts(@PathVariable(value = "user_id") String userId, Authentication auth) {
@@ -59,7 +65,8 @@ public class AccountController {
 	}
 
 	@PostMapping(value = "/newAccount", consumes =  {"application/json"})
-	public @ResponseBody void startNewAccount (AccountDAO account, Authentication authentication) {
+	public @ResponseBody HashMap<String, String> startNewAccount (AccountDAO account, Authentication authentication) throws JsonProcessingException {
+		return accountService.createNewAccount(account, authentication);
 	}
 
 	@PatchMapping(value = "/updateInterest", consumes = { "application/json" })

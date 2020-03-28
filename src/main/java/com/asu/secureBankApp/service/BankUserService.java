@@ -15,4 +15,6 @@ public interface BankUserService {
     
     UserDAO getUserByEmail(String email);
 
+    UserDAO getUserByUserId(Long userId);
+
 }

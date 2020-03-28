@@ -17,7 +17,7 @@ public class SystemLoggerImpl implements SystemLoggerService{
     LogRepository logRepository;
 
     @Override
-    public void log(Integer user, String dump, String type) {
+    public void log(Long user, String dump, String type) {
         SystemLoggerDAO log = new SystemLoggerDAO();
         log.setLogDump(dump);
         log.setLogTime(System.currentTimeMillis());
