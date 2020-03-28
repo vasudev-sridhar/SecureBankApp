@@ -19,7 +19,7 @@ public class AccountRequestDAO {
     private Long request_id;
 
     @Column(name="status_id")
-    private Integer status_id;
+    private Integer statusId;
 
     @Column(name="created_at")
     private Date createdAt;
@@ -31,10 +31,10 @@ public class AccountRequestDAO {
     private int type;
 
     @Column(name="created_by")
-    private String created_by;
+    private String createdBy;
 
     @Column(name="approved_by")
-    private String approved_by;
+    private String approvedBy;
 
     @Column(name="description")
     private String description;
@@ -56,12 +56,12 @@ public class AccountRequestDAO {
 		this.request_id = request_id;
 	}
 
-	public Integer getStatus_id() {
-		return status_id;
+	public Integer getStatusId() {
+		return statusId;
 	}
 
-	public void setStatus_id(Integer status_id) {
-		this.status_id = status_id;
+	public void setStatusId(Integer statusId) {
+		this.statusId = statusId;
 	}
 
 	public Date getCreatedAt() {
@@ -88,20 +88,20 @@ public class AccountRequestDAO {
 		this.type = type;
 	}
 
-	public String getCreated_by() {
-		return created_by;
+	public String getCreatedBy() {
+		return createdBy;
 	}
 
-	public void setCreated_by(String created_by) {
-		this.created_by = created_by;
+	public void setCreatedBy(String created_by) {
+		this.createdBy = created_by;
 	}
 
-	public String getApproved_by() {
-		return approved_by;
+	public String getApprovedBy() {
+		return approvedBy;
 	}
 
-	public void setApproved_by(String approved_by) {
-		this.approved_by = approved_by;
+	public void setApprovedBy(String approved_by) {
+		this.approvedBy = approved_by;
 	}
 
 	public String getDescription() {

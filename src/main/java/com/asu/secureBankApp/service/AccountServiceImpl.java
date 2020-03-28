@@ -128,32 +128,52 @@ public class AccountServiceImpl implements AccountService {
 			responseMap.put("redirect", "redirect:/user");
 			return responseMap;
 		}
-		String emailId = authentication.getName();
-		SecureRandom routingRandomizer = new SecureRandom();
-		int routingNumber = routingRandomizer.nextInt(100000);
-		Long id = bankUserService.getUserByEmail(emailId).getId();
-		String name = bankUserService.getUserByUserId(id).getName();
+		int routingNumber = generateRoutingNumber();
+
+		HashMap<String, Object> accountDetailsMap = new HashMap<>();
+		accountDetailsMap = getAccountDetailsMap(authentication, account, routingNumber);
+
+		Long userId = bankUserService.getUserByEmail(authentication.getName()).getId();
+		String name = bankUserService.getUserByUserId(userId).getName();
+
+		AccountRequestDAO accountRequest = generateAccountRequest(accountDetailsMap, name);
+
+		accountRequestRepository.save(accountRequest);
+
+		responseMap.put("message", "success");
+		return responseMap;
+	}
+
+	private AccountRequestDAO generateAccountRequest(HashMap<String, Object> accountDetailsMap, String name) throws JsonProcessingException {
 		AccountRequestDAO accountRequest = new AccountRequestDAO();
-		HashMap<String, Object> accountMap = new HashMap<>();
-		accountMap.put("account_no", null);
-		accountMap.put("user_id", id);
-		accountMap.put("balance", 0);
-		accountMap.put("account_type", account.getAccountType());
-		accountMap.put("routing_no", routingNumber);
-		accountMap.put("interest", 10);
-		String accountString = accountService.accountToString(accountMap);
-		accountRequest.setDescription("New Account for " +name+" : " +authentication.getName());
+		String accountString = accountService.accountToString(accountDetailsMap);
 		accountRequest.setAccount(accountString);
-		accountRequest.setCreated_by(name);
-		accountRequest.setStatus_id(2);
-        Timestamp ts=new Timestamp(System.currentTimeMillis());
-        Date createdAt = new Date(ts.getTime());
+		accountRequest.setCreatedBy(name);
+		Timestamp ts=new Timestamp(System.currentTimeMillis());
+		Date createdAt = new Date(ts.getTime());
 		accountRequest.setCreatedAt(createdAt);
 		accountRequest.setType(Constants.NEW_ACCOUNT_REQUEST_TYPE);
 		accountRequest.setRole(2);
-		accountRequestRepository.save(accountRequest);
-		responseMap.put("message", "success");
-		return responseMap;
+		accountRequest.setStatusId(Constants.STATUS_PENDING);
+		return accountRequest;
+	}
+
+	private HashMap<String, Object> getAccountDetailsMap(Authentication authentication, AccountDAO account, int routingNumber) {
+		HashMap<String, Object> accountMap = new HashMap<>();
+		String emailId = authentication.getName();
+		Long userId = bankUserService.getUserByEmail(emailId).getId();
+		accountMap.put("accountNo", null);
+		accountMap.put("accountType", account.getAccountType());
+		accountMap.put("routingNo", routingNumber);
+		accountMap.put("userId", userId);
+		accountMap.put("balance", 0);
+		accountMap.put("interest", 10);
+		return accountMap;
+	}
+
+	private int generateRoutingNumber() {
+		SecureRandom routingRandomizer = new SecureRandom();
+		return routingRandomizer.nextInt(100000);
 	}
 
 	@Override

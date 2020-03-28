@@ -1,6 +1,5 @@
 package com.asu.secureBankApp.service;
 
-import com.asu.secureBankApp.service.BankUserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.sql.Timestamp;
@@ -100,12 +99,12 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 			try {
 				attributes = accountService.stringToAccount(accountString);
 	            AccountDAO account = new AccountDAO();
-	            account.setId((int)attributes.get("account_no"));
+	            account.setId((int)attributes.get("accountNo"));
 	            account.setUser(user);
 	            double balance = (double)attributes.get("balance");
 	            account.setBalance((double)balance);
-	            account.setRoutingNo((int)attributes.get("routing_no"));
-	            account.setAccountType((Integer)attributes.get("account_type"));
+	            account.setRoutingNo((int)attributes.get("routingNo"));
+	            account.setAccountType((Integer)attributes.get("accountType"));
 	            double interest = (double)attributes.get("interest");
 	            account.setInterest((double)interest);
 	            Timestamp ts=new Timestamp(System.currentTimeMillis());  
@@ -120,8 +119,8 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
         Timestamp ts=new Timestamp(System.currentTimeMillis());
         Date date = new Date(ts.getTime());
         accountRequest.setApprovedAt(date);
-        accountRequest.setApproved_by(user.getName());
-        accountRequest.setStatus_id(Constants.STATUS_APPROVED);
+        accountRequest.setApprovedBy(user.getName());
+        accountRequest.setStatusId(Constants.STATUS_APPROVED);
         saveOrUpdate(accountRequest);
         systemLoggerService.log(user.getId(), "Approved Request for id:"+accountRequest.getRequest_id(), "Account Approved");
         response.put("modelAndView", "redirect:/account-request/list/1");
@@ -145,8 +144,8 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
         Timestamp ts=new Timestamp(System.currentTimeMillis());
         Date approvedAt = new Date(ts.getTime());
 		accountRequest.setApprovedAt(approvedAt);
-		accountRequest.setApproved_by(user.getName());
-		accountRequest.setStatus_id(Constants.STATUS_DECLINED);
+		accountRequest.setApprovedBy(user.getName());
+		accountRequest.setStatusId(Constants.STATUS_DECLINED);
 		saveOrUpdate(accountRequest);
         systemLoggerService.log(user.getId(), "Declined Request for id:"+accountRequest.getRequest_id(), "Declined");
         response.put("modelAndView", "redirect:/account-request/list/1");
