@@ -36,5 +36,9 @@ angular.module('Dashboard')
     	  $state.go('CreditDebit')
       }
       
+      $rootScope.goTransferFunds = function() {
+    	  $state.go('TransferFunds')
+      }
+      
       $scope.getAccounts();
     }]);

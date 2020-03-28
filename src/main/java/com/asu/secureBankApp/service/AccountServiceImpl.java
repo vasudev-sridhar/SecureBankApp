@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.asu.secureBankApp.Repository.AccountRepository;
@@ -83,7 +84,20 @@ public class AccountServiceImpl implements AccountService {
 		AccountResponses response = new AccountResponses();
 		List<AccountDAO> accounts = accountRepository.findByUserId(Integer.valueOf(userId));
 		for(AccountDAO account : accounts) {
-			account.setUser(null);
+			account.getUser().setAuthRole(null);
+			account.getUser().setAccounts(null);
+		}
+		response.setAccounts(accounts);
+		return response;
+	}
+
+	@Override
+	public AccountResponses getAllAccounts() {
+		AccountResponses response = new AccountResponses();
+		List<AccountDAO> accounts = accountRepository.findAll();
+		for(AccountDAO account : accounts) {
+			account.getUser().setAuthRole(null);
+			account.getUser().setAccounts(null);
 		}
 		response.setAccounts(accounts);
 		return response;

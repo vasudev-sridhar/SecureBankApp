@@ -1,7 +1,5 @@
 package com.asu.secureBankApp.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +15,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.asu.secureBankApp.Repository.AccountRepository;
 import com.asu.secureBankApp.Repository.UserRepository;
-import com.asu.secureBankApp.Request.UpdateBalanceRequest;
 import com.asu.secureBankApp.Request.UpdateInterestRequest;
 import com.asu.secureBankApp.Response.AccountResponses;
 import com.asu.secureBankApp.Response.StatusResponse;
-import com.asu.secureBankApp.dao.AccountDAO;
 import com.asu.secureBankApp.dao.CreateAccountReqDAO;
 import com.asu.secureBankApp.service.AccountService;
 
 @Controller
-@RequestMapping("/api//account")
+@RequestMapping("/api/account")
 public class AccountController {
 
 	@Autowired
@@ -40,15 +36,12 @@ public class AccountController {
 
 	@GetMapping(value = "/get/{user_id}")
 	public @ResponseBody AccountResponses getAccounts(@PathVariable(value = "user_id") String userId, Authentication auth) {
-		AccountResponses response = new AccountResponses();
-		System.out.println("Auth1:" + auth);
-		System.out.println("Auth: " + auth.getName() + " " + auth.getAuthorities().size());
-		List<AccountDAO> accounts = accountRepository.findByUserId(Integer.valueOf(userId));
-		for(AccountDAO account : accounts) {
-			account.setUser(null);
-		}
-		response.setAccounts(accounts);
-		return response;
+		return accountService.getAccounts(userId);
+	}
+	
+	@GetMapping(value = "/get")
+	public @ResponseBody AccountResponses getAllAccounts() {
+		return accountService.getAllAccounts();
 	}
 
 	@PostMapping(value = "/createAccount", consumes = { "application/json" })

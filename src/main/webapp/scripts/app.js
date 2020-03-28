@@ -5,12 +5,14 @@ angular.module('Authentication', []);
 angular.module('Dashboard', []);
 angular.module('TransactionRequest', []);
 angular.module('CreditDebit', []);
+angular.module('TransferFunds', []);
 
 angular.module('SecureBankApp', [
     'Authentication',
     'Dashboard',
     'TransactionRequest',
     'CreditDebit',
+    'TransferFunds',
     'ui.router',
     'ngCookies',
     'anguFixedHeaderTable'
@@ -39,6 +41,11 @@ angular.module('SecureBankApp', [
         	url: '/credit_debit',
         	templateUrl: 'modules/credit_debit/views/credit_debit.html',
             controller: 'CreditDebitController',
+        })
+        .state('TransferFunds', {
+        	url: '/transfer_funds',
+        	templateUrl: 'modules/transfer_funds/views/transfer_funds.html',
+            controller: 'TransferFundsController',
         })
         ;  //credit_debit/CreditDebitController.js
  

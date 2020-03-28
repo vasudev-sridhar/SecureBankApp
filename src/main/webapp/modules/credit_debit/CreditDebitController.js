@@ -17,7 +17,7 @@ angular.module('CreditDebit')
 	    $scope.creditAccount = function() {
 	    	console.log($scope.credit);
 	    	console.log($scope.accountNo);
-    		if(!$scope.credit || $scope.credit < 0) {
+    		if(!$scope.credit || $scope.credit <= 0) {
     			$scope.isCreditSuccess = false;
     			$scope.creditErrorMsg = "Amount must be greater than zero";
     			return;
@@ -42,7 +42,7 @@ angular.module('CreditDebit')
 	    $scope.debitAccount = function() {
 	    	console.log($scope.debit);
 	    	console.log($scope.accountNo);
-	    	if(!$scope.debit || $scope.debit < 0) {
+	    	if(!$scope.debit || $scope.debit <= 0) {
     			$scope.isDebitSuccess = false;
     			$scope.debitErrorMsg = "Amount must be greater than zero";
     			return;
