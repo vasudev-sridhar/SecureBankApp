@@ -129,7 +129,6 @@ public class AccountServiceImpl implements AccountService {
 			return responseMap;
 		}
 		int routingNumber = generateRoutingNumber();
-
 		HashMap<String, Object> accountDetailsMap = new HashMap<>();
 		accountDetailsMap = getAccountDetailsMap(authentication, account, routingNumber);
 
