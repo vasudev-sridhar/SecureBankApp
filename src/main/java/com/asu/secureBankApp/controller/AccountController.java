@@ -65,7 +65,7 @@ public class AccountController {
 	}
 
 	@PostMapping(value = "/newAccount", consumes =  {"application/json"})
-	public @ResponseBody HashMap<String, String> startNewAccount (AccountDAO account, Authentication authentication) throws JsonProcessingException {
+	public @ResponseBody HashMap<String, String> startNewAccount (@RequestBody AccountDAO account, Authentication authentication) throws JsonProcessingException {
 		return accountService.createNewAccount(account, authentication);
 	}
 
