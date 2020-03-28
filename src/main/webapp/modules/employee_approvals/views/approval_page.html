@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html ng-app"SecureBankApp">
   <head>
     <title>Approval Page</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -48,58 +48,79 @@
   <body>
     <div id="base" class="">
 
-      <!-- Unnamed (Rectangle) -->
-      <div id="u15" class="ax_default box_1">
-        <div id="u15_div" class=""></div>
-        <div id="u15_text" class="text " style="display:none; visibility: hidden">
-          <p></p>
-        </div>
+      <div>
+          <!-- Unnamed (Rectangle) -->
+          <div id="u18" class="ax_default label">
+              <div id="u18_div" class=""></div>
+              <div id="u18_text" class="text ">
+                  <p><span>Transaction Approvals</span></p>
+              </div>
+          </div>
+          <div>
+              <table>
+                  <thead>
+                      <tr>
+                          <th style="text-align:center">Amount</th>
+                          <th style="text-align:center">Type</th>
+                          <th style="text-align:center">Status</th>
+                          <th style="text-align:center">Time</th>
+                          <th style="text-align:center">Approve</th>
+                          <th style="text-align:center">Deny</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr ng-repeat="item in transactionList">
+                          <td style="text-align:right;padding-right: 25px;"><i class="fa w3-text-blue w3-large"></i>{{item.transactionAmount}}</td>
+                          <td style="text-align:center">{{item.type}}</td>
+                          <td style="text-align:center">{{item.status}}</td>
+                          <td style="text-align:center">{{item.transactionTimestamp}}</td>
+                          <td style="text-align:center">
+                              <button ng-click="RespondToPendingTransactions(item.id,True)">Approve</button>
+                          </td>
+                          <td style="text-align:center">
+                              <button ng-click="RespondToPendingTransactions(item.id,False)">Deny</button>
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
       </div>
 
-      <!-- Unnamed (Text Field) -->
-      <div id="u16" class="ax_default text_field">
-        <div id="u16_div" class=""></div>
-        <input id="u16_input" type="text" value="" class="u16_input"/>
+      <div>
+          <!-- Unnamed (Rectangle) -->
+          <div id="u19" class="ax_default label">
+              <div id="u19_div" class=""></div>
+              <div id="u19_text" class="text ">
+                  <p><span>Account Approvals</span></p>
+              </div>
+          </div>
+          <div>
+              <table>
+                  <thead>
+                      <tr>
+                          <th style="text-align:center">Type</th>
+                          <th style="text-align:center">Status</th>
+                          <th style="text-align:center">Time</th>
+                          <th style="text-align:center">Approve</th>
+                          <th style="text-align:center">Deny</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr ng-repeat="item in accountList">
+                          <td style="text-align:right;padding-right: 25px;"><i class="fa w3-text-blue w3-large"></i>{{item.type}}</td>
+                          <td style="text-align:center">{{item.status}}</td>
+                          <td style="text-align:center">{{item.transactionTimestamp}}</td>
+                          <td style="text-align:center">
+                              <button ng-click="RespondToPendingAccounts(item.id,True)">Approve</button>
+                          </td>
+                          <td style="text-align:center">
+                              <button ng-click="RespondToPendingAccounts(item.id,False)">Deny</button>
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
       </div>
-
-      <!-- Unnamed (Rectangle) -->
-      <div id="u17" class="ax_default button">
-        <div id="u17_div" class=""></div>
-        <div id="u17_text" class="text ">
-          <p><span>Approve</span></p>
-        </div>
-      </div>
-
-      <!-- Unnamed (Rectangle) -->
-      <div id="u18" class="ax_default label">
-        <div id="u18_div" class=""></div>
-        <div id="u18_text" class="text ">
-          <p><span>Approvals</span></p>
-        </div>
-      </div>
-
-      <!-- Unnamed (Rectangle) -->
-      <div id="u19" class="ax_default label">
-        <div id="u19_div" class=""></div>
-        <div id="u19_text" class="text " style="display:none; visibility: hidden">
-          <p></p>
-        </div>
-      </div>
-
-      <!-- Unnamed (Rectangle) -->
-      <div id="u20" class="ax_default button">
-        <div id="u20_div" class=""></div>
-        <div id="u20_text" class="text ">
-          <p><span>Deny</span></p>
-        </div>
-      </div>
-
-      <!-- Unnamed (Text Field) -->
-      <div id="u21" class="ax_default text_field">
-        <div id="u21_div" class=""></div>
-        <input id="u21_input" type="text" value="" class="u21_input"/>
-      </div>
-    </div>
     <script src="modules/resources/scripts/axure/ios.js"></script>
   </body>
 </html>
