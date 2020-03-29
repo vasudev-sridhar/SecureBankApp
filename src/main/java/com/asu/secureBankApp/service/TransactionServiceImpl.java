@@ -1,7 +1,10 @@
 package com.asu.secureBankApp.service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -64,6 +67,8 @@ public class TransactionServiceImpl implements TransactionService {
 		UserDAO user = userRepository.findByUsername(auth.getPrincipal().toString());
 		RoleType authRoleType = user.getAuthRole()
 				.getRoleType();
+		
+		// Can't update someone else's account if authUser is not employee
 		if (authRoleType != accRoleType && !Util.isEmployee(authRoleType)) {
 			response.setMsg(ErrorCodes.INVALID_ACCESS);
 			return response;
@@ -78,8 +83,9 @@ public class TransactionServiceImpl implements TransactionService {
 		
 		TransactionDAO transactionDAO = new TransactionDAO();
 		
+		float transactionSum = transactionRepository.dailyTransactionSum(user);
 		boolean approvalRequired = !Util.isEmployee(authRoleType)
-				&& transferReq.getTransferAmount() > Constants.TRANSFER_CRITICAL_LIMIT;
+				&& (transactionSum + transferReq.getTransferAmount()) > Constants.TRANSFER_CRITICAL_LIMIT;
 				
 		if (approvalRequired) {
 			transactionDAO.setCreatedBy(user);
@@ -88,16 +94,18 @@ public class TransactionServiceImpl implements TransactionService {
 			transactionDAO.setTransactionAmount(Math.abs(transferReq.getTransferAmount()));
 			transactionDAO.setType(TransactionType.TRANSFER);
 			transactionDAO.setStatus(TransactionStatus.PENDING);
-			response = submitTransactionRequest(transactionDAO);
-			if(response.getIsSuccess())
-				response.setMsg(ErrorCodes.SUBMIT_APPROVAL);
+			transactionDAO.setTransactionTimestamp(Calendar.getInstance().getTime());
+			transactionRepository.save(transactionDAO);
+			response.setIsSuccess(true);
+			response.setMsg(ErrorCodes.SUBMIT_APPROVAL);
 		} else {
 			if(doUpdateBalance(fromUpdateBalanceRequest) && doUpdateBalance(toUpdateBalanceRequest)) {
+				// Don't create new Transaction record if already approved. Update existing one
 				if(isApproved) {
 					response.setIsSuccess(true);
 					return response;
 				}
-					
+				// Executed if approval not required	
 				transactionDAO.setCreatedBy(user);
 				transactionDAO.setFromAccount(fromAccount);
 				transactionDAO.setToAccount(toAccount);
@@ -134,12 +142,15 @@ public class TransactionServiceImpl implements TransactionService {
 		System.out.println("user.getAuthRole(): " + user.getAuthRole());
 		RoleType authRoleType = user.getAuthRole()
 				.getRoleType();
+		
+		// Can't update someone else's account if authUser is not employee. Ignore condition if it is called from transfer function as it is internal
 		if (!isTransfer && authRoleType != accRoleType && !Util.isEmployee(authRoleType)) {
 			response.setMsg(ErrorCodes.INVALID_ACCESS);
 			return response;
 		}
+		float transactionSum = transactionRepository.dailyTransactionSum(user);
 		boolean approvalRequired = !Util.isEmployee(authRoleType)
-				&& updateBalanceRequest.getAmount() > Constants.UPDATE_BALANCE_CRITICAL_LIMIT;
+				&& (transactionSum + updateBalanceRequest.getAmount()) > Constants.UPDATE_BALANCE_CRITICAL_LIMIT;
 		TransactionDAO transactionDAO = new TransactionDAO();
 		transactionDAO.setCreatedBy(user);
 		transactionDAO.setFromAccount(account);
@@ -147,9 +158,10 @@ public class TransactionServiceImpl implements TransactionService {
 		transactionDAO.setType((updateBalanceRequest.getAmount()>0)?TransactionType.CREDIT : TransactionType.DEBIT);
 		if (approvalRequired) {
 			transactionDAO.setStatus(TransactionStatus.PENDING);
-			response = submitTransactionRequest(transactionDAO);
-			if(response.getIsSuccess())
-				response.setMsg(ErrorCodes.SUBMIT_APPROVAL);
+			transactionDAO.setTransactionTimestamp(Calendar.getInstance().getTime());
+			transactionRepository.save(transactionDAO);
+			response.setIsSuccess(true);
+			response.setMsg(ErrorCodes.SUBMIT_APPROVAL);
 		} else {
 			if(doUpdateBalance(updateBalanceRequest)) {
 				transactionDAO.setStatus(TransactionStatus.COMPLETED);
@@ -178,6 +190,9 @@ public class TransactionServiceImpl implements TransactionService {
 		return true;
 	}
 	
+	/*
+	 * Only called when a Transaction is TransactionStatus.CONFIRMED or APPROVED 
+	 */
 	@Override
 	@Transactional
 	public StatusResponse submitTransactionRequest(@Valid TransactionDAO transactionDAO) {
@@ -217,7 +232,7 @@ public class TransactionServiceImpl implements TransactionService {
 			} else {
 				throw new RuntimeException();
 			}
-		} else {  // TRANSFER
+		} else {  // TRANSFER - Create request and call transfer function internally with isApproved=true
 			TransferRequest transferReq = new TransferRequest();
 			transferReq.setFromAccNo(transaction.getFromAccount().getId());
 			transferReq.setToAccNo(transaction.getToAccount().getId());
@@ -285,24 +300,26 @@ public class TransactionServiceImpl implements TransactionService {
 				break;
 			default:
 				throw new Exception("Status should be between 1,3");
-			}
-			
+			}		
 		}
-		UserDAO user = null;
-		// For Technical Account Access where authUserId != userId
-		if(userName == null)
-			user = userRepository.findByUsername(auth.getPrincipal().toString());
-		else
+		UserDAO authUser = userRepository.findByUsername(auth.getPrincipal().toString()), user = null;
+		// For Technical Account Access where authUser != user
+		if(userName != null) {
 			user = userRepository.findByUsername(userName);
-		if(user == null)
-			throw new Exception(ErrorCodes.ID_NOT_FOUND);
-		if(tStatus == TransactionStatus.APPROVED || tStatus == TransactionStatus.DECLINED) {
-			RoleType authRoleType = user.getAuthRole()
-					.getRoleType();
-			if(!Util.isEmployee(authRoleType)) {
-				throw new Exception(ErrorCodes.INVALID_ACCESS);
-			}
+			if(user == null)
+				throw new Exception(ErrorCodes.ID_NOT_FOUND);			
 		}
+		// Can't access someone else's account if authUser is not employee
+		if(user != null && !Util.isEmployee(authUser.getAuthRole().getRoleType()))
+			throw new Exception(ErrorCodes.INVALID_ACCESS);
+		
+		// Under TAC for someone, can't see PENDING,APPROVED or COMPLETED transactions. Call without status
+		if(tStatus != null && user != null && Util.isEmployee(user.getAuthRole().getRoleType()))
+			throw new Exception(ErrorCodes.INVALID_ACCESS);
+		
+		// All validations done. Use only user variable from here
+		if(user == null)
+			user = authUser;
 		List<TransactionStatus> statuses = new ArrayList<>();
 		if(tStatus == null) {
 			statuses.add(TransactionStatus.APPROVED);
@@ -315,8 +332,9 @@ public class TransactionServiceImpl implements TransactionService {
 			responses = transactionRepository.findByApprovedByAndStatusIn(user, statuses);
 		else if (tStatus == TransactionStatus.PENDING)
 			responses = transactionRepository.findByStatusIn(statuses);
-		else
+		else {
 			responses = transactionRepository.findByFromAccount_User(user);
+		}
 		for(TransactionDAO t : responses) {
 			System.out.println("fixing...");
 			UserDAO createdBy = t.getCreatedBy(); 
@@ -334,5 +352,10 @@ public class TransactionServiceImpl implements TransactionService {
 		return responses;
 	}
 
+	private List<TransactionDAO> getTransactionsForToday(UserDAO user) {
+		ZoneId defaultZoneId = ZoneId.systemDefault();
+		Date date = Date.from(LocalDate.now().atStartOfDay(defaultZoneId).toInstant());
+		return transactionRepository.findByFromAccount_UserAndTransactionTimestampGreaterThan(user, date);
+	}
 
 }
