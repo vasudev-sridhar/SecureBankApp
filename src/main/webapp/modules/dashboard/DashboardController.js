@@ -40,5 +40,9 @@ angular.module('Dashboard')
     	  $state.go('TransferFunds')
       }
       
+      $rootScope.goHelpandSupport = function() {
+    	  $state.go('HelpCenter')
+      }
+      
       $scope.getAccounts();
     }]);

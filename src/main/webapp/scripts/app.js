@@ -47,6 +47,11 @@ angular.module('SecureBankApp', [
         	templateUrl: 'modules/transfer_funds/views/transfer_funds.html',
             controller: 'TransferFundsController',
         })
+         .state('HelpCenter', {
+        	url: '/help_center',
+        	templateUrl: 'modules/help/views/help_and_support_center.html',
+            controller: 'helpAndSupportController',
+        })
         ;  //credit_debit/CreditDebitController.js
  
 	$urlRouterProvider.otherwise("/login"); 
