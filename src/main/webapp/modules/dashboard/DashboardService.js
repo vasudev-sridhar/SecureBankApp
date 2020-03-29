@@ -9,25 +9,22 @@ angular.module('Dashboard')
 
         service.getAccounts = function (userid, callback) {
         	console.log("getAccounts...");
-            /* Dummy authentication for testing, uses $timeout to simulate api call
-             ----------------------------------------------*/
-//            $timeout(function(){
-//                var response = { isSuccess: username === 'test' && password === 'test' };
-//                if(!response.isSuccess) {
-//                    response.message = 'Username or password is incorrect';
-//                }
-//                callback(response);
-//            }, 1000);
-
-
-            /* Use this for real authentication
-             ----------------------------------------------*/
             $http.get('/api/account/get/' + userid)
                 .success(function (response) {
                 	console.log(response);
 //                	if(!response.isSuccess) {
 //                      response.message = 'Username or password is incorrect';
 //                  }
+                    callback(response);
+                });
+
+        };
+        
+        service.getUser = function (userid, callback) {
+        	console.log("getAccounts...");
+            $http.get('/api/user/get/' + userid)
+                .success(function (response) {
+                	console.log(response);
                     callback(response);
                 });
 

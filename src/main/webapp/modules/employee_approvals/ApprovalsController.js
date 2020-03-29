@@ -4,10 +4,13 @@
 angular.module('Approvals')
 
     .controller('ApprovalsController',
-        ['$scope', '$rootScope', '$location', 'ApprovalsService',
-            function ($scope, $rootScope, $location, ApprovalsService) {
+        ['$scope', '$rootScope', '$state','$location', 'ApprovalsService',
+            function ($scope, $rootScope, $state, $location, ApprovalsService) {
                 // Do stuff
-
+        		if(!$rootScope.isEmployee) {
+        			alert("Invalid Access! Only for Employees")
+        			$state.go('Dashboard')
+        		}
 				// Get pending transactions for approval.
 				$scope.GetPendingTransactions = function () {
 
@@ -71,4 +74,6 @@ angular.module('Approvals')
 						$scope.dataLoading = false;
 					})
 				}
+				
+				$scope.GetPendingTransactions();
             }]);

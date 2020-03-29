@@ -103,8 +103,8 @@ angular.module('Approvals')
 
                 // Get existing request records for the customer.
                 //      Status = 3 refers to any requests that are pending approval.
-                var query = ($rootScope.isTAC) ? "?userName=" + $rootScope.userName + "&status=3" : "";
-                $http.get('/api/account/get' + query)
+                var query = "?status=3";
+                $http.get('/api/transaction/get' + query)
                     .success(function (response) {
                         console.log(response);
 
@@ -124,8 +124,8 @@ angular.module('Approvals')
 
                 // Get existing request records for the customer.
                 //      Status = 3 refers to any requests that are pending approval.
-                var query = ($rootScope.isTAC) ? "?userName=" + $rootScope.userName + "&status=3" : "";
-                $http.get('/api/transaction/get' + query)
+                //var query = ($rootScope.isTAC) ? "?userName=" + $rootScope.userName + "&status=3" : "";
+                $http.get('/api/account/get')
                     .success(function (response) {
                         console.log(response);
 

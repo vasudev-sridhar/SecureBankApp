@@ -307,14 +307,16 @@ public class TransactionServiceImpl implements TransactionService {
 		if(userName != null) {
 			user = userRepository.findByUsername(userName);
 			if(user == null)
-				throw new Exception(ErrorCodes.ID_NOT_FOUND);			
+				throw new Exception(ErrorCodes.ID_NOT_FOUND);
+			
+			System.out.println("Under TAC for " + userName);
 		}
 		// Can't access someone else's account if authUser is not employee
 		if(user != null && !Util.isEmployee(authUser.getAuthRole().getRoleType()))
 			throw new Exception(ErrorCodes.INVALID_ACCESS);
 		
 		// Under TAC for someone, can't see PENDING,APPROVED or COMPLETED transactions. Call without status
-		if(tStatus != null && user != null && Util.isEmployee(user.getAuthRole().getRoleType()))
+		if(tStatus != null && user != null && Util.isEmployee(authUser.getAuthRole().getRoleType()))
 			throw new Exception(ErrorCodes.INVALID_ACCESS);
 		
 		// All validations done. Use only user variable from here
