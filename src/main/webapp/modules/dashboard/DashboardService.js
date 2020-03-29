@@ -27,7 +27,6 @@ angular.module('Dashboard')
                 	console.log(response);
                     callback(response);
                 });
-
         };
  
         service.SetCredentials = function (username, password) {

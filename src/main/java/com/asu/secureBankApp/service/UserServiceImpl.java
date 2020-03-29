@@ -1,25 +1,19 @@
 package com.asu.secureBankApp.service;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import com.asu.secureBankApp.Repository.AuthUserRepository;
 import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.dao.UserDAO;
 
 @Service
-public class UserServiceImpl {//implements UserService {
+public class UserServiceImpl implements UserService {
 
-//	@Autowired
-//    private UserRepository userRepository;
-//
+	
+	@Autowired
+    private UserRepository userRepository;
+
 //    @Autowired
 //    private  AuthUserRepository authUserRepository;
 //
@@ -52,10 +46,13 @@ public class UserServiceImpl {//implements UserService {
 //        return (List<Auth_user>) authUserRepository.findAll();
 //    }
 //
-//    @Override
-//    public UserDAO getUserByUserId(Long userId) {
-//        return userRepository.findById(userId).get();
-//    }
+    @Override
+    public UserDAO getUser(Integer userId, Authentication auth) {
+    	UserDAO userDAO = userRepository.findById(userId).get();
+    	userDAO.getAuthRole().setPermissions(null);
+    	userDAO.setAccounts(null);
+    	return userDAO;
+    }
 //
 //    @Override
 //    public void saveOrUpdate(Auth_user user) {
