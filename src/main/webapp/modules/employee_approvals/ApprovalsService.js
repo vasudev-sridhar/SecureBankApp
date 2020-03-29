@@ -168,18 +168,24 @@ angular.module('Approvals')
             service.RepondToTransactionApproval = function (id, approve, callback) {
 
                 // Approve the given account request.
-                var action = (approve) ? "approve" : "decline";
+                var action = (approve) ? "approve" : "reject";
                 $http.post('/api/transaction/' + action + '/' + id)
                     .success(function (response) {
                         console.log(response);
-
-                        // Handle the case of an unsucessful HTTP get response.
-                        if (!response.isSuccess) {
-                            response.message = 'Error approving request.';
-                        }
+                        if(!(response && response.isSuccess))
+                        	response.message = response.msg
 
                         // Call the callback function.
                         callback(response);
+                    }).error(function(response) {
+                    	response.isSuccess = false;
+                    	console.log(response);
+                    	if(response && response.msg) {
+                    		response.message = response.msg                    		
+                    	} else if (response && response.error)
+                    		response.message = response.error
+                		else
+                			response.message = 'Error ' + action + 'ing request.';
                     });
             };
 

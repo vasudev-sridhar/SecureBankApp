@@ -6,6 +6,7 @@ angular.module('Approvals')
     .controller('ApprovalsController',
         ['$scope', '$rootScope', '$state','$location', 'ApprovalsService',
             function ($scope, $rootScope, $state, $location, ApprovalsService) {
+        		$scope.transactionResponseError = "";
                 // Do stuff
         		if(!$rootScope.isEmployee) {
         			alert("Invalid Access! Only for Employees")
@@ -21,6 +22,10 @@ angular.module('Approvals')
 
 						if (response) {
 							$scope.transactionList = response;
+							for(var i=0; i < $scope.transactionList.length; i++) {
+							  var t = $scope.transactionList[i].transactionTimestamp;
+							  $scope.transactionList[i].transactionTimestamp = $rootScope.formatDate(t);
+							}
 						}
 
 						$scope.dataLoading = false;
@@ -51,8 +56,16 @@ angular.module('Approvals')
 
 						console.log(response)
 
-						if (response) {
-							$scope.accountList = response;
+						if (response && response.isSuccess) {
+							$scope.transactionResponseError = "";
+							for(var i=0; i < $scope.transactionList.length; i++) {
+								if(id==$scope.transactionList[i].transactionId) {
+									$scope.transactionList[i].status = (approve)? "Approved" : "Declined";
+									break;
+								}
+							}
+						} else {
+							$scope.transactionResponseError = (response && response.message)? response.message : "Something went wrong";
 						}
 
 						$scope.dataLoading = false;

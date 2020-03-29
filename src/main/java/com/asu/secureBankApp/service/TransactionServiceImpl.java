@@ -218,6 +218,10 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		System.out.println(Integer.parseInt(transactionId));
 		TransactionDAO transaction = transactionRepository.findByTransactionId(Integer.parseInt(transactionId));
+		if(transaction == null) {
+			response.setMsg(ErrorCodes.ID_NOT_FOUND);
+			return response; 
+		}
 		transaction.setApprovedAt(Calendar.getInstance().getTime());
 		transaction.setApprovedBy(user);
 		transaction.setStatus(TransactionStatus.APPROVED);
