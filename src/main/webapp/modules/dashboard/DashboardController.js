@@ -25,9 +25,13 @@ angular.module('Dashboard')
     	  DashboardService.getUser(userId, function(response) {
     		  if(response) {
     			  $rootScope.user = response;
+    			  console.log(response)
     			  var a = response.authRole.roleType;
-    			  if(a == "ADMIN" || "TIER1" || "TIER2")
+    			  if(a == "ADMIN" || a == "TIER1" || a == "TIER2") {
+    				  console.log("employee!")
     				  $rootScope.isEmployee = true;
+    				  console.log($rootScope.isEmployee)
+    			  }
     		  }
     		  $scope.dataLoading = true;
     	  })

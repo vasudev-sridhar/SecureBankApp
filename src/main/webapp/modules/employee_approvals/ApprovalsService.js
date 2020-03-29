@@ -4,7 +4,7 @@
 angular.module('Approvals')
 
     .factory('ApprovalsService',
-        [function () {
+        ['$http', function ($http) {
             // Initialize the service.
             var service = {};
 
@@ -169,7 +169,7 @@ angular.module('Approvals')
 
                 // Approve the given account request.
                 var action = (approve) ? "approve" : "decline";
-                $http.post('/api/account/' + action + '/' + id)
+                $http.post('/api/transaction/' + action + '/' + id)
                     .success(function (response) {
                         console.log(response);
 

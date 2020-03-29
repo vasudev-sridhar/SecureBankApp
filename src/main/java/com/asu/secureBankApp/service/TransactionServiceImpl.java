@@ -83,9 +83,9 @@ public class TransactionServiceImpl implements TransactionService {
 		
 		TransactionDAO transactionDAO = new TransactionDAO();
 		
-		float transactionSum = transactionRepository.dailyTransactionSum(user);
+		Float transactionSum = transactionRepository.dailyTransactionSum(user);
 		boolean approvalRequired = !Util.isEmployee(authRoleType)
-				&& (transactionSum + transferReq.getTransferAmount()) > Constants.TRANSFER_CRITICAL_LIMIT;
+				&& (transactionSum!=null) && (transactionSum + transferReq.getTransferAmount()) > Constants.TRANSFER_CRITICAL_LIMIT;
 				
 		if (approvalRequired) {
 			transactionDAO.setCreatedBy(user);
@@ -148,9 +148,9 @@ public class TransactionServiceImpl implements TransactionService {
 			response.setMsg(ErrorCodes.INVALID_ACCESS);
 			return response;
 		}
-		float transactionSum = transactionRepository.dailyTransactionSum(user);
+		Float transactionSum = transactionRepository.dailyTransactionSum(user);
 		boolean approvalRequired = !Util.isEmployee(authRoleType)
-				&& (transactionSum + updateBalanceRequest.getAmount()) > Constants.UPDATE_BALANCE_CRITICAL_LIMIT;
+				&& (transactionSum!=null) && (transactionSum + updateBalanceRequest.getAmount()) > Constants.UPDATE_BALANCE_CRITICAL_LIMIT;
 		TransactionDAO transactionDAO = new TransactionDAO();
 		transactionDAO.setCreatedBy(user);
 		transactionDAO.setFromAccount(account);

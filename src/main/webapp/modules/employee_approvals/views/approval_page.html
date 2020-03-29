@@ -14,14 +14,11 @@
 	<div ng-include="'modules/sidebar.html'"></div>
     <div id="base"  class="container; background-color: w3-light-gray" style = "position:fixed; left:0px; width: 100%;">
 
-      <div>
+      <div style = "position:relative; left:350px;width: 100%;">
           <!-- Unnamed (Rectangle) -->
-          <div id="u18" class="ax_default label">
-              <div id="u18_div" class=""></div>
-              <div id="u18_text" class="text ">
-                  <p><span>Transaction Approvals</span></p>
-              </div>
-          </div>
+          <header class="w3-container" style="padding-top:22px">
+		    <h5><b><i class="fa fa-dashboard"></i>Transaction Approval</b></h5>
+		  </header>
           <div>
               <table>
                   <thead>
@@ -41,10 +38,10 @@
                           <td style="text-align:center">{{item.status}}</td>
                           <td style="text-align:center">{{item.transactionTimestamp}}</td>
                           <td style="text-align:center">
-                              <button ng-click="RespondToPendingTransactions(item.id,True)">Approve</button>
+                              <button ng-click="RespondToPendingTransactions(item.transactionId,true)">Approve</button>
                           </td>
                           <td style="text-align:center">
-                              <button ng-click="RespondToPendingTransactions(item.id,False)">Deny</button>
+                              <button ng-click="RespondToPendingTransactions(item.transactionId,false)">Deny</button>
                           </td>
                       </tr>
                   </tbody>

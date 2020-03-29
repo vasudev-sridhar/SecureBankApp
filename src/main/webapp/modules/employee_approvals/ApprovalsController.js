@@ -28,7 +28,7 @@ angular.module('Approvals')
 				}
 
 				// Get pending account actions for approval.
-				$scope.GetPendingTransactions = function () {
+				$scope.GetPendingAccounts = function () {
 
 					$scope.dataLoading = true;
 					ApprovalsService.GetAccountPendingApproval(function (response) {
@@ -44,7 +44,7 @@ angular.module('Approvals')
 				}
 
 				// Respond to pending transaction by approving or denying.
-				$scope.RespondToPendingTransactions = function () {
+				$scope.RespondToPendingTransactions = function (id, approve) {
 
 					$scope.dataLoading = true;
 					ApprovalsService.RepondToTransactionApproval(id, approve, function (response) {

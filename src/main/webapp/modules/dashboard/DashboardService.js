@@ -21,7 +21,7 @@ angular.module('Dashboard')
         };
         
         service.getUser = function (userid, callback) {
-        	console.log("getAccounts...");
+        	console.log("getUser...");
             $http.get('/api/user/get/' + userid)
                 .success(function (response) {
                 	console.log(response);
