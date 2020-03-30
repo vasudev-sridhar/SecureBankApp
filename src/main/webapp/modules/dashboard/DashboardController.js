@@ -6,11 +6,15 @@ angular.module('Dashboard')
     ['$scope', '$rootScope','$state','DashboardService',
     function ($scope, $rootScope, $state, DashboardService) {
       console.log("DashboardService")
+      $rootScope.uncheckedMenu = 'w3-bar-item w3-button w3-padding'
+	  $rootScope.checkedMenu = 'w3-bar-item w3-button w3-padding w3-blue'
       $scope.accountList = [];
       $rootScope.isEmployee = false;
+      $rootScope.isTAC = ($rootScope.isTAC)? $rootScope.isTAC : false;
       $scope.getAccounts = function() {
+    	  var userId = ($rootScope.isTAC)? $rootScope.tacUser.id : $rootScope.userId;
     	  $scope.dataLoading = true;
-    	  DashboardService.getAccounts($rootScope.userId, function(response) {
+    	  DashboardService.getAccounts(userId, function(response) {
     		  console.log("controller response")
     		  console.log(response)
     		  if(response) {
@@ -71,31 +75,49 @@ angular.module('Dashboard')
       
       $rootScope.goLogout = function() {
     	  //call Logout
+    	  $rootScope.stateName = 'Login'
     	  $state.go('Login')
       }
       
       $rootScope.goTransaction = function() {
+    	  $rootScope.stateName = 'Transaction'
     	  $state.go('Transaction')
       }
       
       $rootScope.goDashboard = function() {
+    	  $rootScope.stateName = 'Dashboard'
     	  $state.go('Dashboard')
       }
       
       $rootScope.goCreditDebit = function() {
+    	  $rootScope.stateName = 'CreditDebit'
     	  $state.go('CreditDebit')
       }
       
       $rootScope.goTransferFunds = function() {
+    	  $rootScope.stateName = 'TransferFunds'
     	  $state.go('TransferFunds')
       }
       
       $rootScope.goHelpandSupport = function() {
+    	  $rootScope.stateName = 'HelpCenter'
     	  $state.go('HelpCenter')
       }
       
       $rootScope.goApprovals = function() {
+    	  $rootScope.stateName = 'Approvals'
     	  $state.go('Approvals')
+      }
+      
+      $rootScope.goTAC = function() {
+    	  $state.go('TAC')
+      }
+      
+      $rootScope.exitTAC = function() {
+    	  $rootScope.isTAC = false;
+    	  $rootScope.tacUser = undefined;
+    	  $rootScope.stateName = 'Dashboard'
+    	  $state.go('Dashboard')
       }
       
       $scope.getUser($rootScope.userId)

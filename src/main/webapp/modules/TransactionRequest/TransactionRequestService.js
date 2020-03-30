@@ -26,10 +26,10 @@ angular.module('TransactionRequest')
        };
  
        service.getTransactions = function (callback) {
-    		 //var transactions = JSON.stringify(transaction_details);
+    		 //var userId = ($rootScope.isTAC)? $rootScope.tacUser.id : $rootScope.userId;
 
     		 console.log("Transaction Details...");
-    		 var query = ($rootScope.isTAC)? "?userName=" + $rootScope.userName : "";
+    		 var query = ($rootScope.isTAC)? "?userName=" + $rootScope.tacUser.username : "";
     	     $http.get('/api/transaction/get' + query)
     		 .success(function (response) {
 	            console.log(response);

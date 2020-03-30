@@ -1,5 +1,7 @@
 package com.asu.secureBankApp.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -21,5 +23,10 @@ public class UserController {
 	@GetMapping(value = "/get/{userId}")
 	public @ResponseBody UserDAO getUser(@PathVariable Integer userId, Authentication auth) {
 		return userService.getUser(userId, auth);
+	}
+	
+	@GetMapping(value = "/get")
+	public @ResponseBody List<UserDAO> getAllUsers(Authentication auth) throws Exception {
+		return userService.getAllUsers(auth);
 	}
 }

@@ -64,8 +64,8 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		RoleType accRoleType = fromAccount.getUser().getAuthRole().getRoleType();
 		System.out.println("auth.getPrincipal()" + auth.getName());
-		UserDAO user = userRepository.findByUsername(auth.getPrincipal().toString());
-		RoleType authRoleType = user.getAuthRole()
+		UserDAO authUser = userRepository.findByUsername(auth.getPrincipal().toString());
+		RoleType authRoleType = authUser.getAuthRole()
 				.getRoleType();
 		
 		// Can't update someone else's account if authUser is not employee
@@ -83,12 +83,14 @@ public class TransactionServiceImpl implements TransactionService {
 		
 		TransactionDAO transactionDAO = new TransactionDAO();
 		
-		Float transactionSum = transactionRepository.dailyTransactionSum(user);
+		UserDAO workingUser = fromAccount.getUser();
+		Float transactionSum = transactionRepository.dailyTransactionSum(workingUser);
+		System.out.println("transactionSum = " + transactionSum + " for working user:" + workingUser.getUsername() + " authUser: " + authUser);
 		boolean approvalRequired = !Util.isEmployee(authRoleType)
 				&& (transactionSum!=null) && (transactionSum + transferReq.getTransferAmount()) > Constants.TRANSFER_CRITICAL_LIMIT;
 				
 		if (approvalRequired) {
-			transactionDAO.setCreatedBy(user);
+			transactionDAO.setCreatedBy(workingUser);
 			transactionDAO.setFromAccount(fromAccount);
 			transactionDAO.setToAccount(toAccount);
 			transactionDAO.setTransactionAmount(Math.abs(transferReq.getTransferAmount()));
@@ -106,7 +108,7 @@ public class TransactionServiceImpl implements TransactionService {
 					return response;
 				}
 				// Executed if approval not required	
-				transactionDAO.setCreatedBy(user);
+				transactionDAO.setCreatedBy(workingUser);
 				transactionDAO.setFromAccount(fromAccount);
 				transactionDAO.setToAccount(toAccount);
 				transactionDAO.setTransactionAmount(Math.abs(transferReq.getTransferAmount()));
@@ -138,9 +140,9 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		RoleType accRoleType = account.getUser().getAuthRole().getRoleType();
 		System.out.println("auth.getPrincipal()" + auth.getName());
-		UserDAO user = userRepository.findByUsername(auth.getPrincipal().toString());
-		System.out.println("user.getAuthRole(): " + user.getAuthRole());
-		RoleType authRoleType = user.getAuthRole()
+		UserDAO authUser = userRepository.findByUsername(auth.getPrincipal().toString());
+		System.out.println("user.getAuthRole(): " + authUser.getAuthRole());
+		RoleType authRoleType = authUser.getAuthRole()
 				.getRoleType();
 		
 		// Can't update someone else's account if authUser is not employee. Ignore condition if it is called from transfer function as it is internal
@@ -148,11 +150,13 @@ public class TransactionServiceImpl implements TransactionService {
 			response.setMsg(ErrorCodes.INVALID_ACCESS);
 			return response;
 		}
-		Float transactionSum = transactionRepository.dailyTransactionSum(user);
+		UserDAO workingUser = account.getUser();
+		Float transactionSum = transactionRepository.dailyTransactionSum(workingUser);
+		System.out.println("transactionSum = " + transactionSum + " for working user:" + workingUser.getUsername() + " authUser: " + authUser);
 		boolean approvalRequired = !Util.isEmployee(authRoleType)
 				&& (transactionSum!=null) && (transactionSum + updateBalanceRequest.getAmount()) > Constants.UPDATE_BALANCE_CRITICAL_LIMIT;
 		TransactionDAO transactionDAO = new TransactionDAO();
-		transactionDAO.setCreatedBy(user);
+		transactionDAO.setCreatedBy(workingUser);
 		transactionDAO.setFromAccount(account);
 		transactionDAO.setTransactionAmount(Math.abs(updateBalanceRequest.getAmount()));
 		transactionDAO.setType((updateBalanceRequest.getAmount()>0)?TransactionType.CREDIT : TransactionType.DEBIT);

@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html ng-app="SecureBankApp">
+  <head>
+    <title>Transaction Request Page</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+    <style>
+	html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+	.FixedHeightContainer
+	{
+	  height: 250px;
+
+	}
+	.Content
+	{
+	  height:224px;
+	   overflow:auto;
+	}
+	</style>
+  </head>
+  <body>
+    
+    <div class="container; background-color: w3-light-gray" style = "position:fixed; left:-10px; width: 100%;">
+	<div ng-include="'modules/sidebar.html'"></div>
+    <div id="base"  class="container; background-color: w3-light-gray" style = "position:fixed; left:0px; width: 100%;">
+	<div style = "position:relative; left:350px;width: 100%;">
+      <div class="w3-panel">
+      	<select style="padding: 0 5em 1em 0;" ng-model="tacUser" ng-options="user.id for user in userList"></select>
+	  </div>
+	  <br>
+	  <button class="w3-w3-button w3-padding w3-green" style="font-size:16px;" ng-click="startTAC()"><i class="fa fa-play" style="font-size:18px;"></i>Start TAC</button>
+      </div>
+    </div>
+    <script src="resources/scripts/axure/ios.js"></script>
+    </div>
+  </body>
+</html>
