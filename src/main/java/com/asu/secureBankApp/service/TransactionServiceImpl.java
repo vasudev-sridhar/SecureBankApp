@@ -8,10 +8,10 @@ import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Stream;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -38,11 +38,17 @@ import com.asu.secureBankApp.dao.UserDAO;
 import com.asu.secureBankApp.util.Util;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import constants.ErrorCodes;
@@ -365,7 +371,6 @@ public class TransactionServiceImpl implements TransactionService {
 			responses = transactionRepository.findByFromAccount_User(user);
 		}
 		for(TransactionDAO t : responses) {
-			System.out.println("fixing...");
 			UserDAO createdBy = t.getCreatedBy(); 
 			createdBy.setAccounts(null);
 			createdBy.setAuthRole(null);
@@ -391,6 +396,7 @@ public class TransactionServiceImpl implements TransactionService {
 	public ResponseEntity<InputStreamResource> downloadStatement(String userName, Authentication auth) throws Exception {
 		UserDAO authUser = userRepository.findByUsername(auth.getPrincipal().toString());
 		UserDAO workingUser = null;
+		String dob = "";
 		if(userName != null && !Util.isEmployee(authUser.getAuthRole().getRoleType()))
 			throw new Exception(ErrorCodes.INVALID_ACCESS);
 		
@@ -402,24 +408,52 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		if(workingUser == null)
 			workingUser = authUser;
+		dob = workingUser.getDob().getDate() + "" + (workingUser.getDob().getMonth()+1) + (workingUser.getDob().getYear()%100);
+		
 		ByteArrayOutputStream out = null;
 		Document document = null;
+		InputStream in = null;
+		ByteArrayOutputStream encOs = null;
+		PdfStamper pdfStamper = null;
+		List<TransactionDAO> transactions = getTransaction(null, null, userName, auth);
 		try {
 
 			document = new Document();
-			String file = "iTextTable.pdf";
+			String file = workingUser.getUsername().strip() + "-Bank_Statement.pdf";
 			// String fPath = this.getClass().getResource("/").getPath();
 			out = new ByteArrayOutputStream();
 			PdfWriter.getInstance(document, out);
-
 			document.open();
-
-			PdfPTable table = new PdfPTable(3);
-			addTableHeader(table);
-			addRows(table);
-			addCustomRows(table);
-
-			document.add(table);
+			Font font = FontFactory.getFont(FontFactory.TIMES_BOLD, 16, 1, BaseColor.BLACK);
+			Chunk chunk = new Chunk("Banking Statement for " + workingUser.getName(), font);
+			 
+			document.add(chunk);
+			document.add(new Paragraph(20, "\u00a0"));
+			if(transactions == null || transactions.size() == 0) {
+				font = FontFactory.getFont(FontFactory.TIMES, 16, BaseColor.BLACK);
+				chunk = new Chunk("No transactions for user", font);
+				document.add(chunk);
+			} else {
+				PdfPTable table = new PdfPTable(5);
+				addTableHeader(table, transactions);
+				addRows(table, transactions);
+				document.add(table);
+			}
+			document.close();
+			out.close();
+			
+			PdfReader pdfReader = new PdfReader(((ByteArrayOutputStream)out).toByteArray()); 
+			encOs = new ByteArrayOutputStream(); 
+			pdfStamper = new PdfStamper(pdfReader, encOs); 
+			 
+			pdfStamper.setEncryption(
+					dob.getBytes(),
+					"".getBytes(),
+					0,
+					PdfWriter.ENCRYPTION_AES_256
+			);
+			encOs.close();
+			pdfStamper.close();
 			
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.parseMediaType("application/pdf"));
@@ -431,8 +465,8 @@ public class TransactionServiceImpl implements TransactionService {
 			headers.add("Pragma", "no-cache");
 			headers.add("Expires", "0");
 			
-			headers.setContentLength(out.size());//contentLength());
-			InputStream in = new ByteArrayInputStream(out.toByteArray());
+			headers.setContentLength(encOs.size());
+			in = new ByteArrayInputStream(encOs.toByteArray());
 			ResponseEntity<InputStreamResource> response = new ResponseEntity<InputStreamResource>(
 					new InputStreamResource(in), headers, HttpStatus.OK);
 			return response;
@@ -440,6 +474,9 @@ public class TransactionServiceImpl implements TransactionService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			encOs.close();
+			pdfStamper.close();
+			in.close();
 			document.close();
 			out.close();
 		}
@@ -447,21 +484,28 @@ public class TransactionServiceImpl implements TransactionService {
 
 	}
 	
-	private static void addTableHeader(PdfPTable table) {
-        Stream.of("column header 1", "column header 2", "column header 3")
-        .forEach(columnTitle -> {
-            PdfPCell header = new PdfPCell();
-            header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-            header.setBorderWidth(2);
-            header.setPhrase(new Phrase(columnTitle));
-            table.addCell(header);
-        });
+	private static void addTableHeader(PdfPTable table, List<TransactionDAO> transactions) {
+		List<String> headers = Arrays.asList("Transaction Id", "Amount", "Time", "Type", "To Account");
+		for(String header : headers) {
+			PdfPCell h = new PdfPCell();
+			h.setBackgroundColor(BaseColor.LIGHT_GRAY);
+			h.setBorderWidth(2);
+			h.setPhrase(new Phrase(header));
+			table.addCell(h);
+		}
     }
 
-    private static void addRows(PdfPTable table) {
-        table.addCell("row 1, col 1");
-        table.addCell("row 1, col 2");
-        table.addCell("row 1, col 3");
+    private static void addRows(PdfPTable table, List<TransactionDAO> transactions) {
+    	for(TransactionDAO tr : transactions) {
+    		table.addCell(tr.getTransactionId().toString());
+    		table.addCell(tr.getTransactionAmount().toString());
+    		table.addCell(tr.getTransactionTimestamp().toString());
+    		table.addCell(tr.getType().toString());
+    		if(tr.getToAccount() == null)
+    			table.addCell("");
+    		else
+    			table.addCell(tr.getToAccount().getId().toString());
+    	}
     }
 
     private static void addCustomRows(PdfPTable table) throws URISyntaxException, BadElementException, IOException {
