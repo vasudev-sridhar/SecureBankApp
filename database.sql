@@ -71,6 +71,15 @@ CREATE TABLE sample.auth_role_permission (
     CONSTRAINT FK_auth_role_permission__auth_permission FOREIGN KEY (auth_permission_id) REFERENCES auth_permission(auth_permission_id)
 );
 
+create table sample.appointment (
+appointment_id  int(11) NOT NULL AUTO_INCREMENT, 
+user_id int(11) NOT NULL, 
+app_date Date NOT NULL, 
+app_time Time NOT NULL, 
+PRIMARY KEY (appointment_id),
+CONSTRAINT FK_Appointment FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
 SELECT * FROM ACCOUNT;
 #ALTER TABLE sample.account AUTO_INCREMENT=1000000;
 
@@ -145,5 +154,16 @@ CREATE TABLE sample.transaction (
   CONSTRAINT FK_TRANSACTION_USER_APPROVED FOREIGN KEY (approved_by) REFERENCES user(user_id),
   CONSTRAINT FK_TRANSACTION_USER_CREATED FOREIGN KEY (created_by) REFERENCES user(user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create table sample.appointment (
+appointment_id  int(11) NOT NULL AUTO_INCREMENT, 
+user_id int(11) NOT NULL, 
+app_date Date NOT NULL, 
+app_time varchar(10) NOT NULL, 
+PRIMARY KEY (appointment_id),
+CONSTRAINT FK_Appointment FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+insert into `sample`.`appointment` (`user_id`, `app_date`, `app_time`) values (1, "2020-03-07", "4pm");
 
 #CONSTRAINT FK_auth_user_role FOREIGN KEY (auth_role_id) REFERENCES auth_role (auth_role_id)
