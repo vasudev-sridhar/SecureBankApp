@@ -1,7 +1,10 @@
 package com.asu.secureBankApp.service;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
 import com.asu.secureBankApp.Request.TransferRequest;
@@ -24,4 +27,6 @@ public interface TransactionService {
 	StatusResponse submitTransactionRequest(TransactionDAO transactionDAO);
 	
 	List<TransactionDAO> getTransaction(Integer type, Integer status, String userName, Authentication auth) throws Exception;
+	
+	ResponseEntity<InputStreamResource> downloadStatement(String userName, Authentication auth) throws IOException, Exception;
 }

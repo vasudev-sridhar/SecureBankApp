@@ -1,16 +1,27 @@
 package com.asu.secureBankApp.service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +36,14 @@ import com.asu.secureBankApp.dao.AccountDAO;
 import com.asu.secureBankApp.dao.TransactionDAO;
 import com.asu.secureBankApp.dao.UserDAO;
 import com.asu.secureBankApp.util.Util;
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import constants.ErrorCodes;
 import constants.RoleType;
@@ -366,6 +385,93 @@ public class TransactionServiceImpl implements TransactionService {
 		ZoneId defaultZoneId = ZoneId.systemDefault();
 		Date date = Date.from(LocalDate.now().atStartOfDay(defaultZoneId).toInstant());
 		return transactionRepository.findByFromAccount_UserAndTransactionTimestampGreaterThan(user, date);
+	}
+
+	@Override
+	public ResponseEntity<InputStreamResource> downloadStatement(String userName, Authentication auth) throws Exception {
+		UserDAO authUser = userRepository.findByUsername(auth.getPrincipal().toString());
+		UserDAO workingUser = null;
+		if(userName != null && !Util.isEmployee(authUser.getAuthRole().getRoleType()))
+			throw new Exception(ErrorCodes.INVALID_ACCESS);
+		
+		if(userName != null) {
+			workingUser = userRepository.findByUsername(userName);
+			if(workingUser == null) {
+				throw new Exception(ErrorCodes.USERNAME_NOT_FOUND);
+			}
+		}
+		if(workingUser == null)
+			workingUser = authUser;
+		ByteArrayOutputStream out = null;
+		Document document = null;
+		try {
+
+			document = new Document();
+			String file = "iTextTable.pdf";
+			// String fPath = this.getClass().getResource("/").getPath();
+			out = new ByteArrayOutputStream();
+			PdfWriter.getInstance(document, out);
+
+			document.open();
+
+			PdfPTable table = new PdfPTable(3);
+			addTableHeader(table);
+			addRows(table);
+			addCustomRows(table);
+
+			document.add(table);
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.parseMediaType("application/pdf"));
+			headers.add("Access-Control-Allow-Origin", "*");
+			headers.add("Access-Control-Allow-Methods", "GET, POST, PUT");
+			headers.add("Access-Control-Allow-Headers", "Content-Type");
+			headers.add("Content-Disposition", "; filename=\"" + file + "\"");
+			headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+			headers.add("Pragma", "no-cache");
+			headers.add("Expires", "0");
+			
+			headers.setContentLength(out.size());//contentLength());
+			InputStream in = new ByteArrayInputStream(out.toByteArray());
+			ResponseEntity<InputStreamResource> response = new ResponseEntity<InputStreamResource>(
+					new InputStreamResource(in), headers, HttpStatus.OK);
+			return response;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			document.close();
+			out.close();
+		}
+		return null;
+
+	}
+	
+	private static void addTableHeader(PdfPTable table) {
+        Stream.of("column header 1", "column header 2", "column header 3")
+        .forEach(columnTitle -> {
+            PdfPCell header = new PdfPCell();
+            header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            header.setBorderWidth(2);
+            header.setPhrase(new Phrase(columnTitle));
+            table.addCell(header);
+        });
+    }
+
+    private static void addRows(PdfPTable table) {
+        table.addCell("row 1, col 1");
+        table.addCell("row 1, col 2");
+        table.addCell("row 1, col 3");
+    }
+
+    private static void addCustomRows(PdfPTable table) throws URISyntaxException, BadElementException, IOException {
+        PdfPCell horizontalAlignCell = new PdfPCell(new Phrase("row 2, col 2"));
+        horizontalAlignCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(horizontalAlignCell);
+
+        PdfPCell verticalAlignCell = new PdfPCell(new Phrase("row 2, col 3"));
+        verticalAlignCell.setVerticalAlignment(Element.ALIGN_BOTTOM);
+        table.addCell(verticalAlignCell);
 	}
 
 }
