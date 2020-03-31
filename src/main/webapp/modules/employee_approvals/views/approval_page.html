@@ -2,67 +2,47 @@
 <html ng-app"SecureBankApp">
   <head>
     <title>Approval Page</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <link href="modules/resources/css/axure_rp_page.css" type="text/css" rel="stylesheet"/>
-    <link href="modules/resources/data/styles.css" type="text/css" rel="stylesheet"/>
-    <link href="modules/resources/files/approval_page/styles.css" type="text/css" rel="stylesheet"/>
-    <script src="modules/resources/scripts/jquery-3.2.1.min.js"></script>
-    <script src="modules/resources/scripts/axure/axQuery.js"></script>
-    <script src="modules/resources/scripts/axure/globals.js"></script>
-    <script src="modules/resources/scripts/axutils.js"></script>
-    <script src="modules/resources/scripts/axure/annotation.js"></script>
-    <script src="modules/resources/scripts/axure/axQuery.std.js"></script>
-    <script src="modules/resources/scripts/axure/doc.js"></script>
-    <script src="modules/resources/scripts/messagecenter.js"></script>
-    <script src="modules/resources/scripts/axure/events.js"></script>
-    <script src="modules/resources/scripts/axure/recording.js"></script>
-    <script src="modules/resources/scripts/axure/action.js"></script>
-    <script src="modules/resources/scripts/axure/expr.js"></script>
-    <script src="modules/resources/scripts/axure/geometry.js"></script>
-    <script src="modules/resources/scripts/axure/flyout.js"></script>
-    <script src="modules/resources/scripts/axure/model.js"></script>
-    <script src="modules/resources/scripts/axure/repeater.js"></script>
-    <script src="modules/resources/scripts/axure/sto.js"></script>
-    <script src="modules/resources/scripts/axure/utils.temp.js"></script>
-    <script src="modules/resources/scripts/axure/variables.js"></script>
-    <script src="modules/resources/scripts/axure/drag.js"></script>
-    <script src="modules/resources/scripts/axure/move.js"></script>
-    <script src="modules/resources/scripts/axure/visibility.js"></script>
-    <script src="modules/resources/scripts/axure/style.js"></script>
-    <script src="modules/resources/scripts/axure/adaptive.js"></script>
-    <script src="modules/resources/scripts/axure/tree.js"></script>
-    <script src="modules/resources/scripts/axure/init.temp.js"></script>
-    <script src="modules/resources/scripts/axure/legacy.js"></script>
-    <script src="modules/resources/scripts/axure/viewer.js"></script>
-    <script src="modules/resources/scripts/axure/math.js"></script>
-    <script src="modules/resources/scripts/axure/jquery.nicescroll.min.js"></script>
-    <script src="modules/resources/data/document.js"></script>
-    <script src="modules/resources/files/approval_page/data.js"></script>
-    <script type="text/javascript">
-      $axure.utils.getTransparentGifPath = function() { return 'modules/resources/images/transparent.gif'; };
-      $axure.utils.getOtherPath = function() { return 'modules/resources/Other.html'; };
-      $axure.utils.getReloadPath = function() { return 'modules/resources/reload.html'; };
-    </script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+    <style>
+	html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+	.FixedHeightContainer
+	{
+	  height: 250px;
+
+	}
+	.Content
+	{
+	  height:224px;
+	   overflow:auto;
+	}
+	#table-wrapper {
+	  position:relative;
+	}
+	#table-scroll {
+	  height:200px;
+	  overflow:auto;  
+	  margin-top:20px;
+	}
+	</style>
   </head>
   <body>
-    <div id="base" class="">
+    <div class="container; background-color: w3-light-gray" style = "position:fixed; left:-10px; width: 100%;">
+	<div ng-include="'modules/sidebar.html'"></div>
+    <div id="base"  class="container; background-color: w3-light-gray" style = "position:fixed; left:0px; width: 100%;">
 
-      <div>
+      <div  id="table-wrapper" class="w3-twothird " style = "position:relative; left:350px;width: 100%;"> <!-- FixedHeightContainer -->
           <!-- Unnamed (Rectangle) -->
-          <div id="u18" class="ax_default label">
-              <div id="u18_div" class=""></div>
-              <div id="u18_text" class="text ">
-                  <p><span>Transaction Approvals</span></p>
-              </div>
-          </div>
-          <div>
-              <table>
+          <header class="w3-container" style="padding-top:22px">
+		    <h5><b><i class="fa fa-dashboard"></i>Transaction Approval</b></h5>
+		  </header>
+          <div  id="table-scroll">  <!-- class="Content" -->
+              <table class="w3-table w3-striped w3-white table-bordered table-condensed" style="width:70%">
                   <thead>
                       <tr>
                           <th style="text-align:center">Amount</th>
                           <th style="text-align:center">Type</th>
-                          <th style="text-align:center">Status</th>
                           <th style="text-align:center">Time</th>
                           <th style="text-align:center">Approve</th>
                           <th style="text-align:center">Deny</th>
@@ -72,17 +52,18 @@
                       <tr ng-repeat="item in transactionList">
                           <td style="text-align:right;padding-right: 25px;"><i class="fa w3-text-blue w3-large"></i>{{item.transactionAmount}}</td>
                           <td style="text-align:center">{{item.type}}</td>
-                          <td style="text-align:center">{{item.status}}</td>
                           <td style="text-align:center">{{item.transactionTimestamp}}</td>
-                          <td style="text-align:center">
-                              <button ng-click="RespondToPendingTransactions(item.id,True)">Approve</button>
+                          <td style="text-align:center" ng-hide="item.status=='PENDING'" colspan="2">{{item.status}}</td>
+                          <td style="text-align:center" ng-show="item.status=='PENDING'">
+                              <button ng-click="RespondToPendingTransactions(item.transactionId,true)">Approve</button>
                           </td>
-                          <td style="text-align:center">
-                              <button ng-click="RespondToPendingTransactions(item.id,False)">Deny</button>
+                          <td style="text-align:center" ng-show="item.status=='PENDING'">
+                              <button ng-click="RespondToPendingTransactions(item.transactionId,false)">Deny</button>
                           </td>
                       </tr>
                   </tbody>
               </table>
+              <label class="alert alert-danger" ng-show="transactionResponseError">{{transactionResponseError}}</label><br>
           </div>
       </div>
 
@@ -120,6 +101,8 @@
                   </tbody>
               </table>
           </div>
+      </div>
+      </div>
       </div>
     <script src="modules/resources/scripts/axure/ios.js"></script>
   </body>

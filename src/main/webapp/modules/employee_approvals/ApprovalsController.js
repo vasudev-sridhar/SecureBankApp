@@ -4,10 +4,14 @@
 angular.module('Approvals')
 
     .controller('ApprovalsController',
-        ['$scope', '$rootScope', '$location', 'ApprovalsService',
-            function ($scope, $rootScope, $location, ApprovalsService) {
+        ['$scope', '$rootScope', '$state','$location', 'ApprovalsService',
+            function ($scope, $rootScope, $state, $location, ApprovalsService) {
+        		$scope.transactionResponseError = "";
                 // Do stuff
-
+        		if(!$rootScope.isEmployee) {
+        			alert("Invalid Access! Only for Employees")
+        			$state.go('Dashboard')
+        		}
 				// Get pending transactions for approval.
 				$scope.GetPendingTransactions = function () {
 
@@ -18,6 +22,10 @@ angular.module('Approvals')
 
 						if (response) {
 							$scope.transactionList = response;
+							for(var i=0; i < $scope.transactionList.length; i++) {
+							  var t = $scope.transactionList[i].transactionTimestamp;
+							  $scope.transactionList[i].transactionTimestamp = $rootScope.formatDate(t);
+							}
 						}
 
 						$scope.dataLoading = false;
@@ -25,7 +33,7 @@ angular.module('Approvals')
 				}
 
 				// Get pending account actions for approval.
-				$scope.GetPendingTransactions = function () {
+				$scope.GetPendingAccounts = function () {
 
 					$scope.dataLoading = true;
 					ApprovalsService.GetAccountPendingApproval(function (response) {
@@ -41,15 +49,23 @@ angular.module('Approvals')
 				}
 
 				// Respond to pending transaction by approving or denying.
-				$scope.RespondToPendingTransactions = function () {
+				$scope.RespondToPendingTransactions = function (id, approve) {
 
 					$scope.dataLoading = true;
 					ApprovalsService.RepondToTransactionApproval(id, approve, function (response) {
 
 						console.log(response)
 
-						if (response) {
-							$scope.accountList = response;
+						if (response && response.isSuccess) {
+							$scope.transactionResponseError = "";
+							for(var i=0; i < $scope.transactionList.length; i++) {
+								if(id==$scope.transactionList[i].transactionId) {
+									$scope.transactionList[i].status = (approve)? "Approved" : "Declined";
+									break;
+								}
+							}
+						} else {
+							$scope.transactionResponseError = (response && response.message)? response.message : "Something went wrong";
 						}
 
 						$scope.dataLoading = false;
@@ -71,4 +87,6 @@ angular.module('Approvals')
 						$scope.dataLoading = false;
 					})
 				}
+				
+				$scope.GetPendingTransactions();
             }]);

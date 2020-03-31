@@ -17,13 +17,13 @@ angular.module('TransferFunds')
     	$scope.getAccounts = function() {
       	  $scope.dataLoading = true;
       	  console.log("userid: " + $rootScope.userId)
-      	  TransferFundsService.getAccounts($rootScope.userId, function(response) {
+      	  var userId = ($rootScope.isTAC)? $rootScope.tacUser.id : $rootScope.userId;
+      	  TransferFundsService.getAccounts(userId, function(response) {
       		  console.log("controller response")
-      		  if(response) {
-//      			  for(var i=0; i < response.accounts.length; i++) {
-//      				$scope.fromAccountList[i] = response.accounts[i].id;
-//      			  }
+      		  if(response && response.accounts) {
       			  $scope.fromAccountList = response.accounts;
+      		  } else {
+      			  console.log("Something went wrong")
       		  }
       		  $scope.dataLoading = true;
       	  })
@@ -33,12 +33,11 @@ angular.module('TransferFunds')
         	  $scope.dataLoading = true;
         	  TransferFundsService.getAllAccounts(function(response) {
         		  console.log("controller response")
-        		  if(response) {
-//        			  for(var i=0; i < response.accounts.length; i++) {
-//            				$scope.toAccountList[i] = response.accounts[i].id;
-//            			  }
-        			  $scope.toAccountList = response.accounts;
-        		  }
+        		  if(response && response.accounts) {
+	      			  $scope.toAccountList = response.accounts;
+	      		  } else {
+	      			  console.log("Something went wrong")
+	      		  }
         		  $scope.dataLoading = true;
         	  })
           }

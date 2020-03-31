@@ -6,6 +6,8 @@ angular.module('Dashboard', []);
 angular.module('TransactionRequest', []);
 angular.module('CreditDebit', []);
 angular.module('TransferFunds', []);
+angular.module('Approvals', []);
+angular.module('TAC', []);
 
 angular.module('SecureBankApp', [
     'Authentication',
@@ -13,6 +15,8 @@ angular.module('SecureBankApp', [
     'TransactionRequest',
     'CreditDebit',
     'TransferFunds',
+    'Approvals',
+    'TAC',
     'ui.router',
     'ngCookies',
     'anguFixedHeaderTable'
@@ -52,7 +56,17 @@ angular.module('SecureBankApp', [
         	templateUrl: 'modules/help/views/help_and_support_center.html',
             controller: 'helpAndSupportController',
         })
-        ;  //credit_debit/CreditDebitController.js
+        .state('Approvals', {
+        	url: '/approvals',
+        	templateUrl: 'modules/employee_approvals/views/approval_page.html',
+            controller: 'ApprovalsController',
+        })
+        .state('TAC', {
+        	url: '/tac',
+        	templateUrl: 'modules/TAC/views/tac_page.html',
+            controller: 'TACController',
+        })
+        ;
  
 	$urlRouterProvider.otherwise("/login"); 
 }])

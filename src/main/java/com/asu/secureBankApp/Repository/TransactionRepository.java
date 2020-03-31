@@ -35,5 +35,5 @@ public interface TransactionRepository extends JpaRepository<TransactionDAO, Int
 	List<TransactionDAO> findByFromAccount_UserAndTransactionTimestampGreaterThan(UserDAO fromUser, Date date);
 	
 	@Query("SELECT SUM(t.transactionAmount) from transaction t where t.transactionTimestamp > CURDATE() and t.fromAccount.user = :fromUser")
-	float dailyTransactionSum(UserDAO fromUser);
+	Float dailyTransactionSum(UserDAO fromUser);
 }

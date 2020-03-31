@@ -22,6 +22,11 @@ angular.module('CreditDebit')
     			$scope.creditErrorMsg = "Amount must be greater than zero";
     			return;
     		}
+    		if(!$scope.accountNo) {
+    			$scope.isCreditSuccess = false;
+    			$scope.creditErrorMsg = "Please pick an account";
+    			return;
+    		}
 			  $scope.dataLoading = true;
 			  CreditDebitService.updateBalance($scope.credit,$scope.accountNo, function(response) {
 				  console.log("controller response")
@@ -47,6 +52,11 @@ angular.module('CreditDebit')
     			$scope.debitErrorMsg = "Amount must be greater than zero";
     			return;
     		}
+	    	if(!$scope.accountNo) {
+    			$scope.isDebitSuccess = false;
+    			$scope.debitErrorMsg = "Please pick an account";
+    			return;
+    		}
 			  $scope.dataLoading = true;
 			  CreditDebitService.updateBalance(-$scope.debit,$scope.accountNo, function(response) {
 				  console.log("controller response")
@@ -66,7 +76,8 @@ angular.module('CreditDebit')
 	    
     	$scope.getAccounts = function() {
       	  $scope.dataLoading = true;
-      	  CreditDebitService.getAccounts($rootScope.userId, function(response) {
+      	  var userId = ($rootScope.isTAC)? $rootScope.tacUser.id : $rootScope.userId;
+      	  CreditDebitService.getAccounts(userId, function(response) {
       		  console.log("controller response")
       		  if(response) {
       			  $scope.accountList = response.accounts;
