@@ -8,6 +8,8 @@ angular.module('CreditDebit', []);
 angular.module('TransferFunds', []);
 angular.module('Approvals', []);
 angular.module('TAC', []);
+angular.module('HelpCenter', []);
+
 
 angular.module('SecureBankApp', [
     'Authentication',
@@ -15,6 +17,7 @@ angular.module('SecureBankApp', [
     'TransactionRequest',
     'CreditDebit',
     'TransferFunds',
+    'HelpCenter',
     'Approvals',
     'TAC',
     'ui.router',
