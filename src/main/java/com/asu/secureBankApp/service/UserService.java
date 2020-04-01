@@ -4,6 +4,10 @@ import java.util.List;
 
 import org.springframework.security.core.Authentication;
 
+import com.asu.secureBankApp.Request.AppointmentRequest;
+import com.asu.secureBankApp.Request.UserDOBRequest;
+import com.asu.secureBankApp.Request.UserRequest;
+import com.asu.secureBankApp.Response.StatusResponse;
 import com.asu.secureBankApp.dao.UserDAO;
 
 public interface UserService {
@@ -11,4 +15,9 @@ public interface UserService {
 	UserDAO getUser(Integer userId, Authentication auth);
 
 	List<UserDAO> getAllUsers(Authentication auth) throws Exception;
-}
+	
+	StatusResponse updateEmail(UserRequest userReq);
+	StatusResponse updateAddress(UserRequest userReq);
+	StatusResponse updatePhone(UserRequest userReq);
+	StatusResponse updateDOB(UserDOBRequest userReq);
+	}

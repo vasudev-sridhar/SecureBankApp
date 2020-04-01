@@ -9,36 +9,77 @@ angular.module('HelpCenter')
             // Initialize the service.
             var service = {};
 
-            // Define functions on the service.
-
-            // Update customer's contact info
-            //      customerId = the ID of the customer to update
-            //      contact = the value of the contact to update
-            //      emailId = the customer's email ID to update
-            //      callback = the function to run when the updating is complete
-           /* service.UpdateContact = function (customerId, contact, emailId, callback) {
-
-                // Make a call to the contact API
-                //      TODO - make sure this is the correct URI for the API
-                $http.post('/api/contact', { customerId: customerId, contact: contact, emailId: emailId })
+           
+            
+            service.UpdateEmail = function (newInfo, callback) {
+            	console.log(newInfo)
+            	var body = {
+                		"userid": $rootScope.userId,
+                		"newInfo": newInfo,
+                		}
+                $http.post('/api/user/updateEmail', body)
                     .success(function (response) {
                         console.log(response);
-
-                        // Handle the case of an unsucessful HTTP post response.
+                        callback(response);
+                        // Handle the case of an unsuccessful HTTP post response.
                         if (!response.isSuccess) {
                             response.message = 'Error updating customer contact info.';
                         }
                     });
-            };*/
-
-            // Schedule an appointment.
-            //      date = the date to schedule
-            //      time = the time to schedule
-            //      callback = the function to run when the scheduling is complete
-            service.ScheduleAppointment = function (date, time, callback) {
-
-                // Make a call to the appointment API
-                //      TODO - make sure this is the correct URI for the API
+            };
+            
+            service.UpdateAddress = function (newInfo, callback) {
+            	console.log(newInfo)
+            	var body = {
+                		"userid": $rootScope.userId,
+                		"newInfo": newInfo,
+                		}
+                $http.post('/api/user/updateAddress', body)
+                    .success(function (response) {
+                        console.log(response);
+                        callback(response);
+                        // Handle the case of an unsuccessful HTTP post response.
+                        if (!response.isSuccess) {
+                            response.message = 'Error updating customer contact info.';
+                        }
+                    });
+            };
+           
+            service.UpdatePhone = function (newInfo, callback) {
+            	console.log(newInfo)
+            	var body = {
+                		"userid": $rootScope.userId,
+                		"newInfo": newInfo,
+                		}
+                $http.post('/api/user/updatePhone', body)
+                    .success(function (response) {
+                        console.log(response);
+                        callback(response);
+                        // Handle the case of an unsuccessful HTTP post response.
+                        if (!response.isSuccess) {
+                            response.message = 'Error updating customer contact info.';
+                        }
+                    });
+            };
+            
+            service.UpdateDOB = function (newInfo, callback) {
+            	console.log(newInfo)
+            	var body = {
+                		"userid": $rootScope.userId,
+                		"newInfo": newInfo,
+                		}
+                $http.post('/api/user/updateDOB', body)
+                    .success(function (response) {
+                        console.log(response);
+                        callback(response);
+                        // Handle the case of an unsuccessful HTTP post response.
+                        if (!response.isSuccess) {
+                            response.message = 'Error updating customer contact info.';
+                        }
+                    });
+            };
+            
+            service.ScheduleAppointment = function (date, time, callback) {               
             	var body = {
                 		"userid": $rootScope.userId,
                 		"date": date,
@@ -48,7 +89,7 @@ angular.module('HelpCenter')
                     .success(function (response) {
                         console.log(response);
                         callback(response);
-                        // Handle the case of an unsucessful HTTP post response.
+                        // Handle the case of an unsuccessful HTTP post response.
                         if (!response.isSuccess) {
                             response.message = 'Error scheduling appointment.';
                         }

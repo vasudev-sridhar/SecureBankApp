@@ -8,6 +8,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.asu.secureBankApp.Repository.UserRepository;
+import com.asu.secureBankApp.Request.UserDOBRequest;
+import com.asu.secureBankApp.Request.UserRequest;
+import com.asu.secureBankApp.Response.StatusResponse;
 import com.asu.secureBankApp.dao.UserDAO;
 
 import constants.ErrorCodes;
@@ -77,6 +80,49 @@ public class UserServiceImpl implements UserService {
     	userDAO.getAuthRole().setPermissions(null);
     	userDAO.setAccounts(null);
     	return userDAO;
+    }
+    
+    public StatusResponse updateEmail(UserRequest userReq) {
+    	StatusResponse response = new StatusResponse();
+		response.setIsSuccess(false);	
+		UserDAO userDAO = userRepository.findById(userReq.getUserid()).orElseGet(null);
+		userDAO.setEmailId(userReq.getNewInfo());
+		userRepository.save(userDAO);
+		response.setIsSuccess(true);
+		response.setMsg(ErrorCodes.SUCCESS);	
+		return response;
+    }
+    
+    public StatusResponse updateAddress(UserRequest userReq) {
+    	StatusResponse response = new StatusResponse();
+		response.setIsSuccess(false);	
+		UserDAO userDAO = userRepository.findById(userReq.getUserid()).orElseGet(null);
+		userDAO.setAddress(userReq.getNewInfo());
+		userRepository.save(userDAO);
+		response.setIsSuccess(true);
+		response.setMsg(ErrorCodes.SUCCESS);	
+		return response;
+    }
+    
+    public StatusResponse updatePhone(UserRequest userReq) {
+    	StatusResponse response = new StatusResponse();
+		response.setIsSuccess(false);	
+		UserDAO userDAO = userRepository.findById(userReq.getUserid()).orElseGet(null);
+		userDAO.setContact(userReq.getNewInfo());
+		userRepository.save(userDAO);
+		response.setIsSuccess(true);
+		response.setMsg(ErrorCodes.SUCCESS);	
+		return response;
+    }
+    public StatusResponse updateDOB(UserDOBRequest userReq) {
+    	StatusResponse response = new StatusResponse();
+		response.setIsSuccess(false);	
+		UserDAO userDAO = userRepository.findById(userReq.getUserid()).orElseGet(null);
+		userDAO.setDob(userReq.getNewInfo());
+		userRepository.save(userDAO);
+		response.setIsSuccess(true);
+		response.setMsg(ErrorCodes.SUCCESS);	
+		return response;
     }
 //
 //    @Override

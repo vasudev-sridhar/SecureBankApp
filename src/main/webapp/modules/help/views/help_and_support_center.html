@@ -25,6 +25,26 @@
 	<div ng-include="'modules/sidebar.html'"></div>
     <div id="base"  class="container; background-color: w3-light-gray" style = "position:fixed; left:0px; width: 100%;">
 
+<div style = "position:relative; left:350px;width: 100%;">
+	<header class="w3-container" style="padding-top:22px">
+	    <h5><b><i class="fa fa-dashboard"></i> Update Contact Details</b></h5>
+  	</header>
+  	
+  	<div class="w3-panel">
+      	<!-- <div><i class="fa fa-plus" style="font-size:48px;color:DodgerBlue"></i></div> -->
+	    <label for="fname">Select information to update:</label><br>
+		<select name="fname" ng-model="selectedOption" ng-options="x for x in options">
+		</select><br>
+		
+  		<label for="fname">Enter New {{selectedOption}}:</label><br>
+  		<input name="fname" ng-model="newInfo">
+  		<button class="w3-w3-button w3-padding w3-green" style="font-size:16px;" ng-click="UpdateContact()"><i class="fa fa-play" style="font-size:18px;"></i> Update</button>
+  		<span style='font-size:25px;color:green;' ng-show="isScheduleSuccess">&#10004;</span><br>
+  		<label ng-show="updateErrorMsg && isUpdateSuccess">{{updateErrorMsg}}</label><br>
+  		<label class="alert alert-danger" ng-show="updateErrorMsg && !isUpdateSuccess">{{updateErrorMsg}}</label><br>
+  		 		
+	  </div>
+
 	<div style = "position:relative; left:350px;width: 100%;">
 	<header class="w3-container" style="padding-top:22px">
 	    <h5><b><i class="fa fa-dashboard"></i> Schedule Appointment</b></h5>
