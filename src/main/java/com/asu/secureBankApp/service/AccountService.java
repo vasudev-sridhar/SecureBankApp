@@ -1,5 +1,7 @@
 package com.asu.secureBankApp.service;
 
+import org.springframework.security.core.Authentication;
+
 import com.asu.secureBankApp.Request.UpdateInterestRequest;
 import com.asu.secureBankApp.Response.AccountResponses;
 import com.asu.secureBankApp.Response.StatusResponse;
@@ -18,6 +20,8 @@ public interface AccountService {
 	StatusResponse updateInterest(UpdateInterestRequest updateInterestRequest);
 	
 	AccountResponses getAccounts(String userId);
+	
+	AccountResponses getAllAccounts();
 
 	String accountToString(Map<String, Object> accountMap) throws JsonProcessingException;
 

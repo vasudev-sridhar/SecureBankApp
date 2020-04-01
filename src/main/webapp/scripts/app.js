@@ -3,12 +3,26 @@
 // declare modules
 angular.module('Authentication', []);
 angular.module('Dashboard', []);
+angular.module('TransactionRequest', []);
+angular.module('CreditDebit', []);
+angular.module('TransferFunds', []);
+angular.module('Approvals', []);
+angular.module('TAC', []);
+angular.module('HelpCenter', []);
+
 
 angular.module('SecureBankApp', [
     'Authentication',
     'Dashboard',
+    'TransactionRequest',
+    'CreditDebit',
+    'TransferFunds',
+    'HelpCenter',
+    'Approvals',
+    'TAC',
     'ui.router',
-    'ngCookies'
+    'ngCookies',
+    'anguFixedHeaderTable'
 ])
  
 .config(['$stateProvider','$urlRouterProvider',function ($stateProvider, $urlRouterProvider) {
@@ -24,7 +38,38 @@ angular.module('SecureBankApp', [
         	url: '/dashboard',
         	templateUrl: 'modules/dashboard/views/dashboard.html',
             controller: 'DashboardController'
-        });
+        })
+        .state('Transaction', {
+        	url: '/transaction',
+        	templateUrl: 'modules/TransactionRequest/views/transaction_request_page.html',
+            controller: 'TransactionRequestController',
+        })
+        .state('CreditDebit', {
+        	url: '/credit_debit',
+        	templateUrl: 'modules/credit_debit/views/credit_debit.html',
+            controller: 'CreditDebitController',
+        })
+        .state('TransferFunds', {
+        	url: '/transfer_funds',
+        	templateUrl: 'modules/transfer_funds/views/transfer_funds.html',
+            controller: 'TransferFundsController',
+        })
+         .state('HelpCenter', {
+        	url: '/help_center',
+        	templateUrl: 'modules/help/views/help_and_support_center.html',
+            controller: 'helpAndSupportController',
+        })
+        .state('Approvals', {
+        	url: '/approvals',
+        	templateUrl: 'modules/employee_approvals/views/approval_page.html',
+            controller: 'ApprovalsController',
+        })
+        .state('TAC', {
+        	url: '/tac',
+        	templateUrl: 'modules/TAC/views/tac_page.html',
+            controller: 'TACController',
+        })
+        ;
  
 	$urlRouterProvider.otherwise("/login"); 
 }])

@@ -15,8 +15,11 @@ angular.module('Authentication')
             	console.log("controller response")
             	console.log(response)
                 if(response.isSuccess) {
+                	console.log("UserId " + response.userId);
+                	$rootScope.userId = response.userId;
                     AuthenticationService.SetCredentials($scope.username, $scope.password);
                     //$state.go('/');
+                    $rootScope.stateName = 'Dashboard'
                     $state.go('Dashboard')
                 } else {
                     $scope.error = response.message;

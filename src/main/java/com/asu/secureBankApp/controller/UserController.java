@@ -1,140 +1,58 @@
 package com.asu.secureBankApp.controller;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping(value="/user")
+import com.asu.secureBankApp.Request.AppointmentRequest;
+import com.asu.secureBankApp.Request.UserDOBRequest;
+import com.asu.secureBankApp.Request.UserRequest;
+import com.asu.secureBankApp.Response.StatusResponse;
+import com.asu.secureBankApp.dao.UserDAO;
+import com.asu.secureBankApp.service.UserService;
+
+@RestController
+@RequestMapping(value="/api/user")
 public class UserController {
 
-//	@Autowired
-//    private UserService userService;
-//
-//    @Autowired
-//    private AccountService accountService;
-//
-//    @Autowired
-//    private LogService logService;
-//
-//    @Autowired
-//    private AccountRequestService accountRequestService;
-//
-//    @RequestMapping(value="/list/{page}", method= RequestMethod.GET)
-//    public ModelAndView list(@PathVariable("page") int page) {
-//        ModelAndView modelAndView = new ModelAndView("user_list");
-//        PageRequest pageable = PageRequest.of(page - 1, 15);
-//        Page<User> userPage = userService.getPaginated(pageable);
-//        int totalPages = userPage.getTotalPages();
-//        if(totalPages > 0) {
-//            List<Integer> pageNos = IntStream.rangeClosed(1,totalPages).boxed().collect(Collectors.toList());
-//            modelAndView.addObject("pageNos", pageNos);
-//        }
-//        modelAndView.addObject("activeUserList", true);
-//        modelAndView.addObject("userList", userPage.getContent());
-//        return modelAndView;
-//    }
-//
-//    @RequestMapping(value = "/accounts/{type}/{data}", method= RequestMethod.GET)
-//    public List<Account> getAccounts(@PathVariable String type, @PathVariable String data){
-//        long userId;
-//        List<Account> accounts = new ArrayList<>() ;
-//        if(data!=null){
-//            switch (type) {
-//                case Config.EMAIL:
-//                    userId = userService.findUserByEmail(data);
-//                    accounts = userService.getUserByUserId(userId).getAccounts();
-//                    break;
-//                case Config.PHONE:
-//                    userId = userService.findUserByPhone(data);
-//                    accounts = userService.getUserByUserId(userId).getAccounts();
-//                    break;
-//            }
-//        }
-//        return accounts;
-//    }
-//
-//    @RequestMapping(value="/edit", method= RequestMethod.POST)
-//    public ModelAndView editAccount(@Valid User user, BindingResult bindingResult,Authentication authentication,  RedirectAttributes redirectAttributes) {
-//        if (bindingResult.hasErrors()) {
-//            redirectAttributes.addFlashAttribute("message","Please fix the errors");
-//            return new ModelAndView("redirect:/user");
-//        }
-//        Long id =  userService.findUserByEmail(authentication.getName());
-//        User old_user = userService.getUserByUserId(id);
-////        old_user.setAddress(user.getAddress());
-////        old_user.setContact(user.getContact());
-////        old_user.setEmailId(user.getEmailId());
-////        old_user.setDob(user.getDob());
-//        if(!user.getEmailId().equals(old_user.getEmailId()) || !user.getName().equals(old_user.getName())){
-//            redirectAttributes.addFlashAttribute("message","Cannot change name or email!");
-//            return new ModelAndView("redirect:/user");
-//        }
-//        if(user.getContact() == null || !user.getContact().matches("-?\\d+(\\.\\d+)?") || user.getContact().length() != 10){
-//            redirectAttributes.addFlashAttribute("message","Contact Number not valid!");
-//            return new ModelAndView("redirect:/user");
-//        }
-//        Date today = new Date();
-//        if(user.getDob().after(today)){
-//            redirectAttributes.addFlashAttribute("message","Date of Birth Cannot be greater than today!");
-//            return new ModelAndView("redirect:/user");
-//        }
-//        try{
-//            User user1 = userService.getUserByUserId(userService.findUserByPhone(user.getContact()));
-//            if( user1 != null && !user1.getUserId().equals(old_user.getUserId())){
-//                redirectAttributes.addFlashAttribute("message","Contact Number already exists!");
-//                return new ModelAndView("redirect:/user");
-//            }
-//        }
-//        catch (Exception e){
-//            System.out.println("Exception");
-//        }
-////        userService.saveOrUpdate(old_user);
-//        AccountRequest accountRequest = new AccountRequest();
-//        Map<String, Object> attributes = new HashMap<>();
-//        attributes.put("user_id",old_user.getUserId());
-//        attributes.put("name", old_user.getName());
-//        attributes.put("gender", old_user.getGender());
-//        attributes.put("dob", user.getDob());
-//        attributes.put("contact", user.getContact());
-//        attributes.put("email_id",old_user.getEmailId());
-//        attributes.put("address", user.getAddress());
-//        accountRequest.setDescription("Profile Edit for "+ user.getName() +" : "+user.getEmailId() );
-//        accountRequest.setUser(attributes);
-//        accountRequest.setCreated_by(old_user.getName());
-//        accountRequest.setStatus_id(Config.PENDING);
-//        accountRequest.setCreated_at(new Timestamp(System.currentTimeMillis()));
-//        accountRequest.setType(Config.USER_TYPE);
-//        accountRequest.setRole(Config.TIER1);
-//        try {
-//            accountRequest.serializeuser();
-//        }
-//        catch(Exception e){
-//            System.out.println("Exception");
-//        }
-//        accountRequestService.saveOrUpdate(accountRequest);
-//
-//        redirectAttributes.addFlashAttribute("message","Successfully saved data! Pending approval with authorities!");
-//        logService.saveLog(authentication.getName(),"Changed User profile for "+old_user.getEmailId());
-//        return new ModelAndView("redirect:/user");
-//    }
+	@Autowired
+	UserService userService;
+	
+	@GetMapping(value = "/get/{userId}")
+	public @ResponseBody UserDAO getUser(@PathVariable Integer userId, Authentication auth) {
+		return userService.getUser(userId, auth);
+	}
+	
+	@GetMapping(value = "/get")
+	public @ResponseBody List<UserDAO> getAllUsers(Authentication auth) throws Exception {
+		return userService.getAllUsers(auth);
+	}
+	
+	@PostMapping(value = "/updateEmail")
+	public StatusResponse updateEmail(@RequestBody @Valid UserRequest user) {
+		return userService.updateEmail(user);
+	}
+	@PostMapping(value = "/updateAddress")
+	public StatusResponse updateAddress(@RequestBody @Valid UserRequest user) {
+		return userService.updateAddress(user);
+	}
+	@PostMapping(value = "/updatePhone")
+	public StatusResponse updatePhone(@RequestBody @Valid UserRequest user) {
+		return userService.updatePhone(user);
+	}
+	@PostMapping(value = "/updateDOB")
+	public StatusResponse updateDOB(@RequestBody @Valid UserDOBRequest user) {
+		return userService.updateDOB(user);
+	}
 }

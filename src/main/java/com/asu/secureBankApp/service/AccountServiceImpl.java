@@ -104,7 +104,20 @@ public class AccountServiceImpl implements AccountService {
 		AccountResponses response = new AccountResponses();
 		List<AccountDAO> accounts = accountRepository.findByUserId(Integer.parseInt(userId));
 		for(AccountDAO account : accounts) {
-			account.setUser(null);
+			account.getUser().setAuthRole(null);
+			account.getUser().setAccounts(null);
+		}
+		response.setAccounts(accounts);
+		return response;
+	}
+
+	@Override
+	public AccountResponses getAllAccounts() {
+		AccountResponses response = new AccountResponses();
+		List<AccountDAO> accounts = accountRepository.findAll();
+		for(AccountDAO account : accounts) {
+			account.getUser().setAuthRole(null);
+			account.getUser().setAccounts(null);
 		}
 		response.setAccounts(accounts);
 		return response;

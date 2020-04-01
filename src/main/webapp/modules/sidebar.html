@@ -1,31 +1,50 @@
-<div>
+<style>
+	.pointer {cursor: pointer;}
+	button:hover {
+  background-color: w3-blue;
+}
+</style>
+<div ng-app="SecureBankApp">
 <!-- Top container -->
-<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+<div class="w3-bar w3-top w3-black w3-large" style="z-index:4"> <!-- $rootScope.uncheckedMenu -->
   <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
-  <span class="w3-bar-item w3-right" ng-click="logout()">Logout</span>
+  <span class="w3-bar-item" style='font-size:20px' ng-hide="userId">Please don't reload the page or use Back or Forward buttons on the browser</span>
+  <span class="w3-bar-item w3-right pointer" style='font-size:20px' ng-click="goLogout()">Logout</span>
+</div>
+<div class="w3-bar w3-deep-orange" style="z-index:3;" ng-show="isTAC">
+  <span class="w3-bar-item w3-right pointer" style='font-size:20px;' ng-click="exitTAC()">&#10006;</span>
+  <span class="w3-bar-item w3-right" ng-click="">You are in TAC for {{tacUser.username}} ({{tacUser.authRole.roleType}})</span>
 </div>
 
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
   <div class="w3-container w3-row">
+  <div class="w3-col s4">
+      <img src="modules/resources/images/avatar2.png" class="w3-circle w3-margin-right" style="width:46px">
+    </div>
     <div class="w3-col s8 w3-bar">
-      <span>Welcome, <strong>User</strong></span><br>
+      <span>Welcome, <strong>{{user.username}}</strong></span><br>
       <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
       <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
       <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
     </div>
+    <span>{{user.authRole.roleType}}</span><br>
   </div>
   <hr>
-  <div class="w3-container">
+  <div class="w3-container"> <!-- ($state.current.name=='Transaction')?'w3-blue':'' -->
     <h5>Dashboard</h5>
   </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-    <button class="w3-bar-item w3-button w3-padding w3-blue" ng-click="$state.go('Dashboard')"><i class="fa fa-users fa-fw"></i>  Overview</button>
+    <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='Dashboard')?checkedMenu:uncheckedMenu" ng-click="goDashboard()"><i class="fa fa-users fa-fw"></i>  Overview</button>
     <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Account</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  View Transactions</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Credit/Debit</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-diamond fa-fw"></i>  Transfer Funds</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bell fa-fw"></i>  Help and Support</a>
+    <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='Transaction')?checkedMenu:uncheckedMenu" ng-click="goTransaction()"><i class="fa fa-users fa-fw"></i>  Transactions</button>
+    <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='CreditDebit')?checkedMenu:uncheckedMenu" ng-click="goCreditDebit()"><i class="fa fa-users fa-fw"></i>  Credit/Debit</button>
+    <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='TransferFunds')?checkedMenu:uncheckedMenu" ng-click="goTransferFunds()"><i class="fa fa-users fa-fw"></i>  Transfer Funds</button>
+    <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='HelpCenter')?checkedMenu:uncheckedMenu" ng-click="goHelpandSupport()"><i class="fa fa-users fa-fw"></i>  Help and Support</button>
+    <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='Approvals')?checkedMenu:uncheckedMenu" ng-click="goApprovals()" ng-show="isEmployee"><i class="fa fa-users fa-fw"></i>  Approvals</button>
+    <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='TAC')?checkedMenu:uncheckedMenu" ng-click="goTAC()" ng-show="isEmployee"><i class="fa fa-users fa-fw"></i>Technical Account Access</button>
+   
   </div>
 </nav>
+</div>

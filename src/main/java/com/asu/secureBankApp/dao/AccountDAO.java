@@ -22,7 +22,7 @@ public class AccountDAO {
 	private Integer id;
 	
 	@JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name="FK_ACCOUNT_USER"))
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private UserDAO user;
 	
 	private Double balance;

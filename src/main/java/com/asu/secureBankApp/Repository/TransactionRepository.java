@@ -1,8 +1,10 @@
 package com.asu.secureBankApp.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.asu.secureBankApp.dao.TransactionDAO;
@@ -29,4 +31,9 @@ public interface TransactionRepository extends JpaRepository<TransactionDAO, Int
 	List<TransactionDAO> findByFromAccount_UserAndStatusIn(UserDAO fromUser, List<TransactionStatus> status);
 	
 	List<TransactionDAO> findByFromAccount_User(UserDAO fromUser);
+	
+	List<TransactionDAO> findByFromAccount_UserAndTransactionTimestampGreaterThan(UserDAO fromUser, Date date);
+	
+	@Query("SELECT SUM(t.transactionAmount) from transaction t where t.transactionTimestamp > CURDATE() and t.fromAccount.user = :fromUser")
+	Float dailyTransactionSum(UserDAO fromUser);
 }

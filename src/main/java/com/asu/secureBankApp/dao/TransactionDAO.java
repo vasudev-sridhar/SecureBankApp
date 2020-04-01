@@ -27,7 +27,7 @@ public class TransactionDAO {
     private Integer transactionId;
 
     @Column(name="transaction_amount")
-    private float transactionAmount;
+    private Float transactionAmount;
 
     @Column(name="transaction_timestamp")
     private Date transactionTimestamp;
@@ -66,11 +66,11 @@ public class TransactionDAO {
 		this.transactionId = transactionId;
 	}
 
-	public float getTransactionAmount() {
+	public Float getTransactionAmount() {
 		return transactionAmount;
 	}
 
-	public void setTransactionAmount(float transactionAmount) {
+	public void setTransactionAmount(Float transactionAmount) {
 		this.transactionAmount = transactionAmount;
 	}
 

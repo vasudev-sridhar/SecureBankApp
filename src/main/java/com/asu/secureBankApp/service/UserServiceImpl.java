@@ -1,25 +1,28 @@
-//package com.asu.secureBankApp.service;
-//
-//import java.util.Arrays;
-//import java.util.HashSet;
-//import java.util.List;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.Pageable;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.stereotype.Service;
-//
-//import com.asu.secureBankApp.Repository.AuthUserRepository;
-//import com.asu.secureBankApp.Repository.UserRepository;
-//import com.asu.secureBankApp.dao.UserDAO;
-//
-//@Service
-//public class UserServiceImpl implements UserService {
-//
-//	@Autowired
-//    private UserRepository userRepository;
-//
+package com.asu.secureBankApp.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+
+import com.asu.secureBankApp.Repository.UserRepository;
+import com.asu.secureBankApp.Request.UserDOBRequest;
+import com.asu.secureBankApp.Request.UserRequest;
+import com.asu.secureBankApp.Response.StatusResponse;
+import com.asu.secureBankApp.dao.UserDAO;
+
+import constants.ErrorCodes;
+import constants.RoleType;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+	
+	@Autowired
+    private UserRepository userRepository;
+
 //    @Autowired
 //    private  AuthUserRepository authUserRepository;
 //
@@ -47,15 +50,80 @@
 //        return userRepository.findUserByPhone(phone);
 //    }
 //
-//    @Override
-//    public List<Auth_user> getAllUsers() {
-//        return (List<Auth_user>) authUserRepository.findAll();
-//    }
+    @Override
+    public List<UserDAO> getAllUsers(Authentication auth) throws Exception {
+    	UserDAO authUser = userRepository.findByUsername(auth.getPrincipal().toString());
+    	RoleType authRoleType = authUser.getAuthRole()
+				.getRoleType();
+    	if(authRoleType == RoleType.USER || authRoleType == RoleType.MERCHANT)
+    		throw new Exception(ErrorCodes.INVALID_ACCESS);
+    	
+    	List<RoleType> roles = new ArrayList<>();
+    	roles.add(RoleType.USER);
+    	roles.add(RoleType.MERCHANT);
+    	if(authRoleType == RoleType.ADMIN) {
+    		roles.add(RoleType.TIER1);
+    		roles.add(RoleType.TIER2);
+    	}
+    	
+    	List<UserDAO> users =  userRepository.findByAuthRole_RoleTypeIn(roles);
+    	for(UserDAO user : users) {
+    		user.getAuthRole().setPermissions(null);
+    		user.setAccounts(null);
+    	}
+    	return users;
+    }
 //
-//    @Override
-//    public UserDAO getUserByUserId(Long userId) {
-//        return userRepository.findById(userId).get();
-//    }
+    @Override
+    public UserDAO getUser(Integer userId, Authentication auth) {
+    	UserDAO userDAO = userRepository.findById(userId).get();
+    	userDAO.getAuthRole().setPermissions(null);
+    	userDAO.setAccounts(null);
+    	return userDAO;
+    }
+    
+    public StatusResponse updateEmail(UserRequest userReq) {
+    	StatusResponse response = new StatusResponse();
+		response.setIsSuccess(false);	
+		UserDAO userDAO = userRepository.findById(userReq.getUserid()).orElseGet(null);
+		userDAO.setEmailId(userReq.getNewInfo());
+		userRepository.save(userDAO);
+		response.setIsSuccess(true);
+		response.setMsg(ErrorCodes.SUCCESS);	
+		return response;
+    }
+    
+    public StatusResponse updateAddress(UserRequest userReq) {
+    	StatusResponse response = new StatusResponse();
+		response.setIsSuccess(false);	
+		UserDAO userDAO = userRepository.findById(userReq.getUserid()).orElseGet(null);
+		userDAO.setAddress(userReq.getNewInfo());
+		userRepository.save(userDAO);
+		response.setIsSuccess(true);
+		response.setMsg(ErrorCodes.SUCCESS);	
+		return response;
+    }
+    
+    public StatusResponse updatePhone(UserRequest userReq) {
+    	StatusResponse response = new StatusResponse();
+		response.setIsSuccess(false);	
+		UserDAO userDAO = userRepository.findById(userReq.getUserid()).orElseGet(null);
+		userDAO.setContact(userReq.getNewInfo());
+		userRepository.save(userDAO);
+		response.setIsSuccess(true);
+		response.setMsg(ErrorCodes.SUCCESS);	
+		return response;
+    }
+    public StatusResponse updateDOB(UserDOBRequest userReq) {
+    	StatusResponse response = new StatusResponse();
+		response.setIsSuccess(false);	
+		UserDAO userDAO = userRepository.findById(userReq.getUserid()).orElseGet(null);
+		userDAO.setDob(userReq.getNewInfo());
+		userRepository.save(userDAO);
+		response.setIsSuccess(true);
+		response.setMsg(ErrorCodes.SUCCESS);	
+		return response;
+    }
 //
 //    @Override
 //    public void saveOrUpdate(Auth_user user) {
@@ -116,4 +184,4 @@
 //    public AuthUserRole findById(AuthUserRolePK authUserRolePK){
 //        return authUserRoleRepository.findById(authUserRolePK).get();
 //    }
-//}
+}

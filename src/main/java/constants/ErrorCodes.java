@@ -6,6 +6,8 @@ public final class ErrorCodes {
 	
 	public static final String ID_NOT_FOUND = "ID not found";
 	
+	public static final String USERNAME_NOT_FOUND = "Username does not exist";
+	
 	public static final String INVALID_ACCESS = "Invalid Access";
 	
 	public static final String INSUFFICIENT_FUNDS = "Insufficient funds";
