@@ -16,6 +16,6 @@ public interface UserRepository extends CrudRepository<UserDAO, Integer> {
 
 	UserDAO findByContact(String contact);
 
-	UserDAO findById(Long id);
+	UserDAO findById(int id);
 
 }

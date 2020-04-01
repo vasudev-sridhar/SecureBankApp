@@ -102,7 +102,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public AccountResponses getAccounts(String userId) {
 		AccountResponses response = new AccountResponses();
-		List<AccountDAO> accounts = accountRepository.findByUserId(Long.parseLong(userId));
+		List<AccountDAO> accounts = accountRepository.findByUserId(Integer.parseInt(userId));
 		for(AccountDAO account : accounts) {
 			account.setUser(null);
 		}
@@ -132,7 +132,7 @@ public class AccountServiceImpl implements AccountService {
 		HashMap<String, Object> accountDetailsMap = new HashMap<>();
 		accountDetailsMap = getAccountDetailsMap(authentication, account, routingNumber);
 
-		Long userId = bankUserService.getUserByUsername(authentication.getName()).getId();
+		int userId = bankUserService.getUserByUsername(authentication.getName()).getId();
 		String name = bankUserService.getUserByUserId(userId).getName();
 
 		AccountRequestDAO accountRequest = generateAccountRequest(accountDetailsMap, name);
@@ -160,7 +160,7 @@ public class AccountServiceImpl implements AccountService {
 	private HashMap<String, Object> getAccountDetailsMap(Authentication authentication, AccountDAO account, int routingNumber) {
 		HashMap<String, Object> accountMap = new HashMap<>();
 		String username = authentication.getName();
-		Long userId = bankUserService.getUserByUsername(username).getId();
+		int userId = bankUserService.getUserByUsername(username).getId();
 		accountMap.put("accountNo", null);
 		accountMap.put("accountType", account.getAccountType());
 		accountMap.put("routingNo", routingNumber);

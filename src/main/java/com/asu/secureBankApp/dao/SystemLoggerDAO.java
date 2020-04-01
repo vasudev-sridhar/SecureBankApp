@@ -18,7 +18,7 @@ public class SystemLoggerDAO {
     private Long logId;
 
     @Column(name = "user_id")
-    private Long userId;
+    private int userId;
 
     @Column(name = "log_time")
     private long logTime;
@@ -37,11 +37,11 @@ public class SystemLoggerDAO {
         this.logId = logId;
     }
 
-    public Long getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 

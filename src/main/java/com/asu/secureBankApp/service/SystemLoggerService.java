@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface SystemLoggerService {
 
-    void log(Long user, String dump, String type);
+    void log(int user, String dump, String type);
 
     //void getLogsByUser(String user);
 

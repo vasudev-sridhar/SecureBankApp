@@ -17,6 +17,6 @@ public interface BankUserService {
 
     UserDAO getUserByUsername(String username);
 
-    UserDAO getUserByUserId(Long userId);
+    UserDAO getUserByUserId(int userId);
 
 }

@@ -48,7 +48,7 @@ public class BankUserServiceImpl implements BankUserService {
         return user;
     }
 
-	public UserDAO getUserByUserId(Long userId) {
+	public UserDAO getUserByUserId(int userId) {
         return userRepository.findById(userId);
     }
 
