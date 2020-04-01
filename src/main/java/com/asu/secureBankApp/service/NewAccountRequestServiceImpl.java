@@ -57,14 +57,19 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         List<String> roles = new ArrayList<String>();
+        
+		UserDAO authUser = userRepository.findByUsername(authentication.getPrincipal().toString());
+		RoleType authRoleType = authUser.getAuthRole()
+				.getRoleType();
+		
         for(GrantedAuthority a : authorities) {
             roles.add(a.getAuthority());
         }
         Integer role;     
-        if(roles.contains("ADMIN")){
+        if(authRoleType == RoleType.ADMIN){
             role = 1;
             response.put("modelAndView", "account_request_admin");
-        }else if(roles.contains("TIER1")){
+        }else if(authRoleType == RoleType.TIER1){
             role = 2;
             response.put("modelAndView", "account_request");
         }
@@ -107,7 +112,6 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 	            account.setUser(user);
 //	            int balance = (int) attributes.get("balance");
 	            account.setBalance(new Double(attributes.get("balance").toString()));
-	            account.setRoutingNo((int)attributes.get("routingNo"));
 	            account.setAccountType((Integer)attributes.get("accountType"));
 //	            int attrInterest = (int) attributes.get("interest");
 	            double interest = (new Double(attributes.get("interest").toString()));

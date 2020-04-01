@@ -35,9 +35,6 @@ public class AccountDAO {
 	private Date created;
 	
 	private Date updated;
-	
-	@Column(name = "routing_no")
-	private int routingNo;
 
 	public Integer getId() {
 		return id;
@@ -95,12 +92,5 @@ public class AccountDAO {
 		this.updated = updated;
 	}
 
-	public int getRoutingNo() {
-		return routingNo;
-	}
-
-	public void setRoutingNo(int routingNo) {
-		this.routingNo = routingNo;
-	}
 	
 }
