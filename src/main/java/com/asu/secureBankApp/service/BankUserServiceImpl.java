@@ -3,6 +3,7 @@ package com.asu.secureBankApp.service;
 import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.dao.AccountDAO;
 import com.asu.secureBankApp.dao.UserDAO;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +41,15 @@ public class BankUserServiceImpl implements BankUserService {
 		UserDAO user = userRepository.findByEmailId(emailId);
 		return user;
 	}
+
+	@Override
+    public UserDAO getUserByUsername(String username) {
+        UserDAO user = userRepository.findByUsername(username);
+        return user;
+    }
+
+	public UserDAO getUserByUserId(int userId) {
+        return userRepository.findById(userId);
+    }
 
 }

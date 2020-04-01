@@ -91,5 +91,6 @@ public class AccountDAO {
 	public void setUpdated(Date updated) {
 		this.updated = updated;
 	}
+
 	
 }

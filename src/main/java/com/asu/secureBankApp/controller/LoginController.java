@@ -38,6 +38,7 @@ public class LoginController {
 	            new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
         Authentication auth = authManager.authenticate(authReq);
         SecurityContext sc = SecurityContextHolder.getContext();
+        auth.getName();
         sc.setAuthentication(auth);
         HttpSession session = request.getSession(true);
         session.setAttribute("SPRING_SECURITY_CONTEXT", sc);

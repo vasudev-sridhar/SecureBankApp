@@ -22,4 +22,6 @@ public interface UserRepository extends CrudRepository<UserDAO, Integer> {
 	
 	List<UserDAO> findByAuthRole_RoleTypeIn(List<RoleType> roles);
 
+	UserDAO findById(int id);
+
 }

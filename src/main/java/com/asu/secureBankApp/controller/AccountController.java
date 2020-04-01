@@ -1,7 +1,10 @@
 package com.asu.secureBankApp.controller;
 
+import java.security.SecureRandom;
+import java.util.HashMap;
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -13,11 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
 import com.asu.secureBankApp.Repository.AccountRepository;
 import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.Request.UpdateInterestRequest;
 import com.asu.secureBankApp.Response.AccountResponses;
 import com.asu.secureBankApp.Response.StatusResponse;
+import com.asu.secureBankApp.dao.AccountDAO;
 import com.asu.secureBankApp.dao.CreateAccountReqDAO;
 import com.asu.secureBankApp.service.AccountService;
 
@@ -34,6 +39,8 @@ public class AccountController {
 	@Autowired
 	AccountService accountService;
 
+	SecureRandom randomInt = new SecureRandom();
+
 	@GetMapping(value = "/get/{user_id}")
 	public @ResponseBody AccountResponses getAccounts(@PathVariable(value = "user_id") String userId, Authentication auth) {
 		return accountService.getAccounts(userId);
@@ -48,6 +55,11 @@ public class AccountController {
 	public @ResponseBody StatusResponse createNewAccount(@RequestBody @Valid CreateAccountReqDAO createAccountReqDAO) {
 		StatusResponse response = accountService.createAccount(createAccountReqDAO);
 		return response;
+	}
+
+	@PostMapping(value = "/newAccount", consumes =  {"application/json"})
+	public @ResponseBody HashMap<String, String> startNewAccount (@RequestBody AccountDAO account, Authentication authentication) throws JsonProcessingException {
+		return accountService.createNewAccount(account, authentication);
 	}
 
 	@PatchMapping(value = "/updateInterest", consumes = { "application/json" })

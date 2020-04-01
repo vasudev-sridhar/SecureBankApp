@@ -1,17 +1,26 @@
 package com.asu.secureBankApp.service;
 
+import java.security.SecureRandom;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import com.asu.secureBankApp.Config.Constants;
+import com.asu.secureBankApp.Repository.AccountRequestRepository;
+import com.asu.secureBankApp.dao.AccountRequestDAO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.asu.secureBankApp.Repository.AccountRepository;
 import com.asu.secureBankApp.Repository.UserRepository;
-import com.asu.secureBankApp.Request.UpdateBalanceRequest;
 import com.asu.secureBankApp.Request.UpdateInterestRequest;
 import com.asu.secureBankApp.Response.AccountResponses;
 import com.asu.secureBankApp.Response.StatusResponse;
@@ -28,7 +37,18 @@ public class AccountServiceImpl implements AccountService {
 	AccountRepository accountRepository;
 
 	@Autowired
+	AccountRequestRepository accountRequestRepository;
+
+	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	AccountService accountService;
+
+	@Autowired
+	BankUserService bankUserService;
+
+	ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
 	@Transactional
@@ -82,7 +102,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public AccountResponses getAccounts(String userId) {
 		AccountResponses response = new AccountResponses();
-		List<AccountDAO> accounts = accountRepository.findByUserId(Integer.valueOf(userId));
+		List<AccountDAO> accounts = accountRepository.findByUserId(Integer.parseInt(userId));
 		for(AccountDAO account : accounts) {
 			account.getUser().setAuthRole(null);
 			account.getUser().setAccounts(null);
@@ -101,6 +121,76 @@ public class AccountServiceImpl implements AccountService {
 		}
 		response.setAccounts(accounts);
 		return response;
+	}
+
+	@Override
+	public String accountToString(Map<String, Object> accountMap) throws JsonProcessingException {
+		return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(accountMap);
+	}
+
+	@Override
+	public Map<String, Object> stringToAccount(String accountString) throws JsonProcessingException {
+		return objectMapper.readValue(accountString, Map.class);
+	}
+
+	@Override
+	public HashMap<String, String> createNewAccount(AccountDAO account, Authentication authentication) throws JsonProcessingException {
+		HashMap<String, String> responseMap = new HashMap<>();
+		if(account.getAccountType() < 0 || account.getAccountType() > 2) {
+			responseMap.put("message", "You have selected the wrong account type");
+			responseMap.put("redirect", "redirect:/user");
+			return responseMap;
+		}
+		int routingNumber = generateRoutingNumber();
+		HashMap<String, Object> accountDetailsMap = new HashMap<>();
+		accountDetailsMap = getAccountDetailsMap(authentication, account, routingNumber);
+
+		int userId = bankUserService.getUserByUsername(authentication.getName()).getId();
+		String name = bankUserService.getUserByUserId(userId).getName();
+
+		AccountRequestDAO accountRequest = generateAccountRequest(accountDetailsMap, name);
+
+		accountRequestRepository.save(accountRequest);
+
+		responseMap.put("message", "success");
+		return responseMap;
+	}
+
+	private AccountRequestDAO generateAccountRequest(HashMap<String, Object> accountDetailsMap, String name) throws JsonProcessingException {
+		AccountRequestDAO accountRequest = new AccountRequestDAO();
+		String accountString = accountService.accountToString(accountDetailsMap);
+		accountRequest.setAccount(accountString);
+		accountRequest.setCreatedBy(name);
+		Timestamp ts=new Timestamp(System.currentTimeMillis());
+		Date createdAt = new Date(ts.getTime());
+		accountRequest.setCreatedAt(createdAt);
+		accountRequest.setType(Constants.NEW_ACCOUNT_REQUEST_TYPE);
+		accountRequest.setRole(2);
+		accountRequest.setStatusId(Constants.STATUS_PENDING);
+		return accountRequest;
+	}
+
+	private HashMap<String, Object> getAccountDetailsMap(Authentication authentication, AccountDAO account, int routingNumber) {
+		HashMap<String, Object> accountMap = new HashMap<>();
+		String username = authentication.getName();
+		int userId = bankUserService.getUserByUsername(username).getId();
+		accountMap.put("accountNo", null);
+		accountMap.put("accountType", account.getAccountType());
+		accountMap.put("routingNo", routingNumber);
+		accountMap.put("userId", userId);
+		accountMap.put("balance", 0.0);
+		accountMap.put("interest", 10.0);
+		return accountMap;
+	}
+
+	private int generateRoutingNumber() {
+		SecureRandom routingRandomizer = new SecureRandom();
+		return routingRandomizer.nextInt(100000);
+	}
+
+	@Override
+	public AccountDAO saveOrUpdate(AccountDAO account) {
+		return accountRepository.save(account);
 	}
 
 }
