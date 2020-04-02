@@ -52,6 +52,65 @@ angular.module('Authentication')
             $cookieStore.remove('globals');
             $http.defaults.headers.common.Authorization = 'Basic ';
         };
+
+        // Create a new user.
+        service.CreateUser = function (name, birthday, email, phone, address, username, password) {
+
+            // Log in the new user.
+            $http.post('/api/user/signup', { name: name, dob: birthday, emailId: email, contact: phone, address: address, username: username, password: password })
+                .success(function (response) {
+                    console.log(response);
+                    if (!response.isSuccess) {
+                        response.message = 'Username or password is incorrect';
+                    }
+                    callback(response);
+                });
+        };
+
+        // Check is password is valid.
+        service.ValidatePassword = function (password) {
+            // Regex taken from https://martech.zone/javascript-password-strength/. This is a citation.
+            var strongRegex = new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
+            var mediumRegex = new RegExp("^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$", "g");
+            var enoughRegex = new RegExp("(?=.{6,}).*", "g");
+
+            var response = {};
+
+            if (password.length < 8) {
+                response.message = "Password must be at least 8 characters.";
+                response.ok = false;
+            }
+            else if (enoughRegex.test(password) === false) {
+                response.message = "Password needs more characters.";
+                response.ok = false;
+            }
+            else if (mediumRegex.test(password) === false) {
+                response.message = "Password is medium. Try adding more special characters.";
+                response.ok = true;
+            }
+            else if (strongRegex.test(password) === false) {
+                response.message = "Password is strong!";
+                response.ok = true;
+            }
+            else {
+                response.message = "Password is weak. Try adding more special characters, and do not use known words.";
+                response.ok = true;
+            }
+        };
+
+        // Check if username is already taken.
+        service.CheckUserNameAvailability = function (username) {
+            // Log in the new user.
+            $http.post('/api/user/signup', {  username: username })
+                .success(function (response) {
+                    console.log(response);
+                    if (!response.isSuccess) {
+                        response.message = 'Username already taken.';
+                    }
+
+                    return response.isSuccess;
+                });
+        };
  
         return service;
     }])

@@ -13,7 +13,7 @@
 </style>
 <body class="w3-light-grey">
 
-    <div class="container; background-color: w3-light-gray" style="position:fixed; left:-10px; width: 100%;">
+    <div class="container; background-color: w3-light-gray" style="position:fixed; left:-10px; width: 100%;" ng-app="SecureBankApp">
         <div ng-include="'modules/sidebar.html'"></div>
 
         <!-- Overlay effect when opening sidebar on small screens -->
@@ -31,30 +31,39 @@
                 <div>
                     <div>
                         <h4>Name</h4>
-                        <input type="text" />
-                    </div>
-                    <div>
-                        <h4>Email</h4>
-                        <input type="text" />
+                        <input type="text" ng-model="name" />
                     </div>
                     <div>
                         <h4>Birthday</h4>
-                        <input type="date" />
+                        <input type="date" ng-model="birthday" />
+                    </div>
+                    <div>
+                        <h4>Email</h4>
+                        <input type="text" ng-model="email" />
+                    </div>
+                    <div>
+                        <h4>Phone Number</h4>
+                        <input type="text" ng-model="phone" />
+                    </div>
+                    <div>
+                        <h4>Address</h4>
+                        <input type="text" ng-model="address" />
                     </div>
                     <div>
                         <h4>Username</h4>
-                        <input type="text" />
+                        <input type="text" ng-model="username" />
+                        <p id="UsernameMessage" ng-model="usernameMessage"></p>
                     </div>
                     <div>
                         <h4>Password</h4>
-                        <input id="PasswordInput" type="password" />
-                        <p id="PasswordMessage"></p>
+                        <input id="PasswordInput" type="password" ng-model="password" ng-change="ValidatePassword()"/>
+                        <p id="PasswordMessage" ng-model="passwordMessage"></p>
                     </div>
                     <div>
-                        <button class="btn success">Register</button>
+                        <button type="submit" ng-disabled="form.$invalid || dataLoading || passwordInvalid || usernameUnavailable" class="btn success" ng-click="CreateUser()">Register</button>
                     </div>
                     <div>
-                        <button class="btn default">Cancel</button>
+                        <button class="btn default" ng-click="">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -86,39 +95,6 @@ function w3_close() {
   mySidebar.style.display = "none";
   overlayBg.style.display = "none";
 }
-    </script>
-
-    <!-- Password strength check. -->
-    <script>
-
-        document.onload = function () {
-            var passwordInput = document.getElementById("PasswordInput");
-            passwordInput.onchange = CheckPassword;
-            console.log("tada");
-        }
-
-        function CheckPassword() {
-            // Regex taken from https://martech.zone/javascript-password-strength/. This is a citation.
-            var strongRegex = new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
-            var mediumRegex = new RegExp("^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$", "g");
-            var enoughRegex = new RegExp("(?=.{6,}).*", "g");
-
-            var passwordMessage = document.getElementById("PasswordMessage");
-            var passwordInput = document.getElementById("PasswordInput");
-
-            if (passwordInput.value.length < 8) {
-                passwordMessage.innerHTML = "Password must be at least 8 characters.";
-            }
-            else if (enoughRegex.test(passwordInput.value) == false) {
-                passwordMessage.innerHTML = "Password is weak. Try adding more special characters, and do not use known words.";
-            }
-            else if (mediumRegex.test(passwordInput.value) == false) {
-                passwordMessage.innerHTML = "Password is medium. Try adding more special characters.";
-            }
-            else if (strongRegex.test(passwordInput.value) == false) {
-                passwordMessage.innerHTML = "Password is strong!";
-            }
-        }
     </script>
 </body>
 </html>
