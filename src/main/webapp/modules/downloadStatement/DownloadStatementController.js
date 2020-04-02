@@ -12,18 +12,28 @@ angular.module('DownloadStatement')
     	$scope.downloadErrorMsg = "";
     	
     	$scope.downloadStatement = function() {
-      	  $scope.dataLoading = true;
+			$scope.dataLoading = true;
+			var fileName = "file_name.pdf";
+            var a = document.createElement("a");
+            document.body.appendChild(a);
       	  console.log("Downloading Statement")
       	  DownloadStatementService.downloadStatement($scope.fromAccount,
       			  function(response) {
       		  console.log("controller response")
-      		  if(response && response.isSuccess) {
-    			  $scope.downloadErrorMsg = response.msg;
-    			  $scope.isDownloadSuccess = true;
-    		  } else {
-    			  $scope.downloadErrorMsg = (response.msg)?response.msg : "Something went wrong";
-    			  $scope.isDownloadSuccess = false;
-    		  }
+      		//   if(response && response.isSuccess) {
+				var file = new Blob([response], {type: 'application/pdf'});
+				var fileURL = window.URL.createObjectURL(file);
+				console.log(fileURL);
+                a.href = fileURL;
+                a.download = fileName;
+				a.click()
+
+    			$scope.downloadErrorMsg = response.msg;
+    			$scope.isDownloadSuccess = true;
+    		//   } else {
+    		// 	  $scope.downloadErrorMsg = (response.msg)?response.msg : "Something went wrong";
+    		// 	  $scope.isDownloadSuccess = false;
+    		//   }
       		  $scope.dataLoading = true;
       	  })
 		}

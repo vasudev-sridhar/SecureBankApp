@@ -36,7 +36,7 @@ angular.module('DownloadStatement')
       service.downloadStatement = function (frmAcc, callback) {
             console.log("Downloading Statement...");
     		var query = "?userName=" + frmAcc;
-    	        $http.get('/api/transaction/statement')
+    	        $http.get('/api/transaction/statement',{responseType: 'arraybuffer'})
     		        .success(function (response) {
 	                    console.log(response);
                         callback(response);
