@@ -88,6 +88,7 @@ INSERT INTO `sample`.`ACCOUNT` (`account_no`, `user_id`, `balance`, `account_typ
 INSERT INTO `sample`.`ACCOUNT` (`account_no`, `user_id`, `balance`, `account_type`, `interest`, `created`, `updated`) VALUES (3, 2, 100, 0, 0, NOW(), NOW());
 
 INSERT INTO `sample`.`auth_permission` (`perm_name`) VALUES ('VIEW_CUSTOMER_ACCOUNT');
+INSERT INTO `sample`.`auth_permission` (`perm_name`) VALUES ('VIEW_CUSTOMER_ACCOUNT');
 INSERT INTO `sample`.`auth_permission` (`perm_name`) VALUES ('CREATE_CUSTOMER_ACCOUNT');
 INSERT INTO `sample`.`auth_permission` (`perm_name`) VALUES ('MODIFY_CUSTOMER_ACCOUNT');
 INSERT INTO `sample`.`auth_permission` (`perm_name`) VALUES ('CLOSE_CUSTOMER_ACCOUNT');
