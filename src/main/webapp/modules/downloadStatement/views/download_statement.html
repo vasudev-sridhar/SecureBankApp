@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html ng-app="SecureBankApp">
+  <head>
+    <title>Transfer Funds</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+    <style>
+	html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+	.FixedHeightContainer
+	{
+	  height: 250px;
+
+	}
+	.Content
+	{
+	  height:224px;
+	   overflow:auto;
+	}
+	</style>
+  </head>
+  <body>
+    
+    <div class="container; background-color: w3-light-gray" style = "position:fixed; left:-10px; width: 100%;">
+	<div ng-include="'modules/sidebar.html'"></div>
+    <div id="base"  class="container; background-color: w3-light-gray" style = "position:fixed; left:0px; width: 100%;">
+
+	<div style = "position:relative; left:350px;width: 100%;">
+	<header class="w3-container" style="padding-top:22px">
+	    <h5><b><i class="fa fa-dashboard"></i> Pick Account</b></h5>
+  	</header>
+  	<br>
+  	<!-- <label>From Account:   </label>
+  	
+  	<select style="padding: 0 5em 1em 0;" ng-model="fromAccount" ng-options="account.id for account in fromAccountList"></select> -->
+	
+	<div class="w3-panel">
+      	<!-- <div><i class="fa fa-plus" style="font-size:48px;color:DodgerBlue"></i></div> -->
+  		<button class="w3-w3-button w3-padding w3-green" style="font-size:16px;" ng-click="downloadStatement()"><i class="fa fa-play" style="font-size:18px;"></i> Download Statement</button>
+  		<span style='font-size:25px;color:green;' ng-show="isDownloadSuccess">&#10004;</span><br>
+  		<label ng-show="downloadErrorMsg && isDownloadSuccess">{{downloadErrorMsg}}</label><br>
+  		<label class="alert alert-danger" ng-show="downloadErrorMsg && !isDownloadSuccess">{{downloadErrorMsg}}</label><br>
+  		<br><br><br>  		
+	  </div>
+	</div>
+    </div>
+    <script src="resources/scripts/axure/ios.js"></script>
+    </div>
+  </body>
+</html>

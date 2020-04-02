@@ -118,6 +118,11 @@ angular.module('Dashboard')
     	  $rootScope.tacUser = undefined;
     	  $rootScope.stateName = 'Dashboard'
     	  $state.go('Dashboard')
+	  }
+	  
+	  $rootScope.goDownloadStatement = function() {
+		  $rootScope.stateName = 'DownloadStatement'
+    	  $state.go('DownloadStatement')
       }
       
       $scope.getUser($rootScope.userId)
