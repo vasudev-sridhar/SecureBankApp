@@ -10,6 +10,7 @@ angular.module('Approvals', []);
 angular.module('TAC', []);
 angular.module('HelpCenter', []);
 angular.module('DownloadStatement', []);
+angular.module('IssueCheque', []);
 
 
 angular.module('SecureBankApp', [
@@ -24,7 +25,8 @@ angular.module('SecureBankApp', [
     'ui.router',
     'ngCookies',
     'anguFixedHeaderTable',
-    'DownloadStatement'
+    'DownloadStatement',
+    'IssueCheque'
 ])
  
 .config(['$stateProvider','$urlRouterProvider',function ($stateProvider, $urlRouterProvider) {
@@ -75,6 +77,11 @@ angular.module('SecureBankApp', [
         	url: '/downloadStatement',
         	templateUrl: 'modules/downloadStatement/views/download_statement.html',
             controller: 'DownloadStatementController',
+        })
+        .state('IssueCheque', {
+        	url: '/issueCheque',
+        	templateUrl: 'modules/issue_cheque/views/issue_cheque.html',
+            controller: 'IssueChequeController',
         })
         ;
  

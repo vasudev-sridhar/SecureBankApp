@@ -123,7 +123,12 @@ angular.module('Dashboard')
 	  $rootScope.goDownloadStatement = function() {
 		  $rootScope.stateName = 'DownloadStatement'
     	  $state.go('DownloadStatement')
-      }
+	  }
+	  
+	  $rootScope.goIssueCheque = function() {
+		  $rootScope.stateName = 'IssueCheque'
+    	  $state.go('IssueCheque')
+	  }
       
       $scope.getUser($rootScope.userId)
       $scope.getAccounts();
