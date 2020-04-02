@@ -56,14 +56,4 @@ public class UserController {
 		return userService.updateDOB(user);
 	}
 
-	@GetMapping(value = "/doesUsernameExist/{username}")
-	public String doesUsernameExist(@PathVariable String username) {
-		return userService.checkIfUsernameExist(username);
-	}
-
-	@PostMapping(value = "/signup")
-	public StatusResponse signup(@RequestBody @Valid UserDAO newUser) {
-		return userService.signup(newUser);
-	}
-
 }

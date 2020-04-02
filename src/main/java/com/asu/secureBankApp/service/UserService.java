@@ -21,7 +21,5 @@ public interface UserService {
 	StatusResponse updatePhone(UserRequest userReq);
 	StatusResponse updateDOB(UserDOBRequest userReq);
 
-	String checkIfUsernameExist(String username);
-	StatusResponse signup(UserDAO newUser);
 
 }
