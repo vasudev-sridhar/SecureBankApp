@@ -9,6 +9,7 @@ angular.module('TransferFunds', []);
 angular.module('Approvals', []);
 angular.module('TAC', []);
 angular.module('HelpCenter', []);
+angular.module('DownloadStatement', []);
 
 
 angular.module('SecureBankApp', [
@@ -22,7 +23,8 @@ angular.module('SecureBankApp', [
     'TAC',
     'ui.router',
     'ngCookies',
-    'anguFixedHeaderTable'
+    'anguFixedHeaderTable',
+    'DownloadStatement'
 ])
  
 .config(['$stateProvider','$urlRouterProvider',function ($stateProvider, $urlRouterProvider) {
@@ -68,6 +70,11 @@ angular.module('SecureBankApp', [
         	url: '/tac',
         	templateUrl: 'modules/TAC/views/tac_page.html',
             controller: 'TACController',
+        })
+        .state('DownloadStatement', {
+        	url: '/downloadStatement',
+        	templateUrl: 'modules/downloadStatement/views/download_statement.html',
+            controller: 'DownloadStatementController',
         })
         ;
  
