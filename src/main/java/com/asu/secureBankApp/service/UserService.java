@@ -20,4 +20,8 @@ public interface UserService {
 	StatusResponse updateAddress(UserRequest userReq);
 	StatusResponse updatePhone(UserRequest userReq);
 	StatusResponse updateDOB(UserDOBRequest userReq);
-	}
+
+	String checkIfUsernameExist(String username);
+	StatusResponse signup(UserDAO newUser);
+
+}

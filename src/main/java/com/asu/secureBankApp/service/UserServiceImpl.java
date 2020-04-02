@@ -3,6 +3,7 @@ package com.asu.secureBankApp.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.asu.secureBankApp.dao.AuthRoleDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -124,6 +125,24 @@ public class UserServiceImpl implements UserService {
 		response.setMsg(ErrorCodes.SUCCESS);	
 		return response;
     }
+
+	public String checkIfUsernameExist(String username) {
+		UserDAO user = userRepository.findByUsername(username);
+		if(null != user)
+			return "0";
+		else
+			return "1";
+	}
+
+	public StatusResponse signup(UserDAO newUser) {
+		AuthRoleDAO authRole = new AuthRoleDAO();
+		authRole.setId(4);
+		newUser.setAuthRole(authRole);
+		userRepository.save(newUser);
+		StatusResponse response = new StatusResponse();
+		response.setIsSuccess(true);
+		return response;
+	}
 //
 //    @Override
 //    public void saveOrUpdate(Auth_user user) {
