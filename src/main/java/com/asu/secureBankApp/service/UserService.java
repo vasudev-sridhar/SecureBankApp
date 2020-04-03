@@ -27,5 +27,7 @@ public interface UserService {
 	StatusResponse signup(UserDAO newUser);
 	
 	public Optional<AuthUserDAO> findByEmail(String email);
+	void saveOrUpdate(AuthUserDAO UserDAO);
+	public UserDAO findById(String username);
 
 }

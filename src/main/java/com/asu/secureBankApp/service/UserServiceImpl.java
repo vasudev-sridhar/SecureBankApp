@@ -189,6 +189,16 @@ public class UserServiceImpl implements UserService {
         return authUserRepository.findById(userRepository.findByEmailId(email).getId());
     }
 
+	@Override
+	public void saveOrUpdate(AuthUserDAO UserDAO) {
+
+	}
+
+	@Override
+	public UserDAO findById(String username) {
+		return null;
+	}
+
 //
 //    @Override
 //    public void saveOrUpdate(Auth_user user) {
