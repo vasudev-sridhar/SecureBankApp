@@ -7,15 +7,15 @@ angular.module('Otp')
     function ($http, $rootScope, $timeout, $cookieStore) {
     	console.log("The Otp has sent 1");
         var service = {};      
-        service.getotp = function (username,callback) {
-            $http.get('/api/generateOtp/'+username)
+        service.getotp = function (callback) {
+            $http.get('/api/generateOtp')
                 .success(function (response) {
                     callback(response);
                 });
         }
-        service.verifyOtp = function (oTp,username,callback) {
+        service.verifyOtp = function (oTp,callback) {
         	console.log("The Otp has been received");
-            $http.get('/api/verifyOtp'+'?'+'otp='+oTp+'&'+'username='+username)
+            $http.get('/api/verifyOtp'+'?'+'otp='+oTp)
                 .success(function (response) {
                 	console.log(response);
                     callback(response);

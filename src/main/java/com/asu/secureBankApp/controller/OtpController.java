@@ -34,20 +34,25 @@ public class OtpController {
 	
 	@Autowired
 	OtpServiceImpl otpService;
+
+	@Autowired
+	UserRepository userRepository;
 	
 	@Autowired
 	UserService userService;
 	
 	int windowMillis =5000;
 	
-	@RequestMapping(value="/generateOtp/{username:.+}", method= RequestMethod.GET)
-    public OtpResponse generateOtp(@PathVariable("username") String username) {
+	@RequestMapping(value="/generateOtp", method= RequestMethod.GET)
+    public OtpResponse generateOtp(Authentication authentication) {
+		String username = authentication.getName();
 		OtpResponse response = new OtpResponse();
 		response.setIsSuccess(false);
         try {
             String r = otpService.generateBase32Secret();
             String otp = otpService.generateCurrentNumberString(r);
-        	String mail= userService.findById(username).getEmailId();           
+        	//String mail= userService.findById(username).getEmailId();
+			String mail= userRepository.findByUsername(username).getEmailId();
         	AuthUserDAO authUser = userService.findByEmail(mail).orElseGet(null);
         	if(authUser != null) {
 	            authUser.setOtp(otp);
@@ -68,8 +73,9 @@ public class OtpController {
 	
 	@RequestMapping(value="/verifyOtp")
 	///{otp:.+}/{username:.+}", method= RequestMethod.GET)
-	public OtpResponse verifyOtp(@RequestParam("otp") int otp,@RequestParam("username") String username)
+	public OtpResponse verifyOtp(@RequestParam("otp") int otp, Authentication authentication)
 			throws GeneralSecurityException {
+		String username = authentication.getName();
 		System.out.println(otp);
 		System.out.println(username);
 		String mail1= userService.findById(username).getEmailId();  
