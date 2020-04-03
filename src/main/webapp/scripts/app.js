@@ -6,6 +6,7 @@ angular.module('Dashboard', []);
 angular.module('TransactionRequest', []);
 angular.module('CreditDebit', []);
 angular.module('TransferFunds', []);
+angular.module('AccountRequest', []);
 angular.module('Approvals', []);
 angular.module('TAC', []);
 angular.module('HelpCenter', []);
@@ -19,6 +20,7 @@ angular.module('SecureBankApp', [
     'CreditDebit',
     'TransferFunds',
     'HelpCenter',
+    'AccountRequest',
     'Approvals',
     'TAC',
     'ui.router',
@@ -60,6 +62,11 @@ angular.module('SecureBankApp', [
         	url: '/help_center',
         	templateUrl: 'modules/help/views/help_and_support_center.html',
             controller: 'helpAndSupportController',
+        })
+        .state('AccountRequest', {
+        	url: '/account_request',
+        	templateUrl: 'modules/AccountRequest/views/Account_Request_page.html',
+            controller: 'AccountRequestController',
         })
         .state('Approvals', {
         	url: '/approvals',
