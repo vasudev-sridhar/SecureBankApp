@@ -28,8 +28,8 @@ public class ChequeServiceImpl implements ChequeService {
     public StatusResponse issueCheque(ChequeRequest chequeRequest) {
         ChequeDAO chequeToIssue = new ChequeDAO();
         StatusResponse response = new StatusResponse();
-        AccountDAO fromAccount = accountRepository.findById(chequeRequest.getFromAccNo()).get();
-        AccountDAO toAccount = accountRepository.findById(chequeRequest.getToAccNo()).get();
+        AccountDAO fromAccount = accountRepository.findById(chequeRequest.getFromAccNo()).orElse(null);
+        AccountDAO toAccount = accountRepository.findById(chequeRequest.getToAccNo()).orElse(null);
         Float amount = chequeRequest.getTransferAmount();
         chequeToIssue.setFromAccount(fromAccount);
         chequeToIssue.setToAccount(toAccount);
