@@ -19,7 +19,12 @@ angular.module('DownloadStatement')
       	  console.log("Downloading Statement")
       	  DownloadStatementService.downloadStatement($scope.fromAccount,
       			  function(response) {
-      		  console.log("controller response")
+				console.log("controller response")
+				
+				console.log("Redirect OTP")
+				$rootScope.stateName = 'Otp'
+    	  		$state.go('OtpTest')
+
       		//   if(response && response.isSuccess) {
 				var file = new Blob([response], {type: 'application/pdf'});
 				var fileURL = window.URL.createObjectURL(file);
