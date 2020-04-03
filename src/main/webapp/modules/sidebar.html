@@ -48,6 +48,7 @@
     <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='ApproveCheque')?checkedMenu:uncheckedMenu" ng-click="goApproveCheque()" ng-show="isTier1"><i class="fa fa-users fa-fw"></i>Approve Issue Cheque</button>    
     <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='DownloadStatement')?checkedMenu:uncheckedMenu" ng-click="goDownloadStatement()"><i class="fa fa-users fa-fw"></i>Download Account Statement</button>
     <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='IssueCheque')?checkedMenu:uncheckedMenu" ng-click="goIssueCheque()"><i class="fa fa-users fa-fw"></i>Issue Cheque</button>
+    <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='AdminLog')?checkedMenu:uncheckedMenu" ng-click="goAdminLog()" ng-show="isAdmin"><i class="fa fa-users fa-fw"></i>Admin Logs</button>
     
   </div>
 </nav>
