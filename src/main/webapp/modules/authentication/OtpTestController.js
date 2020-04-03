@@ -20,8 +20,8 @@ angular.module('Otp')
 //    	  	console.log($rootScope.uname);
 			 OtpTestService.verifyOtp($scope.otp,function(response){
 			 if(response.isSuccess) {
-                 $state.go('Dashboard');
-                  
+				//  $state.go('Dashboard');
+				// DownloadStatementController.downloadStatement();
 			  }else {
 				  $state.go('OtpTest');
 			  }

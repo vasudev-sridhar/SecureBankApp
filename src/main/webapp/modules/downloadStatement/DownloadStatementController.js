@@ -9,22 +9,44 @@ angular.module('DownloadStatement')
 		$scope.fromAccountList = [];
     	$scope.fromAccount;
     	$scope.isDownloadSuccess = false;
-    	$scope.downloadErrorMsg = "";
-    	
+		$scope.downloadErrorMsg = "";
+		$scope.flg='true';
+		$scope.isOtpValidated = false;
+		
+
+		$scope.getotp1 = function() {
+    	  $scope.dataLoading = true;
+//      console.log($rootScope.uname);
+    	  DownloadStatementService.getotp(function(response) {
+    		  console.log(response);
+    		  $scope.otp1=response.message;
+    		  })
+		};
+		  
+		$scope.verifyOtp = function() {
+    	  $scope.dataLoading = false;
+//    	  	console.log($rootScope.uname);
+			 DownloadStatementService.verifyOtp($scope.otp,function(response){
+			 if(response.isSuccess) {
+				console.log("VERIFIED");
+				$scope.isOtpValidated = true;
+			  }else {
+				  $state.go('OtpTest');
+			  }
+			  })
+     	};
+
+
     	$scope.downloadStatement = function() {
 			$scope.dataLoading = true;
 			var fileName = "Accounts_Statement.pdf";
             var a = document.createElement("a");
             document.body.appendChild(a);
-      	  console.log("Downloading Statement")
+			console.log("Downloading Statement")
+			console.log("Redirect OTP")
       	  DownloadStatementService.downloadStatement($scope.fromAccount,
       			  function(response) {
 				console.log("controller response")
-				
-				console.log("Redirect OTP")
-				$rootScope.stateName = 'Otp'
-    	  		$state.go('OtpTest')
-
       		//   if(response && response.isSuccess) {
 				var file = new Blob([response], {type: 'application/pdf'});
 				var fileURL = window.URL.createObjectURL(file);
@@ -71,7 +93,8 @@ angular.module('DownloadStatement')
         		  $scope.dataLoading = true;
         	  })
           }
-	    
+		
+		$scope.getotp1();
 	    $scope.getAccounts();
 	    $scope.getAllAccounts();
     

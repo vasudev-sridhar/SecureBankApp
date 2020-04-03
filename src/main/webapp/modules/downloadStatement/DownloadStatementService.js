@@ -6,6 +6,21 @@ angular.module('DownloadStatement')
     ['Base64', '$http', '$rootScope', '$timeout',
     function (Base64, $http, $rootScope, $timeout) {
         var service = {};
+   
+        service.getotp = function (callback) {
+            $http.get('/api/generateOtp')
+                .success(function (response) {
+                    callback(response);
+                });
+        }
+        service.verifyOtp = function (oTp,callback) {
+        	console.log("The Otp has been received");
+            $http.get('/api/verifyOtp'+'?'+'otp='+oTp)
+                .success(function (response) {
+                	console.log(response);
+                    callback(response);
+                });
+        }
 
         service.getAccounts = function (userid, callback) {
        	console.log("getAccounts...");
