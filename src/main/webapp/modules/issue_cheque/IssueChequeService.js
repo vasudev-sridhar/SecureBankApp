@@ -33,14 +33,16 @@ angular.module('IssueCheque')
                });
           };
           
-      service.transferFunds = function (frmAcc,toAcc, transferAmt, callback) {
-        	console.log("transferFunds...");
+      service.issueCheque = function (frmAcc,toAcc, transferAmt, callback) {
+        	console.log("issue Cheque...");
         	var body = {
             		"fromAccNo":frmAcc,
             		"toAccNo": toAcc,
             		"transferAmount" : transferAmt
-            	}
-            $http.post('/api/transaction/transfer', body)
+                }
+            // var transactions = JSON.stringify(transaction_details);
+            console.log(body);
+            $http.post('api/cheque/issue', body)
                 .success(function (response) {
                 	console.log(response);
                     callback(response);

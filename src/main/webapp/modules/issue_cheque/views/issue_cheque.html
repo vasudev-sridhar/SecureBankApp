@@ -33,7 +33,7 @@
   	<label>From Account:   </label><label style="margin-left: 2.5em;">To Account:</label><br>
   	
   	<select style="padding: 0 5em 1em 0;" ng-model="fromAccount" ng-options="account.id for account in fromAccountList"></select>
-    <input type="number" ng-model="toAccount" name="toAccountNumber">
+    <input type="number" ng-model="toAccountNew">
     <!-- <select style="margin-left: 2.5em;padding: 0 5em 1em 0;" ng-model="toAccount" ng-options="account.id for account in toAccountList"></select> -->
 	
 	<div class="w3-panel">
@@ -41,16 +41,16 @@
 	    <label for="fname">Enter Amount:</label><br>
   		<input type="number" id="fname" name="fname" ng-model="transferAmount">
   		<button class="w3-w3-button w3-padding w3-green" style="font-size:16px;" ng-click="issueCheque()"><i class="fa fa-play" style="font-size:18px;"></i> Issue</button>
-  		<span style='font-size:25px;color:green;' ng-show="isTransferSuccess">&#10004;</span><br>
-  		<label ng-show="transferErrorMsg && isTransferSuccess">{{transferErrorMsg}}</label><br>
-  		<label class="alert alert-danger" ng-show="transferErrorMsg && !isTransferSuccess">{{transferErrorMsg}}</label><br>
+  		<span style='font-size:25px;color:green;' ng-show="isIssueSuccess">&#10004;</span><br>
+  		<label ng-show="issueErrorMsg && isIssueSuccess">{{issueErrorMsg}}</label><br>
+  		<label class="alert alert-danger" ng-show="issueErrorMsg && !isIssueSuccess">{{issueErrorMsg}}</label><br>
   		<br><br><br>  		
 	  </div>
 	</div>
 	</div>
 	<br><br><br><br>
 
-	<div style = "position:relative; left:350px;width: 100%;">
+	<!-- <div style = "position:relative; left:350px;width: 100%;">
 	<header class="w3-container" style="padding-top:300px">
 	    <h5><b><i class="fa fa-dashboard"></i> Deposit Account</b></h5>
   	</header>
@@ -62,7 +62,7 @@
 	<div class="w3-panel">
       	<!-- <div><i class="fa fa-plus" style="font-size:48px;color:DodgerBlue"></i></div> -->
 	    <label for="fname">Enter Amount:</label><br>
-  		<input type="number" id="fname" name="fname" ng-model="transferAmount">
+  		<input type="number" id="fname" name="fname" ng-model="depositAmountCheque">
   		<button class="w3-w3-button w3-padding w3-green" style="font-size:16px;" ng-click="issueCheque()"><i class="fa fa-play" style="font-size:18px;"></i> Deposit</button>
   		<span style='font-size:25px;color:green;' ng-show="isTransferSuccess">&#10004;</span><br>
   		<label ng-show="transferErrorMsg && isTransferSuccess">{{transferErrorMsg}}</label><br>
@@ -71,6 +71,6 @@
 	  </div>
 	</div>
     <script src="resources/scripts/axure/ios.js"></script>
-    </div>
+    </div> -->
   </body>
 </html>
