@@ -63,6 +63,11 @@ angular.module('IssueCheque')
 		  }
 
 		  $scope.depositCheque = function() {
+			  if(!$scope.chequeNumber) {
+    			$scope.isDepositChequeSuccess = false;
+    			$scope.depositChequeErrorMsg = "";
+    			return;
+    		}
         	  $scope.dataLoading = true;
         	  IssueChequeService.depositCheque($scope.chequeNumber.checkId, function(response) {
 				  console.log("controller response --- >")
