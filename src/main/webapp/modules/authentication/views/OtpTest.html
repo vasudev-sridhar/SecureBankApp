@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html ng-app="SecureBankApp">
+<h2 class="alert alert-info">
+    Secure Bank App<br />
+</h2>
+<div ng-show="error" class="alert alert-danger">{{error}}</div>
+<form name="form" ng-submit="verifyOtp()"  role="form"><!--  --> 
+    <div class="form-group">
+        <label for="otp">otp</label>
+        <!-- <a href="#/"/> -->
+        <i class="fa fa-lock"></i>
+        <input type="number" name="otp" id="otp" class="form-control" ng-model="otp" required />
+        
+  <div *ngIf="form.otp.errors.required">
+    OTP is required.
+  </div>
+  <div *ngIf="form.otp.errors.minlength">
+    OTP must be 6 characters long.
+  </div>
+</div>
+    <div class="form-actions">
+        <button type="submit">verifyotp</button>
+       <!-- <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+        --> 
+    </div>
+</form>
+</html>
