@@ -11,6 +11,8 @@ angular.module('TAC', []);
 angular.module('HelpCenter', []);
 angular.module('DownloadStatement', []);
 angular.module('CreateUser', []);
+angular.module('IssueCheque', []);
+angular.module('ChequeApprovals', []);
 
 
 angular.module('SecureBankApp', [
@@ -26,9 +28,9 @@ angular.module('SecureBankApp', [
     'ui.router',
     'ngCookies',
     'anguFixedHeaderTable',
-    'DownloadStatement'
-    /*'IssueCheque',*/
-    /*'ChequeApprovals'*/
+    'DownloadStatement',
+    'IssueCheque',
+    'ChequeApprovals'
     /*'angularjs-crypto'*/
 ])
  .directive('disableRightClick', function() {  
