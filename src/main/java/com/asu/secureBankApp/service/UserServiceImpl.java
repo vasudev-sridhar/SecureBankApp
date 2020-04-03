@@ -1,17 +1,22 @@
 package com.asu.secureBankApp.service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-import com.asu.secureBankApp.dao.AuthRoleDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.Request.UserDOBRequest;
 import com.asu.secureBankApp.Request.UserRequest;
 import com.asu.secureBankApp.Response.StatusResponse;
+import com.asu.secureBankApp.dao.AuthRoleDAO;
 import com.asu.secureBankApp.dao.UserDAO;
 
 import constants.ErrorCodes;
@@ -23,6 +28,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
     private UserRepository userRepository;
+	
+	@Autowired
+	private PasswordEncoder encoder;
 
 //    @Autowired
 //    private  AuthUserRepository authUserRepository;
@@ -137,7 +145,23 @@ public class UserServiceImpl implements UserService {
 	public StatusResponse signup(UserDAO newUser) {
 		AuthRoleDAO authRole = new AuthRoleDAO();
 		authRole.setId(4);
+		newUser.setId(null);
+		MessageDigest md = null;
+		try {
+			md = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+        byte[] hashInBytes = md.digest(newUser.getPassword().getBytes(StandardCharsets.UTF_8));
+
+        StringBuilder sb = new StringBuilder();
+        for (byte b : hashInBytes) {
+            sb.append(String.format("%02x", b));
+        }
+		newUser.setPassword(sb.toString());
 		newUser.setAuthRole(authRole);
+		newUser.setAccounts(null);
+		newUser.setCreated(Calendar.getInstance().getTime());
 		userRepository.save(newUser);
 		StatusResponse response = new StatusResponse();
 		response.setIsSuccess(true);
