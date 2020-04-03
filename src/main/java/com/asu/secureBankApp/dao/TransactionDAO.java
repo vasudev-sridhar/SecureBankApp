@@ -32,6 +32,9 @@ public class TransactionDAO {
     @Column(name="transaction_timestamp")
     private Date transactionTimestamp;
 
+    @Column(name="is_critical", columnDefinition = "boolean default false")
+    private Boolean isCritical;
+    
     @Column(name="type")
     private TransactionType type;
     
@@ -72,6 +75,14 @@ public class TransactionDAO {
 
 	public void setTransactionAmount(Float transactionAmount) {
 		this.transactionAmount = transactionAmount;
+	}
+	
+	public Boolean getIsCritical() {
+		return isCritical;
+	}
+
+	public void setIsCritical(Boolean isCritical) {
+		this.isCritical = isCritical;
 	}
 
 	public TransactionType getType() {
