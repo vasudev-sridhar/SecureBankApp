@@ -9,25 +9,27 @@ angular.module('Authentication')
 
         service.Login = function (username, password, callback) {
         	console.log("LOGIN TRYING...");
-            /* Dummy authentication for testing, uses $timeout to simulate api call
-             ----------------------------------------------*/
-            /*$timeout(function(){
-                var response = { isSuccess: username === 'test' && password === 'test' };
-                if(!response.isSuccess) {
-                    response.message = 'Username or password is incorrect';
-                }
-                callback(response);
-            }, 1000);*/
 
-
-            /* Use this for real authentication
-             ----------------------------------------------*/
         	$http.post('/api/login', { username: username, password: password })
                 .success(function (response) {
                 	console.log(response);
                 	if(!response.isSuccess) {
                       response.message = 'Username or password is incorrect';
                   }
+                    callback(response);	
+                })
+                .error(function (response) {
+                	console.log(response);
+                	callback(response);
+                });
+
+        };
+        
+        service.Logout = function (callback) {
+        	console.log("LOGout TRYING...");
+
+        	$http.post('/api/logout', { id: $rootScope.userId})
+                .success(function (response) {
                     callback(response);	
                 })
                 .error(function (response) {

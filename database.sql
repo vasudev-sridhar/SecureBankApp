@@ -134,9 +134,10 @@ INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id
 INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (3, 5);
 INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (3, 6);
 INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (3, 7);
+INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (3, 14);
 
 INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (4, 14);
-#INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (4, 15);
+INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (4, 15);
 
 INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (5, 14);
 

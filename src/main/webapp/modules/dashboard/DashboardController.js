@@ -81,6 +81,7 @@ angular.module('Dashboard')
       
       $rootScope.goLogout = function() {
     	  //call Logout
+    	  $rootScope.logout();
     	  $rootScope.stateName = 'Login'
     	  $state.go('Login')
       }

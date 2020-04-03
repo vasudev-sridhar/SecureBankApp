@@ -20,6 +20,7 @@ angular.module('Authentication')
             console.log('encrypted = ' + encrypted);
             AuthenticationService.Login($scope.username, encrypted, function(response) {
             	console.log("controller response")
+            	$scope.dataLoading = false;
             	console.log(response)
                 if(response.isSuccess) {
                 	console.log("UserId " + response.userId);
@@ -32,9 +33,30 @@ angular.module('Authentication')
                 	if(response.status=403){
                 	$scope.isAccessDenied = true;
                     $scope.error = response.message;
-                    $scope.dataLoading = false;
                 	}
                 }
             });
         };
+        
+        $rootScope.logout = function () {
+            $scope.dataLoading = true;
+
+            AuthenticationService.Logout( function(response) {
+                if(response) {
+                	console.log("UserId " + response.userId);
+                	$rootScope.userId = undefined;
+                	$rootScope.user = undefined;
+                	$rootScope.isTAC = false;
+                	$rootScope.tacUser = undefined;
+
+                } else {
+                	if(response.status=403){
+	                	$scope.isAccessDenied = true;
+	                    $scope.error = response.message;
+	                    $scope.dataLoading = false;
+                	}
+                }
+            });
+        };
+        
     }]);
