@@ -25,7 +25,21 @@
 	<div ng-include="'modules/sidebar.html'"></div>
 	<div id="base"  class="container; background-color: w3-light-gray" style = "position:fixed; left:0px; width: 100%;">
 
-		<div style = "position:relative; left:350px;width: 100%;">
+		<div style = "position:relative; left:350px;width: 100%;" ng-hide = "isOtpValidated">
+			<br><br><br>
+			<label >OTP</label>
+			<input type="number" name="otp" ng-model="otp"  />
+			
+			<div >
+				Please check registered email for 6 digit OTP.
+			</div>
+			<div >
+				<button ng-click= "verifyOtp()"">verify OTP</button>
+	
+			</div>
+		</div>
+
+		<div style = "position:relative; left:350px;width: 100%;" ng-show = "isOtpValidated">
 			<header class="w3-container" style="padding-top:22px">
 				<h5><b><i class="fa fa-dashboard"></i> Pick Account Type</b></h5>
 			</header>
