@@ -79,7 +79,12 @@ public class ChequeServiceImpl implements ChequeService {
         UpdateBalanceRequest updateBalanceRequest = new UpdateBalanceRequest();
         updateBalanceRequest.setAccountNo(cheque.getFromAccount().getId());
         updateBalanceRequest.setAmount(-cheque.getAmount());
-        response = transactionService.updateBalance(updateBalanceRequest, authentication, true);
+        try {
+			response = transactionService.updateBalance(updateBalanceRequest, authentication, true);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         cheque.setStatus(Constants.CHEQUE_ISSUE_APPROVED);
         chequeRepository.save(cheque);
         return response;
@@ -111,7 +116,12 @@ public class ChequeServiceImpl implements ChequeService {
         UpdateBalanceRequest updateBalanceRequest = new UpdateBalanceRequest();
         updateBalanceRequest.setAccountNo(cheque.getToAccount().getId());
         updateBalanceRequest.setAmount(cheque.getAmount());
-        response = transactionService.updateBalance(updateBalanceRequest, authentication, true);
+        try {
+			response = transactionService.updateBalance(updateBalanceRequest, authentication, true);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         cheque.setStatus(Constants.CHEQUE_DEPOSIT_APPROVED);
         chequeRepository.save(cheque);
         return response;
