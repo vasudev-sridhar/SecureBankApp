@@ -30,10 +30,28 @@ public class AuthUserDAO {
 	@Enumerated(EnumType.STRING)
 	private Status status;
 	
-	private Integer otp;
-	
 	private Date expiry;
+	
+	private String otp;
+	private String r;
 
+	public int getOtp() {
+		return Integer.parseInt(otp);
+	}
+
+	public void setOtp(String otp) {
+		this.otp = otp;
+	}
+
+	public String getr() {
+		return r;
+	}
+
+	public void setr(String r) {
+		this.r = r;
+	}
+
+	
 	public Integer getId() {
 		return id;
 	}
@@ -56,14 +74,6 @@ public class AuthUserDAO {
 
 	public void setStatus(Status status) {
 		this.status = status;
-	}
-
-	public Integer getOtp() {
-		return otp;
-	}
-
-	public void setOtp(Integer otp) {
-		this.otp = otp;
 	}
 
 	public Date getExpiry() {

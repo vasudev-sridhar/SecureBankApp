@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -15,11 +16,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.asu.secureBankApp.Repository.AuthRoleRepository;
+import com.asu.secureBankApp.Repository.AuthUserRepository;
 import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.Request.UserDOBRequest;
 import com.asu.secureBankApp.Request.UserRequest;
 import com.asu.secureBankApp.Response.StatusResponse;
 import com.asu.secureBankApp.dao.AuthRoleDAO;
+import com.asu.secureBankApp.dao.AuthUserDAO;
 import com.asu.secureBankApp.dao.UserDAO;
 
 import constants.ErrorCodes;
@@ -37,6 +40,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private AuthRoleRepository authRoleRepository;
+	
+	@Autowired
+	private AuthUserRepository authUserRepository;
 
 //    @Autowired
 //    private  AuthUserRepository authUserRepository;
@@ -177,6 +183,12 @@ public class UserServiceImpl implements UserService {
 		response.setIsSuccess(true);
 		return response;
 	}
+	
+	@Override
+    public Optional<AuthUserDAO> findByEmail(String email){
+        return authUserRepository.findById(userRepository.findByEmailId(email).getId());
+    }
+
 //
 //    @Override
 //    public void saveOrUpdate(Auth_user user) {
