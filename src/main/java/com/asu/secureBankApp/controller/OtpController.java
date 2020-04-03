@@ -81,27 +81,20 @@ public class OtpController {
 	public OtpResponse verifyOtp(@RequestParam("otp") int otp, Authentication authentication)
 			throws GeneralSecurityException {
 		String username = authentication.getName();
-		System.out.println(otp);
-		System.out.println(username);
 //		String mail1= userService.findById(username).getEmailId();
 		String mail1= userRepository.findByUsername(username).getEmailId();
-		System.out.println(mail1);
 		AuthUserDAO authUser1 = userService.findByEmail(mail1).orElseGet(null);
 		String r = authUser1.getr();
 		int otp1 = authUser1.getOtp();
 		//String otp2 = String.valueOf(otp);
-		System.out.println(otp1);
-		System.out.println(String.valueOf(otp));
 		OtpResponse response1 = new OtpResponse();
 		if (otp1 == otp) {
-			System.out.println("im the greta");
 			response1.setIsSuccess(true);
 			return response1;
 		}
 		else {
-			System.out.println("im not the greta");
-		response1.setIsSuccess(true);
-		return response1;
+			response1.setIsSuccess(true);
+			return response1;
 		}
 //		return validateCurrentNumber(r, otp, windowMillis, System.currentTimeMillis(),
 //				10, response);
