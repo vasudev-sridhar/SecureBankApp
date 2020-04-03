@@ -54,8 +54,8 @@
 		<label>Select Cheque for Account number: {{fromAccountDeposit.id}}   </label>
 		<select style="padding: 0 5em 1em 0;" ng-model="chequeNumber" ng-options="cheque.checkId for cheque in chequeList"></select>
 		<div class="w3-panel">
-	    <label for="fname">Enter Amount:</label><br>
-  		<input type="number" id="depositCheque" name="depositCheque" ng-model="depositChequeAmount">
+	    <!-- <label for="fname">Enter Amount:</label><br>
+  		<input type="number" id="depositCheque" name="depositCheque" ng-model="depositChequeAmount"> -->
   		<button class="w3-w3-button w3-padding w3-green" style="font-size:16px;" ng-click="depositCheque()"><i class="fa fa-play" style="font-size:18px;"></i> Deposit</button>
   		<span style='font-size:25px;color:green;' ng-show="isDepositChequeSuccess">&#10004;</span><br>
   		<label ng-show="depositChequeErrorMsg && isDepositChequeSuccess">{{depositChequeErrorMsg}}</label><br>

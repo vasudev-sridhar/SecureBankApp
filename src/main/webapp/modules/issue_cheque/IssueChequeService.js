@@ -33,6 +33,19 @@ angular.module('IssueCheque')
            });
        };
        
+       service.depositCheque = function (chequeNumber, callback) {
+           console.log("getCheques...");
+           $http.post('/api/cheque/depositCheque/' + chequeNumber)
+               .success(function (response) {
+               	console.log(response);
+                   callback(response);
+           }).error(function (response) {
+              	console.log(response);
+                callback(response);
+               
+           });
+       };
+
        service.getAllAccounts = function (callback) {
           	console.log("getAllAccounts...");
               $http.get('/api/account/get')
@@ -45,6 +58,8 @@ angular.module('IssueCheque')
                    
                });
           };
+
+          
           
       service.issueCheque = function (frmAcc,toAcc, transferAmt, callback) {
         	console.log("issue Cheque...");
