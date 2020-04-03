@@ -68,7 +68,7 @@ public class MailService
   
          // Send email. 
          Transport.send(message); 
-         System.out.println("Mail successfully sent"); 
+//         System.out.println("Mail successfully sent");
       } 
       catch (MessagingException mex)  
       { 

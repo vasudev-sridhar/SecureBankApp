@@ -1,27 +1,27 @@
 'use strict';
 
-angular.module('Authentication')
+angular.module('AdminLog')
 
-    .factory('AuthenticationService',
-        ['Base64', '$http', '$cookieStore', '$rootScope', '$timeout',
-            function (Base64, $http, $cookieStore, $rootScope, $timeout) {
-                var service = {};
+    .factory('AdminLogService',
+         ['$http', function ($http) {
+            // Initialize the service.
+            var service = {};
 
-                service.GetLog = function (callback) {
+            service.GetTransactionsPendingApproval = function (callback) {
 
-                    // Get a list of the admin log records.
-                    $http.get('/api/logs/list')
-                        .success(function (response) {
+                $http.get('/api/log/list')
+                    .success(function (response) {
+                        console.log(response);
 
-                            console.log(response);
+                        // Handle the case of an unsucessful HTTP get response.
+                        if (!response) {
+                            response.message = 'Error locating logs.';
+                        }
 
-                            if (!response.isSuccess) {
-                                response.message = 'Error getting log.';
-                            }
-
-                            callback(response);
-                        });
-                };
+                        // Call the callback function.
+                        callback(response);
+                    });
+            };
 
                 return service;
             }])

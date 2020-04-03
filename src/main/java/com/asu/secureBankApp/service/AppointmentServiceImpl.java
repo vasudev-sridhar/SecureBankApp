@@ -24,6 +24,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Autowired
 	UserRepository userRepository;
 
+	@Autowired
+	SystemLoggerService logger;
+
 	public StatusResponse createAppointment(AppointmentRequest appointmentReq) {
 		
 		StatusResponse response = new StatusResponse();
@@ -34,6 +37,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		appointmentDAO.setApp_date(appointmentReq.getDate());
 		appointmentDAO.setApp_time(appointmentReq.getTime());
 		appointmentRepository.save(appointmentDAO);
+		logger.log(appointmentReq.getUserid(), "User has scheduled an appointment", "APPOINTMENT_SCHEDULED");
 		response.setIsSuccess(true);
 		response.setMsg(ErrorCodes.SUCCESS);	
 		return response;
