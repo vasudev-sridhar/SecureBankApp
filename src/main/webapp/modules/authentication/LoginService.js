@@ -28,7 +28,11 @@ angular.module('Authentication')
                 	if(!response.isSuccess) {
                       response.message = 'Username or password is incorrect';
                   }
-                    callback(response);
+                    callback(response);	
+                })
+                .error(function (response) {
+                	console.log(response);
+                	callback(response);
                 });
 
         };

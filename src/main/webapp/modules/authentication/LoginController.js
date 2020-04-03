@@ -5,6 +5,7 @@ angular.module('Authentication')
 .controller('LoginController',
     ['$scope', '$rootScope', '$state', 'AuthenticationService',
     function ($scope, $rootScope, $state, AuthenticationService) {
+    	$scope.isAccessDenied;
         // reset login status
     	console.log("LoginController")
         AuthenticationService.ClearCredentials();
@@ -28,8 +29,11 @@ angular.module('Authentication')
                     $rootScope.stateName = 'Dashboard'
                     $state.go('Dashboard')
                 } else {
+                	if(response.status=403){
+                	$scope.isAccessDenied = true;
                     $scope.error = response.message;
                     $scope.dataLoading = false;
+                	}
                 }
             });
         };
