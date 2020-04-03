@@ -37,6 +37,9 @@ public class TransactionDAO {
     
     @Column(name="status")
     private TransactionStatus status;
+    
+    @Column(name="is_critical", columnDefinition = "boolean default false")
+    private Boolean isCritical;
 
     @JoinColumn(name = "created_by", nullable = false, foreignKey = @ForeignKey(name="FK_TRANSACTION_USER_CREATED"))
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -88,6 +91,14 @@ public class TransactionDAO {
 
 	public void setStatus(TransactionStatus status) {
 		this.status = status;
+	}
+
+	public Boolean getIsCritical() {
+		return isCritical;
+	}
+
+	public void setIsCritical(Boolean isCritical) {
+		this.isCritical = isCritical;
 	}
 
 	public UserDAO getCreatedBy() {
