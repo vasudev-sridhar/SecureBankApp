@@ -75,13 +75,13 @@ public class ChequeServiceImpl implements ChequeService {
     @Override
     public StatusResponse approveChequeIssue(Long chequeId, Authentication authentication) {
         ChequeDAO cheque = chequeRepository.findById(chequeId).get();
-        cheque.setStatus(Constants.CHEQUE_ISSUE_APPROVED);
-        chequeRepository.save(cheque);
         StatusResponse response = new StatusResponse();
         UpdateBalanceRequest updateBalanceRequest = new UpdateBalanceRequest();
         updateBalanceRequest.setAccountNo(cheque.getFromAccount().getId());
         updateBalanceRequest.setAmount(-cheque.getAmount());
         response = transactionService.updateBalance(updateBalanceRequest, authentication, true);
+        cheque.setStatus(Constants.CHEQUE_ISSUE_APPROVED);
+        chequeRepository.save(cheque);
         return response;
     }
 
@@ -101,6 +101,19 @@ public class ChequeServiceImpl implements ChequeService {
         AccountDAO toAccount = new AccountDAO();
         toAccount.setId(accountNo);
         List<ChequeDAO> response = chequeRepository.findByToAccountAndStatus(toAccount, Constants.CHEQUE_ISSUE_APPROVED);
+        return response;
+    }
+
+    @Override
+    public StatusResponse depositCheque(Long chequeId, Authentication authentication) {
+        StatusResponse response = new StatusResponse();
+        ChequeDAO cheque = chequeRepository.findById(chequeId).get();
+        UpdateBalanceRequest updateBalanceRequest = new UpdateBalanceRequest();
+        updateBalanceRequest.setAccountNo(cheque.getToAccount().getId());
+        updateBalanceRequest.setAmount(cheque.getAmount());
+        response = transactionService.updateBalance(updateBalanceRequest, authentication, true);
+        cheque.setStatus(Constants.CHEQUE_DEPOSIT_APPROVED);
+        chequeRepository.save(cheque);
         return response;
     }
 
