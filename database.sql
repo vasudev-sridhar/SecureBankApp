@@ -81,7 +81,6 @@ PRIMARY KEY (appointment_id),
 CONSTRAINT FK_Appointment FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
-SELECT * FROM ACCOUNT;
 #ALTER TABLE sample.account AUTO_INCREMENT=1000000;
 
 INSERT INTO `sample`.`ACCOUNT` (`account_no`, `user_id`, `balance`, `account_type`, `interest`, `created`, `updated`) VALUES (1, 1, 998.10, 0, 0, NOW(), NOW());
