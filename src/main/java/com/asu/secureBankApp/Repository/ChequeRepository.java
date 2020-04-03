@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ChequeRepository extends CrudRepository<ChequeDAO, Integer> {
+public interface ChequeRepository extends CrudRepository<ChequeDAO, Long> {
 
     List<ChequeDAO> findByStatus(Integer status);
 
