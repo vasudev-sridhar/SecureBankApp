@@ -1,5 +1,7 @@
 package com.asu.secureBankApp.Request;
 
+import com.asu.secureBankApp.dao.AccountDAO;
+
 import javax.validation.constraints.NotNull;
 
 public class ChequeRequest {
@@ -13,13 +15,13 @@ public class ChequeRequest {
         @NotNull
         private Float transferAmount;
 
-        public int getFromAccNo() {
+        public Integer getFromAccNo() {
             return fromAccNo;
         }
         public void setFromAccNo(Integer fromAccNo) {
             this.fromAccNo = fromAccNo;
         }
-        public int getToAccNo() {
+        public Integer getToAccNo() {
             return toAccNo;
         }
         public void setToAccNo(Integer toAccNo) {
