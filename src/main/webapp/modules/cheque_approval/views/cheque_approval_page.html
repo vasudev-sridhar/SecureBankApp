@@ -55,10 +55,10 @@
                           <!-- <td style="text-align:center">{{item.transactionTimestamp}}</td> -->
                           <!-- <td style="text-align:center" ng-hide="item.status=='PENDING'" colspan="2">{{item.status}}</td> -->
                           <td style="text-align:center" ng-show="item.status==0">
-                              <button ng-click="RespondToPendingTransactions(item.transactionId,true)">Approve</button>
+                              <button ng-click="RespondToPendingTransactions(item.checkId,true)">Approve</button>
                           </td>
                           <td style="text-align:center" ng-show="item.status==0">
-                              <button ng-click="RespondToPendingTransactions(item.transactionId,false)">Deny</button>
+                              <button ng-click="RespondToPendingTransactions(item.checkId,false)">Deny</button>
                           </td>
                       </tr>
                   </tbody>

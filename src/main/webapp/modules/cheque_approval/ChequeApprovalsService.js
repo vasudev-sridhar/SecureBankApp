@@ -75,7 +75,7 @@ angular.module('ChequeApprovals')
 
                 // Approve the given account request.
                 var action = (approve) ? "approve" : "reject";
-                $http.post('/api/transaction/' + action + '/' + id)
+                $http.post('/api/cheque/' + action + '/' + id)
                     .success(function (response) {
                         console.log(response);
                         if(!(response && response.isSuccess))

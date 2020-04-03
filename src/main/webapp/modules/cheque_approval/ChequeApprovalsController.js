@@ -59,8 +59,8 @@ angular.module('ChequeApprovals')
 						if (response && response.isSuccess) {
 							$scope.transactionResponseError = "";
 							for(var i=0; i < $scope.transactionList.length; i++) {
-								if(id==$scope.transactionList[i].transactionId) {
-									$scope.transactionList[i].status = (approve)? "Approved" : "Declined";
+								if(id==$scope.transactionList[i].checkId) {
+									$scope.transactionList[i].status = (approve)? 1 : 4;
 									break;
 								}
 							}
