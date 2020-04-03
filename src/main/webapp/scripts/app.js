@@ -13,6 +13,7 @@ angular.module('DownloadStatement', []);
 angular.module('CreateUser', []);
 angular.module('IssueCheque', []);
 angular.module('ChequeApprovals', []);
+angular.module('Otp', []);
 
 
 angular.module('SecureBankApp', [
@@ -30,7 +31,8 @@ angular.module('SecureBankApp', [
     'anguFixedHeaderTable',
     'DownloadStatement',
     'IssueCheque',
-    'ChequeApprovals'
+    'ChequeApprovals',
+    'Otp'
     /*'angularjs-crypto'*/
 ])
  .directive('disableRightClick', function() {  
@@ -106,6 +108,11 @@ angular.module('SecureBankApp', [
         	url: '/createuser',
         	templateUrl: 'modules/authentication/views/register.html',
             controller: 'CreateUserController',
+        })
+        .state('OtpTest', {
+        	url: '/OtpTest',
+        	templateUrl: 'modules/authentication/views/OtpTest.html',
+            controller: 'OtpTestController',
         })
         ;
  
