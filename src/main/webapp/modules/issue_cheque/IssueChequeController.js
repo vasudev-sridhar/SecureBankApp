@@ -7,13 +7,15 @@ angular.module('IssueCheque')
     function ($scope, $rootScope, $state, IssueChequeService) {
     	
     	$scope.fromAccountList = [];
-    	$scope.toAccountList = [];
+		$scope.toAccountList = [];
+		$scope.chequeList = [];
     	$scope.fromAccount;
     	$scope.toAccount;
 		$scope.transferAmount;
 		$scope.toAccountNew;
     	$scope.isIssueSuccess = false;
 		$scope.issueErrorMsg = "";
+		$scope.fromAccountDeposit;
 	    	    
     	$scope.getAccounts = function() {
       	  $scope.dataLoading = true;
@@ -41,7 +43,22 @@ angular.module('IssueCheque')
 	      		  }
         		  $scope.dataLoading = true;
         	  })
-          }
+		  }
+
+		  $scope.getCheques = function() {
+        	  $scope.dataLoading = true;
+        	  IssueChequeService.getAllCheques($scope.fromAccountDeposit.id, function(response) {
+				  console.log("controller response")
+				//   console.log(response)
+        		  if(response) {
+	      			  $scope.chequeList = response;
+	      		  } else {
+	      			  console.log("Something went wrong")
+	      		  }
+        		  $scope.dataLoading = true;
+        	  })
+		  }
+		  
     	
     	$scope.issueCheque = function() {
     		if(!$scope.transferAmount || $scope.transferAmount <= 0) {
@@ -71,7 +88,7 @@ angular.module('IssueCheque')
     		  }
       		  $scope.dataLoading = true;
       	  })
-        }
+		}
 	    
 	    $scope.getAccounts();
 	    $scope.getAllAccounts();

@@ -19,6 +19,19 @@ angular.module('IssueCheque')
                
            });
        };
+
+       service.getAllCheques = function (accNumber, callback) {
+       	console.log("getCheques...");
+           $http.get('/api/cheque/listAvailableCheques/' + accNumber)
+               .success(function (response) {
+               	// console.log(response);
+                   callback(response);
+           }).error(function (response) {
+              	console.log(response);
+                callback(response);
+               
+           });
+       };
        
        service.getAllAccounts = function (callback) {
           	console.log("getAllAccounts...");
