@@ -3,22 +3,23 @@
 angular.module('IssueCheque')
  
 .controller('IssueChequeController',
-    ['$scope', '$rootScope','$state','TransferFundsService',
-    function ($scope, $rootScope, $state, TransferFundsService) {
+    ['$scope', '$rootScope','$state','IssueChequeService',
+    function ($scope, $rootScope, $state, IssueChequeService) {
     	
     	$scope.fromAccountList = [];
     	$scope.toAccountList = [];
     	$scope.fromAccount;
     	$scope.toAccount;
-    	$scope.transferAmount;
-    	$scope.isTransferSuccess = false;
-    	$scope.transferErrorMsg = "";
+		$scope.transferAmount;
+		$scope.toAccountNew;
+    	$scope.isIssueSuccess = false;
+		$scope.issueErrorMsg = "";
 	    	    
     	$scope.getAccounts = function() {
       	  $scope.dataLoading = true;
       	  console.log("userid: " + $rootScope.userId)
       	  var userId = ($rootScope.isTAC)? $rootScope.tacUser.id : $rootScope.userId;
-      	  TransferFundsService.getAccounts(userId, function(response) {
+      	  IssueChequeService.getAccounts(userId, function(response) {
       		  console.log("controller response")
       		  if(response && response.accounts) {
       			  $scope.fromAccountList = response.accounts;
@@ -31,7 +32,7 @@ angular.module('IssueCheque')
     	
     	$scope.getAllAccounts = function() {
         	  $scope.dataLoading = true;
-        	  TransferFundsService.getAllAccounts(function(response) {
+        	  IssueChequeService.getAllAccounts(function(response) {
         		  console.log("controller response")
         		  if(response && response.accounts) {
 	      			  $scope.toAccountList = response.accounts;
@@ -42,29 +43,31 @@ angular.module('IssueCheque')
         	  })
           }
     	
-    	$scope.transferFunds = function() {
+    	$scope.issueCheque = function() {
     		if(!$scope.transferAmount || $scope.transferAmount <= 0) {
-    			$scope.isTransferSuccess = false;
-    			$scope.transferErrorMsg = "Amount must be greater than zero";
+    			$scope.isIssueSuccess = false;
+    			$scope.issueErrorMsg = "Amount must be greater than zero";
     			return;
     		}
-    		if($scope.fromAccount.id == $scope.toAccount.id) {
-    			$scope.isTransferSuccess = false;
-    			$scope.transferErrorMsg = "Both accounts must be different";
+    		if($scope.fromAccount.id == $scope.toAccountNew) {
+    			$scope.isIssueSuccess = false;
+    			$scope.issueErrorMsg = "Both accounts must be different";
     			return;
     		}
       	  $scope.dataLoading = true;
-      	  console.log("FromAccount:" + $scope.fromAccount.id)
-      	  TransferFundsService.transferFunds($scope.fromAccount.id, $scope.toAccount.id, $scope.transferAmount,
+			console.log("FromAccount:" + $scope.fromAccount.id)
+
+      	  IssueChequeService.issueCheque($scope.fromAccount.id, $scope.toAccountNew, $scope.transferAmount,
       			  function(response) {
-      		  console.log("controller response")
+				console.log("controller response")
+				console.log(response);
       		  if(response && response.isSuccess) {
-    			  $scope.transferErrorMsg = response.msg;
-    			  $scope.isTransferSuccess = true;
+    			  $scope.issueErrorMsg = response.msg;
+    			  $scope.isIssueSuccess = true;
     			  $scope.transferAmount = 0;
     		  } else {
-    			  $scope.transferErrorMsg = (response.msg)?response.msg : "Something went wrong";
-    			  $scope.isTransferSuccess = false;
+    			  $scope.issueErrorMsg = (response.msg)?response.msg : "Something went wrong";
+    			  $scope.isIssueSuccess = false;
     		  }
       		  $scope.dataLoading = true;
       	  })
