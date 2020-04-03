@@ -14,10 +14,12 @@ public class ChequeDAO {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long checkId;
 
+    @JsonIgnore
     @JoinColumn(name = "from_account", nullable = false, foreignKey = @ForeignKey(name="FK_CHEQUE_ACCOUNT_FROM"))
     @ManyToOne(fetch = FetchType.EAGER)
     private AccountDAO fromAccount;
 
+    @JsonIgnore
     @JoinColumn(name = "to_account", nullable = false, foreignKey = @ForeignKey(name="FK_CHEQUE_TRANSACTION_ACCOUNT_TO"))
     @ManyToOne(fetch = FetchType.EAGER)
     private AccountDAO toAccount;

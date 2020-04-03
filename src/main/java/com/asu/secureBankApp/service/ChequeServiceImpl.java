@@ -6,12 +6,15 @@ import com.asu.secureBankApp.Request.ChequeRequest;
 import com.asu.secureBankApp.Response.StatusResponse;
 import com.asu.secureBankApp.dao.AccountDAO;
 import com.asu.secureBankApp.dao.ChequeDAO;
+import com.asu.secureBankApp.dao.UserDAO;
 import constants.Status;
 import com.asu.secureBankApp.Config.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,10 +57,14 @@ public class ChequeServiceImpl implements ChequeService {
 
     @Override
     public List<ChequeDAO> listCheques(){
-        List<ChequeDAO> chequesForApproval = null;
-        chequesForApproval = chequeRepository.findByStatus(Constants.CHEQUE_ISSUE_PENDING);
+        List<ChequeDAO> chequesForApproval = chequeRepository.findByStatus(Constants.CHEQUE_ISSUE_PENDING);
+//        for(ChequeDAO cheque: chequesForApproval){
+//            AccountDAO fromAcc = cheque.getFromAccount();
+//            AccountDAO toAcc = cheque.getToAccount();
+//            fromAcc.getUser().setAuthRole(null);
+//            toAcc.getUser().setAuthRole(null);
+//        }
         return chequesForApproval;
-    }
-
-
+        }
 }
+
