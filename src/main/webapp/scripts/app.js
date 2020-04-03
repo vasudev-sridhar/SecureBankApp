@@ -10,6 +10,7 @@ angular.module('Approvals', []);
 angular.module('TAC', []);
 angular.module('HelpCenter', []);
 angular.module('DownloadStatement', []);
+angular.module('CreateUser', []);
 
 
 angular.module('SecureBankApp', [
@@ -18,6 +19,7 @@ angular.module('SecureBankApp', [
     'TransactionRequest',
     'CreditDebit',
     'TransferFunds',
+    'CreateUser',
     'HelpCenter',
     'Approvals',
     'TAC',
@@ -75,6 +77,11 @@ angular.module('SecureBankApp', [
         	url: '/downloadStatement',
         	templateUrl: 'modules/downloadStatement/views/download_statement.html',
             controller: 'DownloadStatementController',
+        })
+        .state('CreateUser', {
+        	url: '/createuser',
+        	templateUrl: 'modules/authentication/views/register.html',
+            controller: 'CreateUserController',
         })
         ;
  
