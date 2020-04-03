@@ -38,25 +38,4 @@ angular.module('Authentication')
             });
         };
         
-        $rootScope.logout = function () {
-            $scope.dataLoading = true;
-
-            AuthenticationService.Logout( function(response) {
-                if(response) {
-                	console.log("UserId " + response.userId);
-                	$rootScope.userId = undefined;
-                	$rootScope.user = undefined;
-                	$rootScope.isTAC = false;
-                	$rootScope.tacUser = undefined;
-
-                } else {
-                	if(response.status=403){
-	                	$scope.isAccessDenied = true;
-	                    $scope.error = response.message;
-	                    $scope.dataLoading = false;
-                	}
-                }
-            });
-        };
-        
     }]);
