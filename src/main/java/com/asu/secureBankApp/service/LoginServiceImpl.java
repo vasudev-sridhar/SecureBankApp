@@ -6,8 +6,11 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.asu.secureBankApp.Config.Constants;
 import com.asu.secureBankApp.Repository.AuthUserRepository;
 import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.Request.LoginRequest;
@@ -15,7 +18,6 @@ import com.asu.secureBankApp.Request.LogoutRequest;
 import com.asu.secureBankApp.Response.LoginResponse;
 import com.asu.secureBankApp.dao.AuthUserDAO;
 import com.asu.secureBankApp.dao.UserDAO;
-import com.asu.secureBankApp.Config.Constants;
 
 import constants.Status;
 
@@ -31,12 +33,14 @@ public class LoginServiceImpl implements LoginService {
 	@Autowired
 	private SystemLoggerService systemLoggerService;
 	
+	@Autowired
+	PasswordEncoder encoder;
+	
 	@Transactional
-	public LoginResponse login(@Valid LoginRequest loginRequest) {
+	public LoginResponse login(@Valid LoginRequest loginRequest, Authentication auth) {
 		LoginResponse response = new LoginResponse();
 		response.setIsSuccess(false);
-		UserDAO user = userRepository.findByUsernameAndPassword(loginRequest.getUsername(),
-				loginRequest.getPassword());
+		UserDAO user = userRepository.findByUsername(auth.getName());
 		if (user == null)
 			return response;
 		

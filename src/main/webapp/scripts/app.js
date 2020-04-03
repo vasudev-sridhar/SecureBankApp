@@ -29,8 +29,18 @@ angular.module('SecureBankApp', [
     'DownloadStatement',
     'IssueCheque',
     'ChequeApprovals'
+    /*'angularjs-crypto'*/
 ])
- 
+ .directive('disableRightClick', function() {  
+    return {  
+        restrict: 'A',  
+        link: function(scope, element, attr) {  
+            element.bind('contextmenu', function(e) {  
+                e.preventDefault();  
+            })  
+        }  
+    }  
+}) 
 .config(['$stateProvider','$urlRouterProvider',function ($stateProvider, $urlRouterProvider) {
 	console.log("$stateProvider")
 	$stateProvider 
@@ -94,10 +104,12 @@ angular.module('SecureBankApp', [
  
 	$urlRouterProvider.otherwise("/login"); 
 }])
- 
+
 .run(['$rootScope', '$location', '$cookieStore', '$http',
     function ($rootScope, $location, $cookieStore, $http) {
         // keep user logged in after page refresh
+	/*$rootScope.base64Key = CryptoJS.enc.Hex.parse('0123456789abcdef0123456789abcdef')
+	$rootScope.iv = CryptoJS.enc.Hex.parse('abcdef9876543210abcdef9876543210');*/
 	console.log("run")
         $rootScope.globals = $cookieStore.get('globals') || {};
         if ($rootScope.globals.currentUser) {

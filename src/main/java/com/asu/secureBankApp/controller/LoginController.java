@@ -42,7 +42,7 @@ public class LoginController {
         sc.setAuthentication(auth);
         HttpSession session = request.getSession(true);
         session.setAttribute("SPRING_SECURITY_CONTEXT", sc);
-        return loginService.login(loginRequest);
+        return loginService.login(loginRequest, auth);
 	}
 
 	@PostMapping(value = "/logout", consumes = { "application/json" })

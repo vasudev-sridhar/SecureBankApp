@@ -23,7 +23,7 @@ public class UserDAO {
 	@Id
 	@Column(name = "user_id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	private Integer id;
 
 	@NotNull
 	private String username;
@@ -58,11 +58,11 @@ public class UserDAO {
 
 	private Date created;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

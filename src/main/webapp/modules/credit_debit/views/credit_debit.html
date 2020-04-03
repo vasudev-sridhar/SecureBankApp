@@ -42,13 +42,15 @@
 	    <label for="fname">Credit:</label><br>
   		<input type="number" id="fname" name="fname" ng-model="credit">
   		<button class="w3-w3-button w3-padding w3-green" style="font-size:16px;" ng-click="creditAccount()"><i class="fa fa-play" style="font-size:18px;"></i> Go</button>
-  		<span style='font-size:25px;color:green;' ng-show="isCreditSuccess">&#10004;</span><br>
+  		<span style='font-size:25px;color:green;' ng-show="isCreditSuccess">&#10004; Submitted for Approval</span><br>
+  		<!-- <label ng-show="creditErrorMsg && isCreditSuccess">{{creditErrorMsg}}</label><br> -->
   		<label class="alert alert-danger" ng-show="creditErrorMsg">{{creditErrorMsg}}</label><br>
   		<br><br><br>
   		<label for="fname">Debit:</label><br>
   		<input type="number" id="fname" name="fname" ng-model="debit">
   		<button class="w3-w3-button w3-padding w3-green" style="font-size:16px;" ng-click="debitAccount()"><i class="fa fa-play" style="font-size:18px;"></i> Go</button>
-		<span style='font-size:25px;color:green;' ng-show="isDebitSuccess">&#10004;</span><br>
+		<span style='font-size:25px;color:green;' ng-show="isDebitSuccess">&#10004; Submitted for Approval</span><br>
+		<!-- <label ng-show="debitErrorMsg && isDebitSuccess">{{debitErrorMsg}}</label><br> -->
 		<label class="alert alert-danger" ng-show="debitErrorMsg">{{debitErrorMsg}}</label><br>  		
 	  </div>
       </div>
