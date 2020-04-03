@@ -93,6 +93,10 @@ angular.module('Dashboard')
     	  $rootScope.stateName = 'CreditDebit'
     	  $state.go('CreditDebit')
       }
+	    
+      $rootScope.goAccountRequest = function() {
+       	  $state.go('AccountRequest')
+      }
       
       $rootScope.goTransferFunds = function() {
     	  $rootScope.stateName = 'TransferFunds'
