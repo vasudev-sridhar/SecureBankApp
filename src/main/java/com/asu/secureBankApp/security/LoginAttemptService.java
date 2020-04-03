@@ -12,12 +12,12 @@ import com.google.common.cache.LoadingCache;
 @Service
 public class LoginAttemptService {
 
-    private final int MAX_ATTEMPT = 2;
+    private final int MAX_ATTEMPT = 3;
     private LoadingCache<String, Integer> attemptsCache;
 
     public LoginAttemptService() {
         super();
-        attemptsCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES).build(new CacheLoader<String, Integer>() {
+        attemptsCache = CacheBuilder.newBuilder().expireAfterWrite(15, TimeUnit.MINUTES).build(new CacheLoader<String, Integer>() {
             @Override
             public Integer load(final String key) {
                 return 0;

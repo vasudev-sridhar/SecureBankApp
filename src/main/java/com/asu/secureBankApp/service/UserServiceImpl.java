@@ -185,8 +185,9 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-    public Optional<AuthUserDAO> findByEmail(String email){
-        return authUserRepository.findById(userRepository.findByEmailId(email).getId());
+    public List<AuthUserDAO> findByEmail(String email){
+		UserDAO user = userRepository.findByEmailId(email);
+        return authUserRepository.findByUserId(user.getId());
     }
 
 	@Override

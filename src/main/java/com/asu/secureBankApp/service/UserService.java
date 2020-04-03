@@ -26,7 +26,7 @@ public interface UserService {
 	String checkIfUsernameExist(String username);
 	StatusResponse signup(UserDAO newUser);
 	
-	public Optional<AuthUserDAO> findByEmail(String email);
+	public List<AuthUserDAO> findByEmail(String email);
 	void saveOrUpdate(AuthUserDAO UserDAO);
 	public UserDAO findById(String username);
 
