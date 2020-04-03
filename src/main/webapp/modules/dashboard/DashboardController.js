@@ -3,8 +3,8 @@
 angular.module('Dashboard')
  
 .controller('DashboardController',
-    ['$scope', '$rootScope','$state','DashboardService',
-    function ($scope, $rootScope, $state, DashboardService) {
+    ['$scope', '$rootScope','$state','DashboardService', 'AuthenticationService',
+    function ($scope, $rootScope, $state, DashboardService, AuthenticationService) {
       console.log("DashboardService")
       $rootScope.uncheckedMenu = 'w3-bar-item w3-button w3-padding'
 	  $rootScope.checkedMenu = 'w3-bar-item w3-button w3-padding w3-blue'
@@ -47,6 +47,27 @@ angular.module('Dashboard')
     	  })
       }
       
+      $rootScope.logout = function () {
+          $scope.dataLoading = true;
+
+          AuthenticationService.Logout( function(response) {
+              if(response) {
+              	console.log("UserId " + response.userId);
+              	$rootScope.userId = undefined;
+              	$rootScope.user = undefined;
+              	$rootScope.isTAC = false;
+              	$rootScope.tacUser = undefined;
+
+              } else {
+              	if(response.status=403){
+	                	$scope.isAccessDenied = true;
+	                    $scope.error = response.message;
+	                    $scope.dataLoading = false;
+              	}
+              }
+          });
+      };
+      
       $rootScope.formatDate = function(timestamp) {
 
 	    	 // Months array
@@ -81,8 +102,10 @@ angular.module('Dashboard')
       
       $rootScope.goLogout = function() {
     	  //call Logout
-    	  $rootScope.logout();
-    	  $rootScope.stateName = 'Login'
+    	  if($rootScope) {
+    		  $rootScope.logout();
+    		  $rootScope.stateName = 'Login'    		  
+    	  }
     	  $state.go('Login')
       }
       
