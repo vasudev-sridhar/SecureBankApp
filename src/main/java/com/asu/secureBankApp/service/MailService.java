@@ -9,7 +9,7 @@ import javax.mail.Session;
 import javax.mail.Transport; 
   
   
-public class MailService 
+public class MailService
 { 
   
    public static void sendmail(String mail,String Otp){     
@@ -30,7 +30,8 @@ public class MailService
       properties.put("mail.smtp.port", "465");
       properties.put("mail.smtp.ssl.enable", "true");
       properties.put("mail.smtp.auth", "true");
-      
+      properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+
       // creating session object to get properties 
       Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 

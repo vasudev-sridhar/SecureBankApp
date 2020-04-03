@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
+import com.asu.secureBankApp.Repository.AuthUserRepository;
 import com.asu.secureBankApp.dao.AuthUserDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class OtpController {
 	
 	@Autowired
 	UserService userService;
+
+	@Autowired
+	AuthUserRepository authUserRepository;
 	
 	int windowMillis =5000;
 	
@@ -58,7 +62,8 @@ public class OtpController {
 	            authUser.setOtp(otp);
 	            authUser.setr(r);
 	            authUser.setExpiry(new Timestamp(System.currentTimeMillis()));
-	            userService.saveOrUpdate(authUser);
+//	            userService.saveOrUpdate(authUser);
+				authUserRepository.save(authUser);
         	}else {
         		return response;
         	}
@@ -78,7 +83,8 @@ public class OtpController {
 		String username = authentication.getName();
 		System.out.println(otp);
 		System.out.println(username);
-		String mail1= userService.findById(username).getEmailId();  
+//		String mail1= userService.findById(username).getEmailId();
+		String mail1= userRepository.findByUsername(username).getEmailId();
 		System.out.println(mail1);
 		AuthUserDAO authUser1 = userService.findByEmail(mail1).orElseGet(null);
 		String r = authUser1.getr();
