@@ -15,6 +15,7 @@ angular.module('CreateUser', []);
 angular.module('IssueCheque', []);
 angular.module('ChequeApprovals', []);
 angular.module('Otp', []);
+angular.module('AdminLog', []);
 
 
 angular.module('SecureBankApp', [
@@ -34,7 +35,8 @@ angular.module('SecureBankApp', [
     'DownloadStatement',
     'IssueCheque',
     'ChequeApprovals',
-    'Otp'
+    'Otp',
+    'AdminLog'
     /*'angularjs-crypto'*/
 ])
  .directive('disableRightClick', function() {  
@@ -120,6 +122,11 @@ angular.module('SecureBankApp', [
         	url: '/OtpTest',
         	templateUrl: 'modules/authentication/views/OtpTest.html',
             controller: 'OtpTestController',
+        })
+        .state('AdminLog', {
+        	url: '/AdminLog',
+        	templateUrl: 'modules/admin_log/views/admin_log.html',
+            controller: 'AdminLogController',
         })
         ;
  

@@ -11,6 +11,7 @@ angular.module('Dashboard')
       $scope.accountList = [];
 	  $rootScope.isEmployee = false;
 	  $rootScope.isTier1 = false;
+	  $rootScope.isAdmin = false;
       $rootScope.isTAC = ($rootScope.isTAC)? $rootScope.isTAC : false;
       $scope.getAccounts = function() {
     	  var userId = ($rootScope.isTAC)? $rootScope.tacUser.id : $rootScope.userId;
@@ -41,6 +42,11 @@ angular.module('Dashboard')
     				  console.log("isTier1!")
     				  $rootScope.isTier1 = true;
     				  console.log($rootScope.isTier1)
+				  }
+				  if(a == "ADMIN") {
+    				  console.log("isAdmin!")
+    				  $rootScope.isAdmin = true;
+    				  console.log($rootScope.isAdmin)
     			  }
     		  }
     		  $scope.dataLoading = true;
@@ -168,7 +174,12 @@ angular.module('Dashboard')
 		  $rootScope.stateName = 'ChequeApprovals'
     	  $state.go('ChequeApprovals')
 	  }
-      
+	  
+	  $rootScope.goAdminLog = function() {
+		  $rootScope.stateName = 'AdminLog'
+    	  $state.go('AdminLog')
+	  }
+
       $scope.getUser($rootScope.userId)
       $scope.getAccounts();
     }]);

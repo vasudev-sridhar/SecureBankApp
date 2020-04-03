@@ -3,27 +3,32 @@
 angular.module('AdminLog')
 
     .controller('AdminLogController',
-        ['$scope', '$rootScope', '$state', 'AdminLogService',
-            function ($scope, $rootScope, $state, AdminLogService) {
-                // reset login status
-                console.log("AdminLogController")
+            ['$scope', '$rootScope', '$state','$location', 'AdminLogService',
+            function ($scope, $rootScope, $state, $location, AdminLogService) {
+        		$scope.transactionResponseError = "";
+                // Do stuff
+        		if(!$rootScope.isEmployee) {
+        			alert("Invalid Access! Only for Employees")
+        			$state.go('Dashboard')
+        		}
+				// Get pending transactions for approval.
+				$scope.GetPendingIssueTransactions = function () {
 
-                $scope.GetLog = function () {
-                    $scope.dataLoading = true;
+					$scope.dataLoading = true;
+					AdminLogService.GetTransactionsPendingApproval(function (response) {
 
-                    AdminLogService.GetLog(function (response) {
+						console.log(response)
 
-                        console.log(response)
+						if (response) {
+							$scope.transactionList = response;
+							for(var i=0; i < $scope.transactionList.length; i++) {
+							  var t = $scope.transactionList[i].transactionTimestamp;
+							  $scope.transactionList[i].transactionTimestamp = $rootScope.formatDate(t);
+							}
+						}
 
-                        if (response.isSuccess) {
-
-                            // Set the log on the scope to the returned log.
-                            $scope.log = response.log;
-                        } else {
-                            $scope.error = response.message;
-                        }
-
-                        $scope.dataLoading = false;
-                    });
-                };
+						$scope.dataLoading = false;
+					})
+                }
+                $scope.GetPendingIssueTransactions();
             }]);
