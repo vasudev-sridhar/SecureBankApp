@@ -36,4 +36,9 @@ public class ChequeController {
         return chequeService.approveChequeIssue(chequeId, authentication);
     }
 
+    @PostMapping(value = "/reject/{chequeId}")
+    public StatusResponse rejectChequeIssue(@PathVariable Long chequeId) {
+        return chequeService.rejectChequeIssue(chequeId);
+    }
+
 }

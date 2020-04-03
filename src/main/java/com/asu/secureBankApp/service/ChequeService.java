@@ -15,4 +15,6 @@ public interface ChequeService {
     List<ChequeDAO> listCheques();
 
     StatusResponse approveChequeIssue(Long chequeId, Authentication authentication);
+
+    StatusResponse rejectChequeIssue(Long chequeId);
 }

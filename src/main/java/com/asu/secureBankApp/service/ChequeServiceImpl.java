@@ -82,8 +82,20 @@ public class ChequeServiceImpl implements ChequeService {
         updateBalanceRequest.setAccountNo(cheque.getFromAccount().getId());
         updateBalanceRequest.setAmount(-cheque.getAmount());
         response = transactionService.updateBalance(updateBalanceRequest, authentication, true);
-        return  response;
+        return response;
     }
+
+    @Override
+    public StatusResponse rejectChequeIssue(Long chequeId) {
+        ChequeDAO cheque = chequeRepository.findById(chequeId).get();
+        cheque.setStatus(Constants.CHEQUE_INVALID);
+        chequeRepository.save(cheque);
+        StatusResponse response = new StatusResponse();
+        response.setIsSuccess(true);
+        response.setMsg("Cheque sent for issue approval");
+        return response;
+    }
+
 
 }
 

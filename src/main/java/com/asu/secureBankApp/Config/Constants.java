@@ -22,5 +22,6 @@ public class Constants {
     public static final int CHEQUE_ISSUE_APPROVED = 1;
     public static final int CHEQUE_DEPOSIT_PENDING = 2;
     public static final int CHEQUE_DEPOSIT_APPROVED = 3;
+    public static final int CHEQUE_INVALID = 4 ;
 
 }
