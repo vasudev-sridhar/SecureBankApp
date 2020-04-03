@@ -46,6 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/user/doesUsernameExist/*").permitAll()
             .antMatchers("/api/cheque/*").permitAll()
             .antMatchers("/api/cheque/listAvailableCheques/*").permitAll()
+			.antMatchers("/api/generateOtp/*").permitAll()
+			.antMatchers("/api/verifyOtp*").permitAll()
 			.antMatchers("/api/login").permitAll()
 			.antMatchers("/api/transaction/balance", "/api/transaction/transfer", "/api/transaction/get*").hasAnyAuthority("AUTHORIZE_CUSTOMER_TRANSFER_REQUEST")
 			.antMatchers("/api/transaction/approve/*","/api/transaction/reject/*").hasAnyAuthority("AUTHORIZE_CRITICAL_TRANSACTIONS")
