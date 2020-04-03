@@ -1,3 +1,4 @@
+drop database if exists sample;
 create database sample;
 
 CREATE TABLE sample.auth_role (
@@ -75,7 +76,7 @@ create table sample.appointment (
 appointment_id  int(11) NOT NULL AUTO_INCREMENT, 
 user_id int(11) NOT NULL, 
 app_date Date NOT NULL, 
-app_time Time NOT NULL, 
+app_time varchar(10) NOT NULL, 
 PRIMARY KEY (appointment_id),
 CONSTRAINT FK_Appointment FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
@@ -155,15 +156,6 @@ CREATE TABLE sample.transaction (
   CONSTRAINT FK_TRANSACTION_USER_APPROVED FOREIGN KEY (approved_by) REFERENCES user(user_id),
   CONSTRAINT FK_TRANSACTION_USER_CREATED FOREIGN KEY (created_by) REFERENCES user(user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table sample.appointment (
-appointment_id  int(11) NOT NULL AUTO_INCREMENT, 
-user_id int(11) NOT NULL, 
-app_date Date NOT NULL, 
-app_time varchar(10) NOT NULL, 
-PRIMARY KEY (appointment_id),
-CONSTRAINT FK_Appointment FOREIGN KEY (user_id) REFERENCES user(user_id)
-);
 
 insert into `sample`.`appointment` (`user_id`, `app_date`, `app_time`) values (1, "2020-03-07", "4pm");
 
