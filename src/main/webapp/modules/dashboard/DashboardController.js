@@ -9,7 +9,8 @@ angular.module('Dashboard')
       $rootScope.uncheckedMenu = 'w3-bar-item w3-button w3-padding'
 	  $rootScope.checkedMenu = 'w3-bar-item w3-button w3-padding w3-blue'
       $scope.accountList = [];
-      $rootScope.isEmployee = false;
+	  $rootScope.isEmployee = false;
+	  $rootScope.isTier1 = false;
       $rootScope.isTAC = ($rootScope.isTAC)? $rootScope.isTAC : false;
       $scope.getAccounts = function() {
     	  var userId = ($rootScope.isTAC)? $rootScope.tacUser.id : $rootScope.userId;
@@ -35,6 +36,11 @@ angular.module('Dashboard')
     				  console.log("employee!")
     				  $rootScope.isEmployee = true;
     				  console.log($rootScope.isEmployee)
+				  }
+				  if(a == "TIER1") {
+    				  console.log("isTier1!")
+    				  $rootScope.isTier1 = true;
+    				  console.log($rootScope.isTier1)
     			  }
     		  }
     		  $scope.dataLoading = true;
@@ -128,6 +134,11 @@ angular.module('Dashboard')
 	  $rootScope.goIssueCheque = function() {
 		  $rootScope.stateName = 'IssueCheque'
     	  $state.go('IssueCheque')
+	  }
+
+	  $rootScope.goApproveCheque = function() {
+		  $rootScope.stateName = 'ChequeApprovals'
+    	  $state.go('ChequeApprovals')
 	  }
       
       $scope.getUser($rootScope.userId)

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="SecureBankApp">
   <head>
-    <title>Transfer Funds</title>
+    <title>Download Statement</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
@@ -27,7 +27,7 @@
 
 	<div style = "position:relative; left:350px;width: 100%;">
 	<header class="w3-container" style="padding-top:22px">
-	    <h5><b><i class="fa fa-dashboard"></i> Pick Account</b></h5>
+	    <!-- <h5><b><i class="fa fa-dashboard"></i> Pick Account</b></h5> -->
   	</header>
   	<br>
   	<!-- <label>From Account:   </label>
@@ -39,7 +39,9 @@
   		<button class="w3-w3-button w3-padding w3-green" style="font-size:16px;" ng-click="downloadStatement()"><i class="fa fa-play" style="font-size:18px;"></i> Download Statement</button>
   		<span style='font-size:25px;color:green;' ng-show="isDownloadSuccess">&#10004;</span><br>
   		<label ng-show="downloadErrorMsg && isDownloadSuccess">{{downloadErrorMsg}}</label><br>
-  		<label class="alert alert-danger" ng-show="downloadErrorMsg && !isDownloadSuccess">{{downloadErrorMsg}}</label><br>
+		  <label class="alert alert-danger" ng-show="downloadErrorMsg && !isDownloadSuccess">{{downloadErrorMsg}}</label><br>
+		  <label>Password is ddmmyy of theuser's DOB(yy is last two digits of year)</label><br>
+		  <label>(if date/month is less than 10, use dmyy )</label>  	
   		<br><br><br>  		
 	  </div>
 	</div>

@@ -13,7 +13,7 @@ angular.module('DownloadStatement')
     	
     	$scope.downloadStatement = function() {
 			$scope.dataLoading = true;
-			var fileName = "file_name.pdf";
+			var fileName = "Accounts_Statement.pdf";
             var a = document.createElement("a");
             document.body.appendChild(a);
       	  console.log("Downloading Statement")
