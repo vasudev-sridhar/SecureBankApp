@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.asu.secureBankApp.Repository.AuthRoleRepository;
 import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.Request.UserDOBRequest;
 import com.asu.secureBankApp.Request.UserRequest;
@@ -23,6 +24,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
     private UserRepository userRepository;
+	
+	@Autowired
+	private AuthRoleRepository authRoleRepository;
 
 //    @Autowired
 //    private  AuthUserRepository authUserRepository;
@@ -119,6 +123,7 @@ public class UserServiceImpl implements UserService {
     	StatusResponse response = new StatusResponse();
 		response.setIsSuccess(false);	
 		UserDAO userDAO = userRepository.findById(userReq.getUserid()).orElseGet(null);
+		System.out.println(userReq.getNewInfo());
 		userDAO.setDob(userReq.getNewInfo());
 		userRepository.save(userDAO);
 		response.setIsSuccess(true);
@@ -135,9 +140,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public StatusResponse signup(UserDAO newUser) {
+		
 		AuthRoleDAO authRole = new AuthRoleDAO();
 		authRole.setId(4);
+		authRole = authRoleRepository.findById(4).orElseGet(null);
 		newUser.setAuthRole(authRole);
+		System.out.println(newUser.toString());
 		userRepository.save(newUser);
 		StatusResponse response = new StatusResponse();
 		response.setIsSuccess(true);
