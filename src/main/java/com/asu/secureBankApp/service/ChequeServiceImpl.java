@@ -3,6 +3,7 @@ package com.asu.secureBankApp.service;
 import com.asu.secureBankApp.Repository.AccountRepository;
 import com.asu.secureBankApp.Repository.ChequeRepository;
 import com.asu.secureBankApp.Request.ChequeRequest;
+import com.asu.secureBankApp.Request.UpdateBalanceRequest;
 import com.asu.secureBankApp.Response.StatusResponse;
 import com.asu.secureBankApp.dao.AccountDAO;
 import com.asu.secureBankApp.dao.ChequeDAO;
@@ -10,6 +11,7 @@ import com.asu.secureBankApp.dao.UserDAO;
 import constants.Status;
 import com.asu.secureBankApp.Config.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,9 @@ public class ChequeServiceImpl implements ChequeService {
 
     @Autowired
     ChequeRepository chequeRepository;
+
+    @Autowired
+    TransactionService transactionService;
 
     @Override
     public StatusResponse issueCheque(ChequeRequest chequeRequest) {
@@ -66,5 +71,19 @@ public class ChequeServiceImpl implements ChequeService {
 //        }
         return chequesForApproval;
         }
+
+    @Override
+    public StatusResponse approveChequeIssue(Long chequeId, Authentication authentication) {
+        ChequeDAO cheque = chequeRepository.findById(chequeId).get();
+        cheque.setStatus(Constants.CHEQUE_ISSUE_APPROVED);
+        chequeRepository.save(cheque);
+        StatusResponse response = new StatusResponse();
+        UpdateBalanceRequest updateBalanceRequest = new UpdateBalanceRequest();
+        updateBalanceRequest.setAccountNo(cheque.getFromAccount().getId());
+        updateBalanceRequest.setAmount(-cheque.getAmount());
+        response = transactionService.updateBalance(updateBalanceRequest, authentication, true);
+        return  response;
+    }
+
 }
 
