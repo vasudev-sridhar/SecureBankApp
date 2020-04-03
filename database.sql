@@ -29,9 +29,9 @@ CREATE TABLE sample.user (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `sample`.`user` (`user_id`, `auth_role_id`,`username`,`password`,`name`,`dob`, `contact`, `email_id`, `address`, `created`) VALUES 
-(1, 1, 'bhargavi', 'b12345', 'Bhargavi Hopper', NOW(),'4802863456', 'bhargavineti@gmail.com', 'Agave', NOW());
+(1, 1, 'bhargavi', '8989e805956d8fdeeeaf0007ac273217', 'Bhargavi Hopper', NOW(),'4802863456', 'bhargavineti@gmail.com', 'Agave', NOW());
 INSERT INTO `sample`.`user` (`user_id`, `auth_role_id`,`username`,`password`,`name`,`dob`, `contact`, `email_id`, `address`, `created`) VALUES 
-(2, 4, 'noob', '12345', 'Noob Noober', NOW(),'4802743516', 'vsridh20@asu.edu', 'Thrive', NOW());
+(2, 4, 'noob', '827ccb0eea8a706c4c34a16891f84e7b', 'Noob Noober', NOW(),'4802743516', 'vsridh20@asu.edu', 'Thrive', NOW());
 
 CREATE TABLE sample.auth_user (
   auth_user_id int(11) NOT NULL AUTO_INCREMENT,
