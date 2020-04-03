@@ -54,19 +54,10 @@ angular.module('Authentication')
         };
 
         // Create a new user.
-        service.CreateUser = function (name, birthday, email, phone, address, username, password, callback) {
-        	var body = {
-        			"name" :name,
-        			"dob" : birthday,
-        			"emailId" : email,
-        			"contact" : phone,
-        			"address" : address,
-        			"username" : username,
-        			"password" : password
-        	};
-        	console.log(body);
+        service.CreateUser = function (name, birthday, email, phone, address, username, password) {
+
             // Log in the new user.
-            $http.post('/api/user/signup', body)
+            $http.post('/api/user/signup', { name: name, dob: birthday, emailId: email, contact: phone, address: address, username: username, password: password })
                 .success(function (response) {
                     console.log(response);
                     if (!response.isSuccess) {
@@ -105,8 +96,6 @@ angular.module('Authentication')
                 response.message = "Password is weak. Try adding more special characters, and do not use known words.";
                 response.ok = true;
             }
-            return response;
-            //callback(response);
         };
 
         // Check if username is already taken.

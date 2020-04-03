@@ -16,9 +16,7 @@ angular.module('Approvals')
 				$scope.GetPendingTransactions = function () {
 
 					$scope.dataLoading = true;
-					var role = $rootScope.user.authRole.roleType;
-					var isCritical = (role == 'TIER2' || role == 'ADMIN')
-					ApprovalsService.GetTransactionsPendingApproval(isCritical, function (response) {
+					ApprovalsService.GetTransactionsPendingApproval(function (response) {
 
 						console.log(response)
 

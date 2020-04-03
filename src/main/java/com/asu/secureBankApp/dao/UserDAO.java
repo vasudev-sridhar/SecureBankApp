@@ -34,13 +34,6 @@ public class UserDAO {
 	@NotNull
 	private String name;
 	
-	@Override
-	public String toString() {
-		return "UserDAO [id=" + id + ", username=" + username + ", password=" + password + ", name=" + name + ", dob="
-				+ dob + ", contact=" + contact + ", emailId=" + emailId + ", address=" + address + ", authRole="
-				+ authRole + ", accounts=" + accounts + ", created=" + created + "]";
-	}
-
 	private Date dob;
 	
 	@NotNull

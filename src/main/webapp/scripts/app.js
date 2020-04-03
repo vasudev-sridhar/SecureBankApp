@@ -12,7 +12,6 @@ angular.module('HelpCenter', []);
 angular.module('DownloadStatement', []);
 angular.module('IssueCheque', []);
 angular.module('ChequeApprovals', []);
-angular.module('CreateUser', []);
 
 
 angular.module('SecureBankApp', [
@@ -21,7 +20,6 @@ angular.module('SecureBankApp', [
     'TransactionRequest',
     'CreditDebit',
     'TransferFunds',
-    'CreateUser',
     'HelpCenter',
     'Approvals',
     'TAC',
@@ -82,7 +80,6 @@ angular.module('SecureBankApp', [
         	templateUrl: 'modules/downloadStatement/views/download_statement.html',
             controller: 'DownloadStatementController',
         })
-
         .state('IssueCheque', {
         	url: '/issueCheque',
         	templateUrl: 'modules/issue_cheque/views/issue_cheque.html',
@@ -92,12 +89,6 @@ angular.module('SecureBankApp', [
         	url: '/chequeApprovals',
         	templateUrl: 'modules/cheque_approval/views/cheque_approval_page.html',
             controller: 'ChequeApprovalsController',
-        })
-        .state('CreateUser', {
-        	url: '/createuser',
-        	templateUrl: 'modules/authentication/views/register.html',
-            controller: 'CreateUserController',
-
         })
         ;
  

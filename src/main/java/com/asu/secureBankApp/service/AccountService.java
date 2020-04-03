@@ -21,10 +21,6 @@ public interface AccountService {
 	
 	AccountResponses getAccounts(String userId);
 	
-	AccountResponses getAccountsbyEmail(String emailId);
-	
-	AccountResponses getAccountsbyPhone(String phone);
-	
 	AccountResponses getAllAccounts();
 
 	String accountToString(Map<String, Object> accountMap) throws JsonProcessingException;

@@ -99,13 +99,11 @@ angular.module('Approvals')
 
             // Get pending transaction approvals for customer.
             //      callback = the function to run when the updating is complete
-            service.GetTransactionsPendingApproval = function (isCritical, callback) {
+            service.GetTransactionsPendingApproval = function (callback) {
 
                 // Get existing request records for the customer.
                 //      Status = 3 refers to any requests that are pending approval.
                 var query = "?status=3";
-                if(isCritical)
-                	query += '&isCritical=true'
                 $http.get('/api/transaction/get' + query)
                     .success(function (response) {
                         console.log(response);

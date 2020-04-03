@@ -1,18 +1,16 @@
 'use strict';
 
-angular.module('CreateUser')
+angular.module('Authentication')
 
-    .controller('CreateUserController', 
+    .controller('CreateUserController',
         ['$scope', '$rootScope', '$state', 'AuthenticationService',
             function ($scope, $rootScope, $state, AuthenticationService) {
                 // reset login status
                 console.log("CreateUserController")
                 AuthenticationService.ClearCredentials();
-                $scope.passwordMessage="password";
 
                 $scope.CreateUser = function () {
                     $scope.dataLoading = true;
-                    console.log("registration");                 
 
                     var validUsername = AuthenticationService.CheckUserNameAvailability($scope.username);
                     // Set the message and return if the username is not valid (available).
@@ -22,7 +20,7 @@ angular.module('CreateUser')
                     }
 
                     // Username is valid, so clear the message.
-                    $scope.usernameMessage = "";
+                    $scop.usernameMessage = "";
 
                     var validPwd = AuthenticationService.ValidatePassword($scope.password);
 
@@ -38,26 +36,11 @@ angular.module('CreateUser')
 
                         if (response.isSuccess) {
                             console.log("UserId " + response.userId);
-                            AuthenticationService.Login($scope.username, $scope.password, function(response) {
-                            	console.log("controller response")
-                            	console.log(response)
-                                if(response.isSuccess) {
-                                	console.log("UserId " + response.userId);
-                                	$rootScope.userId = response.userId;
-                                    AuthenticationService.SetCredentials($scope.username, $scope.password);
-                                    //$state.go('/');
-                                    $rootScope.stateName = 'Dashboard'
-                                    $state.go('Dashboard')
-                                } else {
-                                    $scope.error = response.message;
-                                    $scope.dataLoading = false;
-                                }
-                            });
-                            /*$rootScope.userId = response.userId;
+                            $rootScope.userId = response.userId;
                             AuthenticationService.SetCredentials($scope.username, $scope.password);
 
                             $rootScope.stateName = 'Dashboard'
-                            $state.go('Dashboard')*/
+                            $state.go('Dashboard')
                         } else {
                             $scope.error = response.message;
                             $scope.dataLoading = false;
@@ -66,11 +49,9 @@ angular.module('CreateUser')
                 };
 
                 $scope.ValidatePassword = function () {
-                	console.log("pwvalide");
                     $scope.dataLoading = true;
-                    var validPwd;
-                    
-                    validPwd = AuthenticationService.ValidatePassword($scope.password);
+
+                    var validPwd = AuthenticationService.ValidatePassword($scope.password);
 
                     // Set the message and valid password flag.
                     $scope.passwordMessage = validPwd.message;

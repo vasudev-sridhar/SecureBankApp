@@ -61,13 +61,13 @@ public class TransactionController {
 
 	@PostMapping(value = "/balance")
 	public @ResponseBody StatusResponse updateBalance(@RequestBody @Valid UpdateBalanceRequest updateBalanceRequest,
-			Authentication auth) throws Exception {
+			Authentication auth) {
 		return transactionService.updateBalance(updateBalanceRequest, auth, false);
 	}
 
 	@PostMapping(value = "/approve/{transaction_id}")
 	public @ResponseBody StatusResponse approveTransaction(@PathVariable(value = "transaction_id") String transactionId,
-			Authentication auth) throws Exception {
+			Authentication auth) {
 		return transactionService.approveTransaction(transactionId, auth);
 	}
 
@@ -80,13 +80,12 @@ public class TransactionController {
 	@GetMapping(value = "/get")
 	public @ResponseBody List<TransactionDAO> getTransaction(@RequestParam(required = false) Integer type,
 			@RequestParam(required = false) Integer status, @RequestParam(required = false) String userName,
-			@RequestParam(required = false, defaultValue = "false") Boolean isCritical, Authentication auth) throws Exception {
-		return transactionService.getTransaction(type, status, userName, isCritical, auth);
+			Authentication auth) throws Exception {
+		return transactionService.getTransaction(type, status, userName, auth);
 	}
 
 	@RequestMapping(value = "/statement", method = RequestMethod.GET, produces = "application/pdf")
-	public ResponseEntity<InputStreamResource> downloadStatement(@RequestParam(required = false) String userName,
-			Authentication auth) throws Exception {
+	public ResponseEntity<InputStreamResource> downloadStatement(@RequestParam(required = false) String userName, Authentication auth) throws Exception {
 		return transactionService.downloadStatement(userName, auth);
 	}
 }

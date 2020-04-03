@@ -16,17 +16,17 @@ public interface TransactionService {
 	
 	StatusResponse transfer(TransferRequest transferReq, Authentication auth, boolean isApproved);
 	
-	StatusResponse updateBalance(UpdateBalanceRequest updateBalanceRequest, Authentication auth, boolean isApproved) throws Exception;
+	StatusResponse updateBalance(UpdateBalanceRequest updateBalanceRequest, Authentication auth, boolean isTransfer);
 	
 	boolean doUpdateBalance(UpdateBalanceRequest updateBalanceRequest);
 	
-	StatusResponse approveTransaction(String transactionId, Authentication auth) throws Exception;
+	StatusResponse approveTransaction(String transactionId, Authentication auth);
 	
 	StatusResponse rejectTransaction(String transactionId, Authentication auth);
 	
-	StatusResponse submitTransactionToHyperledger(TransactionDAO transactionDAO);
+	StatusResponse submitTransactionRequest(TransactionDAO transactionDAO);
 	
-	List<TransactionDAO> getTransaction(Integer type, Integer status, String userName, Boolean isCritical, Authentication auth) throws Exception;
+	List<TransactionDAO> getTransaction(Integer type, Integer status, String userName, Authentication auth) throws Exception;
 	
 	ResponseEntity<InputStreamResource> downloadStatement(String userName, Authentication auth) throws IOException, Exception;
 }

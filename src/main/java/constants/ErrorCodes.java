@@ -10,13 +10,9 @@ public final class ErrorCodes {
 	
 	public static final String INVALID_ACCESS = "Invalid Access";
 	
-	public static final String TIER_2_ACCESS = "Only Tier 2 can approve critical transactions";
-	
 	public static final String INSUFFICIENT_FUNDS = "Insufficient funds";
 	
 	public static final String FAIL = "Something goes wrong";
 	
 	public static final String SUBMIT_APPROVAL = "Request submitted for approval";
-	
-	public static final String TO_ACCOUNT_SAME = "To Account must be different from source Account";
 }
