@@ -98,7 +98,10 @@ public class ChequeServiceImpl implements ChequeService {
 
     @Override
     public List<ChequeDAO> listChequesForUser(Integer accountNo) {
-        return chequeRepository.findByToAccount(accountNo);
+        AccountDAO toAccount = new AccountDAO();
+        toAccount.setId(accountNo);
+        List<ChequeDAO> response = chequeRepository.findByToAccountAndStatus(toAccount, Constants.CHEQUE_ISSUE_APPROVED);
+        return response;
     }
 
 
