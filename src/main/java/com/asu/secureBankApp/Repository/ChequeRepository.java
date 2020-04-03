@@ -13,4 +13,6 @@ public interface ChequeRepository extends CrudRepository<ChequeDAO, Long> {
 
     List<ChequeDAO> findByStatus(Integer status);
 
+    List<ChequeDAO> findByToAccount(Integer accountNo);
+
 }

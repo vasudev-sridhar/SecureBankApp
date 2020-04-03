@@ -96,6 +96,11 @@ public class ChequeServiceImpl implements ChequeService {
         return response;
     }
 
+    @Override
+    public List<ChequeDAO> listChequesForUser(Integer accountNo) {
+        return chequeRepository.findByToAccount(accountNo);
+    }
+
 
 }
 

@@ -16,12 +16,12 @@ public class ChequeDAO {
 
     @JsonIgnore
     @JoinColumn(name = "from_account", nullable = false, foreignKey = @ForeignKey(name="FK_CHEQUE_ACCOUNT_FROM"))
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private AccountDAO fromAccount;
 
     @JsonIgnore
     @JoinColumn(name = "to_account", nullable = false, foreignKey = @ForeignKey(name="FK_CHEQUE_TRANSACTION_ACCOUNT_TO"))
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private AccountDAO toAccount;
 
     @Column(name = "amount")

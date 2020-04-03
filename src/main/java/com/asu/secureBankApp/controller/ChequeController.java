@@ -41,4 +41,9 @@ public class ChequeController {
         return chequeService.rejectChequeIssue(chequeId);
     }
 
+    @GetMapping(value = "/listAvailableCheques/{accountNo}")
+    public List<ChequeDAO> listChequesForUser(@PathVariable Integer accountNo) {
+        return chequeService.listChequesForUser(accountNo);
+    }
+
 }
