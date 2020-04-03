@@ -44,7 +44,10 @@
     <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='HelpCenter')?checkedMenu:uncheckedMenu" ng-click="goHelpandSupport()"><i class="fa fa-users fa-fw"></i>  Help and Support</button>
     <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='Approvals')?checkedMenu:uncheckedMenu" ng-click="goApprovals()" ng-show="isEmployee"><i class="fa fa-users fa-fw"></i>  Approvals</button>
     <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='TAC')?checkedMenu:uncheckedMenu" ng-click="goTAC()" ng-show="isEmployee"><i class="fa fa-users fa-fw"></i>Technical Account Access</button>
+    <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='ApproveCheque')?checkedMenu:uncheckedMenu" ng-click="goApproveCheque()" ng-show="isTier1"><i class="fa fa-users fa-fw"></i>Approve Issue Cheque</button>    
     <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='DownloadStatement')?checkedMenu:uncheckedMenu" ng-click="goDownloadStatement()"><i class="fa fa-users fa-fw"></i>Download Account Statement</button>
+    <button class="w3-bar-item w3-button w3-padding" ng-class="(stateName=='IssueCheque')?checkedMenu:uncheckedMenu" ng-click="goIssueCheque()"><i class="fa fa-users fa-fw"></i>Issue Cheque</button>
+    
   </div>
 </nav>
 </div>

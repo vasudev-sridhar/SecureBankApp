@@ -8,8 +8,7 @@ angular.module('Authentication')
         // reset login status
     	console.log("LoginController")
         AuthenticationService.ClearCredentials();
-    	$scope.goCreateUser = function () {$state.go('CreateUser')}
-    	
+ 
         $scope.login = function () {
             $scope.dataLoading = true;
             AuthenticationService.Login($scope.username, $scope.password, function(response) {

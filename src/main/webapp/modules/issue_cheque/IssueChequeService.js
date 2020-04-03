@@ -1,8 +1,8 @@
 'use strict';
  
-angular.module('TransferFunds')
+angular.module('IssueCheque')
  
-.factory('TransferFundsService',
+.factory('IssueChequeService',
     ['Base64', '$http', '$rootScope', '$timeout',
     function (Base64, $http, $rootScope, $timeout) {
         var service = {};
@@ -19,7 +19,33 @@ angular.module('TransferFunds')
                
            });
        };
+
+       service.getAllCheques = function (accNumber, callback) {
+       	console.log("getCheques...");
+           $http.get('/api/cheque/listAvailableCheques/' + accNumber)
+               .success(function (response) {
+               	// console.log(response);
+                   callback(response);
+           }).error(function (response) {
+              	console.log(response);
+                callback(response);
+               
+           });
+       };
        
+       service.depositCheque = function (chequeNumber, callback) {
+           console.log("getCheques...");
+           $http.post('/api/cheque/depositCheque/' + chequeNumber)
+               .success(function (response) {
+               	console.log(response);
+                   callback(response);
+           }).error(function (response) {
+              	console.log(response);
+                callback(response);
+               
+           });
+       };
+
        service.getAllAccounts = function (callback) {
           	console.log("getAllAccounts...");
               $http.get('/api/account/get')
@@ -32,15 +58,19 @@ angular.module('TransferFunds')
                    
                });
           };
+
           
-      service.transferFunds = function (frmAcc,toAcc, transferAmt, callback) {
-        	console.log("transferFunds...");
+          
+      service.issueCheque = function (frmAcc,toAcc, transferAmt, callback) {
+        	console.log("issue Cheque...");
         	var body = {
             		"fromAccNo":frmAcc,
             		"toAccNo": toAcc,
             		"transferAmount" : transferAmt
-            	}
-            $http.post('/api/transaction/transfer', body)
+                }
+            // var transactions = JSON.stringify(transaction_details);
+            console.log(body);
+            $http.post('api/cheque/issue', body)
                 .success(function (response) {
                 	console.log(response);
                     callback(response);

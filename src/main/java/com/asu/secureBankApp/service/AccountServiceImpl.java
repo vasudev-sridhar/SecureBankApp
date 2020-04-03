@@ -110,36 +110,6 @@ public class AccountServiceImpl implements AccountService {
 		response.setAccounts(accounts);
 		return response;
 	}
-	
-	@Override
-	public AccountResponses getAccountsbyEmail(String emailId) {
-		AccountResponses response = new AccountResponses();
-		//System.out.println(emailId);
-		UserDAO userDao = userRepository.findByEmailId(emailId);
-		//System.out.println(userDao.getId());
-		List<AccountDAO> accounts = accountRepository.findByUserId(userDao.getId());
-		for(AccountDAO account : accounts) {
-			account.getUser().setAuthRole(null);
-			account.getUser().setAccounts(null);
-		}
-		response.setAccounts(accounts);
-		return response;
-	}
-
-	@Override
-	public AccountResponses getAccountsbyPhone(String phone) {
-		AccountResponses response = new AccountResponses();
-		//System.out.println(emailId);
-		UserDAO userDao = userRepository.findByContact(phone);
-		//System.out.println(userDao.getId());
-		List<AccountDAO> accounts = accountRepository.findByUserId(userDao.getId());
-		for(AccountDAO account : accounts) {
-			account.getUser().setAuthRole(null);
-			account.getUser().setAccounts(null);
-		}
-		response.setAccounts(accounts);
-		return response;
-	}
 
 	@Override
 	public AccountResponses getAllAccounts() {

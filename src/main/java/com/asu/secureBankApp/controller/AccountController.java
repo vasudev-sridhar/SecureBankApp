@@ -50,16 +50,6 @@ public class AccountController {
 	public @ResponseBody AccountResponses getAllAccounts() {
 		return accountService.getAllAccounts();
 	}
-	
-	@GetMapping(value = "/getbyEmail/{email_id:.+}")
-	public @ResponseBody AccountResponses getAccountsbyEmail(@PathVariable(value = "email_id") String emailId) {
-		return accountService.getAccountsbyEmail(emailId);
-	}
-	
-	@GetMapping(value = "/getbyPhone/{phone}")
-	public @ResponseBody AccountResponses getAccountsbyPhone(@PathVariable(value = "phone") String phone) {
-		return accountService.getAccountsbyPhone(phone);
-	}
 
 	@PostMapping(value = "/createAccount", consumes = { "application/json" })
 	public @ResponseBody StatusResponse createNewAccount(@RequestBody @Valid CreateAccountReqDAO createAccountReqDAO) {

@@ -28,8 +28,6 @@ public interface TransactionRepository extends JpaRepository<TransactionDAO, Int
 	
 	List<TransactionDAO> findByStatusIn(List<TransactionStatus> status);
 	
-	List<TransactionDAO> findByStatusInAndIsCritical(List<TransactionStatus> status, boolean isCritical);
-	
 	List<TransactionDAO> findByFromAccount_UserAndStatusIn(UserDAO fromUser, List<TransactionStatus> status);
 	
 	List<TransactionDAO> findByFromAccount_User(UserDAO fromUser);

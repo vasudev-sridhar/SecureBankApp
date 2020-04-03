@@ -10,7 +10,8 @@ angular.module('Approvals', []);
 angular.module('TAC', []);
 angular.module('HelpCenter', []);
 angular.module('DownloadStatement', []);
-angular.module('CreateUser', []);
+angular.module('IssueCheque', []);
+angular.module('ChequeApprovals', []);
 
 
 angular.module('SecureBankApp', [
@@ -19,14 +20,15 @@ angular.module('SecureBankApp', [
     'TransactionRequest',
     'CreditDebit',
     'TransferFunds',
-    'CreateUser',
     'HelpCenter',
     'Approvals',
     'TAC',
     'ui.router',
     'ngCookies',
     'anguFixedHeaderTable',
-    'DownloadStatement'
+    'DownloadStatement',
+    'IssueCheque',
+    'ChequeApprovals'
 ])
  
 .config(['$stateProvider','$urlRouterProvider',function ($stateProvider, $urlRouterProvider) {
@@ -78,10 +80,15 @@ angular.module('SecureBankApp', [
         	templateUrl: 'modules/downloadStatement/views/download_statement.html',
             controller: 'DownloadStatementController',
         })
-        .state('CreateUser', {
-        	url: '/createuser',
-        	templateUrl: 'modules/authentication/views/register.html',
-            controller: 'CreateUserController',
+        .state('IssueCheque', {
+        	url: '/issueCheque',
+        	templateUrl: 'modules/issue_cheque/views/issue_cheque.html',
+            controller: 'IssueChequeController',
+        })
+        .state('ChequeApprovals', {
+        	url: '/chequeApprovals',
+        	templateUrl: 'modules/cheque_approval/views/cheque_approval_page.html',
+            controller: 'ChequeApprovalsController',
         })
         ;
  

@@ -1,11 +1,11 @@
 // JavaScript source code
 'use strict';
 
-angular.module('Approvals')
+angular.module('ChequeApprovals')
 
-    .controller('ApprovalsController',
-        ['$scope', '$rootScope', '$state','$location', 'ApprovalsService',
-            function ($scope, $rootScope, $state, $location, ApprovalsService) {
+    .controller('ChequeApprovalsController',
+        ['$scope', '$rootScope', '$state','$location', 'ChequeApprovalsService',
+            function ($scope, $rootScope, $state, $location, ChequeApprovalsService) {
         		$scope.transactionResponseError = "";
                 // Do stuff
         		if(!$rootScope.isEmployee) {
@@ -13,10 +13,10 @@ angular.module('Approvals')
         			$state.go('Dashboard')
         		}
 				// Get pending transactions for approval.
-				$scope.GetPendingTransactions = function () {
+				$scope.GetPendingIssueTransactions = function () {
 
 					$scope.dataLoading = true;
-					ApprovalsService.GetTransactionsPendingApproval(function (response) {
+					ChequeApprovalsService.GetTransactionsPendingApproval(function (response) {
 
 						console.log(response)
 
@@ -36,7 +36,7 @@ angular.module('Approvals')
 				$scope.GetPendingAccounts = function () {
 
 					$scope.dataLoading = true;
-					ApprovalsService.GetAccountPendingApproval(function (response) {
+					ChequeApprovalsService.GetAccountPendingApproval(function (response) {
 
 						console.log(response)
 
@@ -52,15 +52,15 @@ angular.module('Approvals')
 				$scope.RespondToPendingTransactions = function (id, approve) {
 
 					$scope.dataLoading = true;
-					ApprovalsService.RepondToTransactionApproval(id, approve, function (response) {
+					ChequeApprovalsService.RepondToTransactionApproval(id, approve, function (response) {
 
 						console.log(response)
 
 						if (response && response.isSuccess) {
 							$scope.transactionResponseError = "";
 							for(var i=0; i < $scope.transactionList.length; i++) {
-								if(id==$scope.transactionList[i].transactionId) {
-									$scope.transactionList[i].status = (approve)? "Approved" : "Declined";
+								if(id==$scope.transactionList[i].checkId) {
+									$scope.transactionList[i].status = (approve)? 1 : 4;
 									break;
 								}
 							}
@@ -76,7 +76,7 @@ angular.module('Approvals')
 				$scope.RespondToPendingAccounts = function () {
 
 					$scope.dataLoading = true;
-					ApprovalsService.RepondToAccountApproval(id, approve, function (response) {
+					ChequeApprovalsService.RepondToAccountApproval(id, approve, function (response) {
 
 						console.log(response)
 
@@ -88,5 +88,5 @@ angular.module('Approvals')
 					})
 				}
 				
-				$scope.GetPendingTransactions();
+				$scope.GetPendingIssueTransactions();
             }]);

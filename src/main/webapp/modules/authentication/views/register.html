@@ -13,7 +13,9 @@
 </style>
 <body class="w3-light-grey">
 
-   
+    <div class="container; background-color: w3-light-gray" style="position:fixed; left:-10px; width: 100%;" ng-app="SecureBankApp">
+        <div ng-include="'modules/sidebar.html'"></div>
+
         <!-- Overlay effect when opening sidebar on small screens -->
         <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
@@ -24,46 +26,44 @@
             <header class="w3-container" style="padding-top:22px">
                 <h5><b><i class="fa fa-dashboard"></i> Register for Account</b></h5>
             </header>
-			<br>
+
             <div class="w3-row-padding w3-margin-bottom">
                 <div>
                     <div>
-                        <label for="name">Name</label>
-                        <input type="text" ng-model="name" /><br>
+                        <h4>Name</h4>
+                        <input type="text" ng-model="name" />
                     </div>
                     <div>
-                        <label for="DOB">DOB</label>
-                        <input type="date" ng-model="birthday" /><br>
+                        <h4>Birthday</h4>
+                        <input type="date" ng-model="birthday" />
                     </div>
                     <div>
-                       <label for="Email">Email</label>
-                        <input type="text" ng-model="email" /><br>
+                        <h4>Email</h4>
+                        <input type="text" ng-model="email" />
                     </div>
                     <div>
-                        <label for="Phone">Phone</label>
-                        <input type="text" ng-model="phone" /><br>
+                        <h4>Phone Number</h4>
+                        <input type="text" ng-model="phone" />
                     </div>
                     <div>
-                        <label for="Address">Address</label>
-                        <input type="text" ng-model="address" /><br>
+                        <h4>Address</h4>
+                        <input type="text" ng-model="address" />
                     </div>
                     <div>
-                       <label for="username">Username</label>
+                        <h4>Username</h4>
                         <input type="text" ng-model="username" />
                         <p id="UsernameMessage" ng-model="usernameMessage"></p>
                     </div>
                     <div>
-                        <label for="password">Password</label>
+                        <h4>Password</h4>
                         <input id="PasswordInput" type="password" ng-model="password" ng-change="ValidatePassword()"/>
-                        <span class="help-block">{{passwordMessage}}</span>
-                        <p id="PasswordMessage" ng-model="passwordMessage"></p><br>
+                        <p id="PasswordMessage" ng-model="passwordMessage"></p>
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-danger w3-green" ng-disabled="form.$invalid || dataLoading || passwordInvalid || usernameUnavailable" ng-click="CreateUser()">Register</button>
-                    <br>
+                        <button type="submit" ng-disabled="form.$invalid || dataLoading || passwordInvalid || usernameUnavailable" class="btn success" ng-click="CreateUser()">Register</button>
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-danger w3-green" ng-click="">Cancel</button>
+                        <button class="btn default" ng-click="">Cancel</button>
                     </div>
                 </div>
             </div>
