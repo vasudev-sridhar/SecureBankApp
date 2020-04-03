@@ -16,6 +16,9 @@ angular.module('IssueCheque')
     	$scope.isIssueSuccess = false;
 		$scope.issueErrorMsg = "";
 		$scope.fromAccountDeposit;
+		$scope.chequeNumber;
+		$scope.depositChequeErrorMsg = "";
+		$scope.isDepositChequeSuccess = false;
 	    	    
     	$scope.getAccounts = function() {
       	  $scope.dataLoading = true;
@@ -58,7 +61,22 @@ angular.module('IssueCheque')
         		  $scope.dataLoading = true;
         	  })
 		  }
-		  
+
+		  $scope.depositCheque = function() {
+        	  $scope.dataLoading = true;
+        	  IssueChequeService.depositCheque($scope.chequeNumber.checkId, function(response) {
+				  console.log("controller response --- >")
+				//   console.log($scope.chequeNumber.checkId)
+				//   console.log(response)
+        		  if(response) {
+	      			  $scope.isDepositChequeSuccess = true;
+	      		  } else {
+						console.log("Something went wrong");
+						$scope.isDepositChequeSuccess = false;
+	      		  }
+        		  $scope.dataLoading = true;
+        	  })
+		  }
     	
     	$scope.issueCheque = function() {
     		if(!$scope.transferAmount || $scope.transferAmount <= 0) {
@@ -89,6 +107,7 @@ angular.module('IssueCheque')
       		  $scope.dataLoading = true;
       	  })
 		}
+		
 	    
 	    $scope.getAccounts();
 	    $scope.getAllAccounts();
