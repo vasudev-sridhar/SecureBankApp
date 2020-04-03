@@ -6,10 +6,11 @@ import com.asu.secureBankApp.dao.SystemLoggerDAO;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ChequeRepository extends CrudRepository<ChequeDAO, Integer> {
 
-    AccountDAO findByFromAccount(AccountDAO fromAccount);
-    AccountDAO findByToAccount(AccountDAO toAccount);
+    List<ChequeDAO> findByStatus(Integer status);
 
 }

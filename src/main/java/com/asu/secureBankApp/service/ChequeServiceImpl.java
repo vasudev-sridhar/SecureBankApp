@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,8 +34,6 @@ public class ChequeServiceImpl implements ChequeService {
         Float amount = chequeRequest.getTransferAmount();
         chequeToIssue.setFromAccount(fromAccount);
         chequeToIssue.setToAccount(toAccount);
-//        Optional<AccountDAO> toAccount = accountRepository.findById(chequeRequest.getToAccNo());
-//        Optional<AccountDAO> fromAccount = accountRepository.findById(chequeRequest.getFromAccNo());
         chequeToIssue.setAmount(amount);
         if(null==toAccount){
             response.setIsSuccess(false);
@@ -52,4 +51,13 @@ public class ChequeServiceImpl implements ChequeService {
         response.setMsg("Cheque sent for issue approval");
         return response;
     }
+
+    @Override
+    public List<ChequeDAO> listCheques(){
+        List<ChequeDAO> chequesForApproval = null;
+        chequesForApproval = chequeRepository.findByStatus(Constants.CHEQUE_ISSUE_PENDING);
+        return chequesForApproval;
+    }
+
+
 }
