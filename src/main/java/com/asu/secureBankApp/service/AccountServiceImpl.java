@@ -48,6 +48,9 @@ public class AccountServiceImpl implements AccountService {
 	@Autowired
 	BankUserService bankUserService;
 
+	@Autowired
+	SystemLoggerService logger;
+
 	ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
@@ -181,6 +184,7 @@ public class AccountServiceImpl implements AccountService {
 		AccountRequestDAO accountRequest = generateAccountRequest(accountDetailsMap, name);
 
 		accountRequestRepository.save(accountRequest);
+		logger.log(userId, "New account request received", "NEW_ACCOUNT_REQUEST");
 
 		responseMap.put("message", "success");
 		return responseMap;

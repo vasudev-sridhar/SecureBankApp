@@ -1,30 +1,5 @@
 package com.asu.secureBankApp.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
-
 import com.asu.secureBankApp.Config.Constants;
 import com.asu.secureBankApp.Repository.AccountRepository;
 import com.asu.secureBankApp.Repository.TransactionRepository;
@@ -36,25 +11,30 @@ import com.asu.secureBankApp.dao.AccountDAO;
 import com.asu.secureBankApp.dao.TransactionDAO;
 import com.asu.secureBankApp.dao.UserDAO;
 import com.asu.secureBankApp.util.Util;
-import com.itextpdf.text.BadElementException;
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.PdfStamper;
-import com.itextpdf.text.pdf.PdfWriter;
-
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
 import constants.ErrorCodes;
 import constants.RoleType;
 import constants.TransactionStatus;
 import constants.TransactionType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.*;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -68,6 +48,11 @@ public class TransactionServiceImpl implements TransactionService {
 	@Autowired
 	TransactionRepository transactionRepository;
 
+	@Autowired
+	SystemLoggerService logger;
+
+
+
 	@Transactional
 	public StatusResponse transfer(@Valid TransferRequest transferReq, Authentication auth, boolean isApproved) {
 		StatusResponse response = new StatusResponse();
@@ -75,6 +60,8 @@ public class TransactionServiceImpl implements TransactionService {
 
 		AccountDAO fromAccount = accountRepository.findById(transferReq.getFromAccNo()).orElse(null);
 		AccountDAO toAccount = accountRepository.findById(transferReq.getToAccNo()).orElse(null);
+
+		logger.log(fromAccount.getUser().getId(), "Transfer initiated to "+toAccount.getId(), "TRANSFER_INITIATED");
 
 		if (fromAccount == null || toAccount == null) {
 			response.setMsg(ErrorCodes.ID_NOT_FOUND);
@@ -89,7 +76,7 @@ public class TransactionServiceImpl implements TransactionService {
 			return response;
 		}
 		RoleType accRoleType = fromAccount.getUser().getAuthRole().getRoleType();
-		System.out.println("auth.getPrincipal()" + auth.getName());
+//		System.out.println("auth.getPrincipal()" + auth.getName());
 		UserDAO authUser = userRepository.findByUsername(auth.getPrincipal().toString());
 		RoleType authRoleType = authUser.getAuthRole()
 				.getRoleType();
@@ -114,7 +101,7 @@ public class TransactionServiceImpl implements TransactionService {
 		if(transactionSum == null)
 			transactionSum = 0f;
 		
-		System.out.println("transactionSum = " + transactionSum + " for working user:" + workingUser.getUsername() + " authUser: " + authUser);
+//		System.out.println("transactionSum = " + transactionSum + " for working user:" + workingUser.getUsername() + " authUser: " + authUser);
 		boolean isCritical = (transactionSum + transferReq.getTransferAmount()) > Constants.TRANSFER_CRITICAL_LIMIT;
 				
 		if (!isApproved) {

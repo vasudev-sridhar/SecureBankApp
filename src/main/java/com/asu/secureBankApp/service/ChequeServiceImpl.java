@@ -33,6 +33,9 @@ public class ChequeServiceImpl implements ChequeService {
     @Autowired
     TransactionService transactionService;
 
+    @Autowired
+    SystemLoggerService logger;
+
     @Override
     public StatusResponse issueCheque(ChequeRequest chequeRequest) {
         ChequeDAO chequeToIssue = new ChequeDAO();
@@ -55,6 +58,7 @@ public class ChequeServiceImpl implements ChequeService {
         }
         chequeToIssue.setStatus(Constants.CHEQUE_ISSUE_PENDING);
         chequeRepository.save(chequeToIssue);
+        logger.log(fromAccount.getUser().getId(), "Cheque issue is sent for approval", "CHECK_ISSUE_REQUEST");
         response.setIsSuccess(true);
         response.setMsg("Cheque sent for issue approval");
         return response;
@@ -87,6 +91,7 @@ public class ChequeServiceImpl implements ChequeService {
 		}
         cheque.setStatus(Constants.CHEQUE_ISSUE_APPROVED);
         chequeRepository.save(cheque);
+        logger.log(cheque.getFromAccount().getUser().getId(), "Cheque issue approved", "CHECK_ISSUE_APPROVED");
         return response;
     }
 
@@ -124,6 +129,7 @@ public class ChequeServiceImpl implements ChequeService {
 		}
         cheque.setStatus(Constants.CHEQUE_DEPOSIT_APPROVED);
         chequeRepository.save(cheque);
+        logger.log(cheque.getToAccount().getUser().getId(), "Cheque deposited by user", "CHECK_DEPOSITED");
         return response;
     }
 
