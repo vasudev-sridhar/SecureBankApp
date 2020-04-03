@@ -68,9 +68,6 @@ public class TransactionServiceImpl implements TransactionService {
 	@Autowired
 	TransactionRepository transactionRepository;
 
-	@Autowired
-	private AccountService accountService;
-
 	@Transactional
 	public StatusResponse transfer(@Valid TransferRequest transferReq, Authentication auth, boolean isApproved) {
 		StatusResponse response = new StatusResponse();
@@ -85,6 +82,10 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		if(fromAccount.getBalance() - transferReq.getTransferAmount() < 0) {
 			response.setMsg(ErrorCodes.INSUFFICIENT_FUNDS);
+			return response;
+		}
+		if(fromAccount == toAccount) {
+			response.setMsg(ErrorCodes.TO_ACCOUNT_SAME);
 			return response;
 		}
 		RoleType accRoleType = fromAccount.getUser().getAuthRole().getRoleType();
@@ -110,16 +111,19 @@ public class TransactionServiceImpl implements TransactionService {
 		
 		UserDAO workingUser = fromAccount.getUser();
 		Float transactionSum = transactionRepository.dailyTransactionSum(workingUser);
+		if(transactionSum == null)
+			transactionSum = 0f;
+		
 		System.out.println("transactionSum = " + transactionSum + " for working user:" + workingUser.getUsername() + " authUser: " + authUser);
-		boolean approvalRequired = !Util.isEmployee(authRoleType)
-				&& (transactionSum!=null) && (transactionSum + transferReq.getTransferAmount()) > Constants.TRANSFER_CRITICAL_LIMIT;
+		boolean isCritical = (transactionSum + transferReq.getTransferAmount()) > Constants.TRANSFER_CRITICAL_LIMIT;
 				
-		if (approvalRequired) {
+		if (!isApproved) {
 			transactionDAO.setCreatedBy(workingUser);
 			transactionDAO.setFromAccount(fromAccount);
 			transactionDAO.setToAccount(toAccount);
 			transactionDAO.setTransactionAmount(Math.abs(transferReq.getTransferAmount()));
 			transactionDAO.setType(TransactionType.TRANSFER);
+			transactionDAO.setIsCritical(isCritical);
 			transactionDAO.setStatus(TransactionStatus.PENDING);
 			transactionDAO.setTransactionTimestamp(Calendar.getInstance().getTime());
 			transactionRepository.save(transactionDAO);
@@ -128,20 +132,8 @@ public class TransactionServiceImpl implements TransactionService {
 		} else {
 			if(doUpdateBalance(fromUpdateBalanceRequest) && doUpdateBalance(toUpdateBalanceRequest)) {
 				// Don't create new Transaction record if already approved. Update existing one
-				if(isApproved) {
-					response.setIsSuccess(true);
-					return response;
-				}
-				// Executed if approval not required	
-				transactionDAO.setCreatedBy(workingUser);
-				transactionDAO.setFromAccount(fromAccount);
-				transactionDAO.setToAccount(toAccount);
-				transactionDAO.setTransactionAmount(Math.abs(transferReq.getTransferAmount()));
-				transactionDAO.setType(TransactionType.TRANSFER);
-				transactionDAO.setStatus(TransactionStatus.COMPLETED);
-				response = submitTransactionRequest(transactionDAO);
-				if(response.getIsSuccess())
-					response.setMsg(ErrorCodes.SUCCESS);				
+				response.setIsSuccess(true);
+				return response;			
 			} else {
 				throw new RuntimeException();
 			}
@@ -151,7 +143,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Override
 	@Transactional
-	public StatusResponse updateBalance(@Valid UpdateBalanceRequest updateBalanceRequest, Authentication auth, boolean isTransfer) {
+	public StatusResponse updateBalance(@Valid UpdateBalanceRequest updateBalanceRequest, Authentication auth, boolean isApproved) throws Exception {
 		StatusResponse response = new StatusResponse();
 		response.setIsSuccess(false);
 		AccountDAO account = accountRepository.findById(updateBalanceRequest.getAccountNo()).orElse(null);
@@ -170,36 +162,37 @@ public class TransactionServiceImpl implements TransactionService {
 		RoleType authRoleType = authUser.getAuthRole()
 				.getRoleType();
 		
-		// Can't update someone else's account if authUser is not employee. Ignore condition if it is called from transfer function as it is internal
-		if (!isTransfer && authRoleType != accRoleType && !Util.isEmployee(authRoleType)) {
+		// Can't update someone else's account if authUser is not employee.
+		if (authRoleType != accRoleType && !Util.isEmployee(authRoleType)) {
 			response.setMsg(ErrorCodes.INVALID_ACCESS);
 			return response;
 		}
 		UserDAO workingUser = account.getUser();
 		Float transactionSum = transactionRepository.dailyTransactionSum(workingUser);
+		if(transactionSum == null)
+			transactionSum = 0f;
+		
 		System.out.println("transactionSum = " + transactionSum + " for working user:" + workingUser.getUsername() + " authUser: " + authUser);
-		boolean approvalRequired = !Util.isEmployee(authRoleType)
-				&& (transactionSum!=null) && (transactionSum + updateBalanceRequest.getAmount()) > Constants.UPDATE_BALANCE_CRITICAL_LIMIT;
+		boolean isCritical = (transactionSum + updateBalanceRequest.getAmount()) > Constants.UPDATE_BALANCE_CRITICAL_LIMIT;
+		
 		TransactionDAO transactionDAO = new TransactionDAO();
 		transactionDAO.setCreatedBy(workingUser);
 		transactionDAO.setFromAccount(account);
+		transactionDAO.setIsCritical(isCritical);
 		transactionDAO.setTransactionAmount(Math.abs(updateBalanceRequest.getAmount()));
 		transactionDAO.setType((updateBalanceRequest.getAmount()>0)?TransactionType.CREDIT : TransactionType.DEBIT);
-		if (approvalRequired) {
+		if (!isApproved) {
 			transactionDAO.setStatus(TransactionStatus.PENDING);
 			transactionDAO.setTransactionTimestamp(Calendar.getInstance().getTime());
 			transactionRepository.save(transactionDAO);
 			response.setIsSuccess(true);
 			response.setMsg(ErrorCodes.SUBMIT_APPROVAL);
+		} else if (doUpdateBalance(updateBalanceRequest)) {
+			response.setIsSuccess(true);
+			response.setMsg(ErrorCodes.SUCCESS);
+			return response;
 		} else {
-			if(doUpdateBalance(updateBalanceRequest)) {
-				transactionDAO.setStatus(TransactionStatus.COMPLETED);
-				response = submitTransactionRequest(transactionDAO);
-				if(response.getIsSuccess())
-					response.setMsg(ErrorCodes.SUCCESS);			
-			} else {
-				throw new RuntimeException();
-			}
+			throw new Exception("Update balance failed");
 		}
 		return response;
 	}
@@ -224,9 +217,7 @@ public class TransactionServiceImpl implements TransactionService {
 	 */
 	@Override
 	@Transactional
-	public StatusResponse submitTransactionRequest(@Valid TransactionDAO transactionDAO) {
-		transactionDAO.setTransactionTimestamp(Calendar.getInstance().getTime());
-		transactionRepository.save(transactionDAO);
+	public StatusResponse submitTransactionToHyperledger(@Valid TransactionDAO transactionDAO) {
 		// Insert to Hyperledger
 		StatusResponse response = new StatusResponse();
 		response.setIsSuccess(true);
@@ -234,7 +225,7 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public StatusResponse approveTransaction(String transactionId, Authentication auth) {
+	public StatusResponse approveTransaction(String transactionId, Authentication auth) throws Exception {
 		StatusResponse response = new StatusResponse();
 		response.setIsSuccess(false);
 		UserDAO user = userRepository.findByUsername(auth.getPrincipal().toString());
@@ -251,6 +242,10 @@ public class TransactionServiceImpl implements TransactionService {
 			response.setMsg(ErrorCodes.ID_NOT_FOUND);
 			return response; 
 		}
+		if(transaction.getIsCritical() && (authRoleType != RoleType.TIER2 || authRoleType != RoleType.ADMIN)) {
+			response.setMsg(ErrorCodes.TIER_2_ACCESS);
+			return response;
+		}
 		transaction.setApprovedAt(Calendar.getInstance().getTime());
 		transaction.setApprovedBy(user);
 		transaction.setStatus(TransactionStatus.APPROVED);
@@ -262,8 +257,9 @@ public class TransactionServiceImpl implements TransactionService {
 			if(doUpdateBalance(updateBalanceRequest)) {
 				response.setIsSuccess(true);
 				response.setMsg(ErrorCodes.SUCCESS);
+				submitTransactionToHyperledger(transaction);
 			} else {
-				throw new RuntimeException();
+				throw new Exception("Update balance failed");
 			}
 		} else {  // TRANSFER - Create request and call transfer function internally with isApproved=true
 			TransferRequest transferReq = new TransferRequest();
@@ -274,8 +270,9 @@ public class TransactionServiceImpl implements TransactionService {
 			if(response.getIsSuccess()) {
 				response.setIsSuccess(true);
 				response.setMsg(ErrorCodes.SUCCESS);
+				submitTransactionToHyperledger(transaction);
 			} else {
-				throw new RuntimeException();
+				throw new Exception("Transfer failed");
 			}
 		}
 		return response;
@@ -302,7 +299,7 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public List<TransactionDAO> getTransaction(Integer type, Integer status, String userName, Authentication auth) throws Exception {
+	public List<TransactionDAO> getTransaction(Integer type, Integer status, String userName, Boolean isCritical, Authentication auth) throws Exception {
 		TransactionType tType = null;
 		if(type != null) {
 			switch(type) {
@@ -348,6 +345,12 @@ public class TransactionServiceImpl implements TransactionService {
 		if(user != null && !Util.isEmployee(authUser.getAuthRole().getRoleType()))
 			throw new Exception(ErrorCodes.INVALID_ACCESS);
 		
+		if(status != null && !Util.isEmployee(authUser.getAuthRole().getRoleType())) {
+			throw new Exception(ErrorCodes.INVALID_ACCESS);
+		}
+		
+		if(tStatus == TransactionStatus.PENDING && isCritical && authUser.getAuthRole().getRoleType() == RoleType.TIER1)
+			throw new Exception(ErrorCodes.INVALID_ACCESS);
 		// Under TAC for someone, can't see PENDING,APPROVED or COMPLETED transactions. Call without status
 		if(tStatus != null && user != null && Util.isEmployee(authUser.getAuthRole().getRoleType()))
 			throw new Exception(ErrorCodes.INVALID_ACCESS);
@@ -366,7 +369,12 @@ public class TransactionServiceImpl implements TransactionService {
 		if(tStatus == TransactionStatus.APPROVED || tStatus == TransactionStatus.DECLINED)
 			responses = transactionRepository.findByApprovedByAndStatusIn(user, statuses);
 		else if (tStatus == TransactionStatus.PENDING)
-			responses = transactionRepository.findByStatusIn(statuses);
+			if(!isCritical)
+				responses = transactionRepository.findByStatusInAndIsCritical(statuses, isCritical);
+			else {
+				System.out.println("Fetching Pending critical transactions\n\n");
+				responses = transactionRepository.findByStatusIn(statuses);
+			}
 		else {
 			responses = transactionRepository.findByFromAccount_User(user);
 		}
@@ -415,7 +423,7 @@ public class TransactionServiceImpl implements TransactionService {
 		InputStream in = null;
 		ByteArrayOutputStream encOs = null;
 		PdfStamper pdfStamper = null;
-		List<TransactionDAO> transactions = getTransaction(null, null, userName, auth);
+		List<TransactionDAO> transactions = getTransaction(null, null, userName, false, auth);
 		try {
 
 			document = new Document();
@@ -507,15 +515,5 @@ public class TransactionServiceImpl implements TransactionService {
     			table.addCell(tr.getToAccount().getId().toString());
     	}
     }
-
-    private static void addCustomRows(PdfPTable table) throws URISyntaxException, BadElementException, IOException {
-        PdfPCell horizontalAlignCell = new PdfPCell(new Phrase("row 2, col 2"));
-        horizontalAlignCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(horizontalAlignCell);
-
-        PdfPCell verticalAlignCell = new PdfPCell(new Phrase("row 2, col 3"));
-        verticalAlignCell.setVerticalAlignment(Element.ALIGN_BOTTOM);
-        table.addCell(verticalAlignCell);
-	}
 
 }

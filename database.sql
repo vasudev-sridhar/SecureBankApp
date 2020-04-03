@@ -31,7 +31,11 @@ CREATE TABLE sample.user (
 INSERT INTO `sample`.`user` (`user_id`, `auth_role_id`,`username`,`password`,`name`,`dob`, `contact`, `email_id`, `address`, `created`) VALUES 
 (1, 1, 'bhargavi', '8989e805956d8fdeeeaf0007ac273217', 'Bhargavi Hopper', NOW(),'4802863456', 'bhargavineti@gmail.com', 'Agave', NOW());
 INSERT INTO `sample`.`user` (`user_id`, `auth_role_id`,`username`,`password`,`name`,`dob`, `contact`, `email_id`, `address`, `created`) VALUES 
-(2, 4, 'noob', '827ccb0eea8a706c4c34a16891f84e7b', 'Noob Noober', NOW(),'4802743516', 'vsridh20@asu.edu', 'Thrive', NOW());
+(2, 4, 'vasu', '827ccb0eea8a706c4c34a16891f84e7b', 'Vasudev', NOW(),'4802743516', 'vsridh20@asu.edu', 'Thrive', NOW());
+INSERT INTO `sample`.`user` (`user_id`, `auth_role_id`,`username`,`password`,`name`,`dob`, `contact`, `email_id`, `address`, `created`) VALUES 
+(3, 2, 'madhu', '84811fed582a9c7b8cb41f68f0ed6147', 'Madhu Madhavan', NOW(),'4806523083', 'msridh11@asu.edu', 'UPark', NOW());
+INSERT INTO `sample`.`user` (`user_id`, `auth_role_id`,`username`,`password`,`name`,`dob`, `contact`, `email_id`, `address`, `created`) VALUES 
+(4, 3, 'shankar', 'e36746428c0084e5444890f46c97b6b8', 'Shankar', NOW(),'4803957366', 'skris106@asu.edu', 'Omnia', NOW());
 
 CREATE TABLE sample.auth_user (
   auth_user_id int(11) NOT NULL AUTO_INCREMENT,
