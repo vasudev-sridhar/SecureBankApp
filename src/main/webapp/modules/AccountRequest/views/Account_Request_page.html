@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html ng-app="SecureBankApp">
 <head>
 	<title>Account Request Page</title>
@@ -38,6 +38,7 @@
 				</div>
 				<div class="w3-panel">
 					<button class="w3-w3-button w3-padding w3-green" style="font-size:16px;" ng-click="SubmitAccountType()"> Submit</button>
+					 <span ng-show="isDisplayAlert" class="help-block">{{alertMsg }}</span>
 				</div>
 			</div>
 

@@ -9,7 +9,7 @@ angular.module('CreateUser')
                 console.log("CreateUserController")
                 AuthenticationService.ClearCredentials();
                 $scope.passwordMessage="password";
-
+                $scope.goLogin = function () {$state.go('Login')}
                 $scope.CreateUser = function () {
                     $scope.dataLoading = true;
                     console.log("registration");                 
@@ -37,8 +37,9 @@ angular.module('CreateUser')
                         console.log(response)
 
                         if (response.isSuccess) {
-                            console.log("UserId " + response.userId);
-                            AuthenticationService.Login($scope.username, $scope.password, function(response) {
+                        	var encrypted = $rootScope.MD5($scope.password);
+                            //console.log("UserId " + response.userId);
+                            AuthenticationService.Login($scope.username, encrypted, function(response) {
                             	console.log("controller response")
                             	console.log(response)
                                 if(response.isSuccess) {

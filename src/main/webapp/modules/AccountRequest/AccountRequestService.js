@@ -16,13 +16,13 @@ angular.module('AccountRequest')
                  $http.post('/api/account/newAccount/' , account_id_details)
                      .success(function (response) {
                         console.log(response);
-                        var msg = "Account Request submitted successfully. Pending Approval. "
-                        $window.alert(msg);
+                       // var msg = "Account Request submitted successfully. Pending Approval. "
+                       // $window.alert(msg);
                         callback(response);
                         }).error(function (response) {
                                          	console.log(response);
-                                         	var msg2 = "Account Request submission failed."
-                                            $window.alert(msg2);
+                                         	//var msg2 = "Account Request submission failed."
+                                           // $window.alert(msg2);
                                              callback(response);
 
                                         });

@@ -18,8 +18,11 @@ angular.module('AccountRequest')
 
        $scope.SubmitAccountType = function () {
                if(!$scope.SelectedAccountId){
-                var msg = "Please select an account type";
-                $window.alert(msg);}
+            	   $scope.alertMsg = "Please select an account type";
+                   $scope.isDisplayAlert = true;
+                //var msg = "Please select an account type";
+                //$window.alert(msg);
+                }
                 else{
                 var accountId = $scope.SelectedAccountId;
                 var accountName;
@@ -33,7 +36,15 @@ angular.module('AccountRequest')
                 console.log(message);
                 AccountRequestService.submitAccountType(accountId, function(response) {
                       		  console.log("controller response");
-                      		  $scope.dataLoading = true;
+                      		  if(response.message == "success"){
+                        			$scope.alertMsg = "Account Request submitted successfully. Pending Approval. ";
+                        			$scope.isDisplayAlert = true;
+                        		  }
+                        		  else{
+                        			$scope.alertMsg = "Account Request submission failed.";
+                        			$scope.isDisplayAlert = true;
+                        		  }
+                      		  
                       	  })
          }}
 
