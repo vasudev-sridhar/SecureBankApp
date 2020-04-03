@@ -10,8 +10,7 @@ angular.module('Approvals', []);
 angular.module('TAC', []);
 angular.module('HelpCenter', []);
 angular.module('DownloadStatement', []);
-angular.module('IssueCheque', []);
-angular.module('ChequeApprovals', []);
+angular.module('CreateUser', []);
 
 
 angular.module('SecureBankApp', [
@@ -20,15 +19,16 @@ angular.module('SecureBankApp', [
     'TransactionRequest',
     'CreditDebit',
     'TransferFunds',
+    'CreateUser',
     'HelpCenter',
     'Approvals',
     'TAC',
     'ui.router',
     'ngCookies',
     'anguFixedHeaderTable',
-    'DownloadStatement',
-    'IssueCheque',
-    'ChequeApprovals'
+    'DownloadStatement'
+    /*'IssueCheque',*/
+    /*'ChequeApprovals'*/
     /*'angularjs-crypto'*/
 ])
  .directive('disableRightClick', function() {  
@@ -100,11 +100,16 @@ angular.module('SecureBankApp', [
         	templateUrl: 'modules/cheque_approval/views/cheque_approval_page.html',
             controller: 'ChequeApprovalsController',
         })
+         .state('CreateUser', {
+        	url: '/createuser',
+        	templateUrl: 'modules/authentication/views/register.html',
+            controller: 'CreateUserController',
+        })
         ;
  
 	$urlRouterProvider.otherwise("/login"); 
 }])
-
+ 
 .run(['$rootScope', '$location', '$cookieStore', '$http',
     function ($rootScope, $location, $cookieStore, $http) {
         // keep user logged in after page refresh

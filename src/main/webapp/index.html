@@ -11,6 +11,17 @@
   </head>
 
   <body>
+  
+    <div class="jumbotron">
+      <div class="container">
+      <!-- <div> -->
+        <div class="col-xs-offset-2 col-xs-8">
+        <!-- <div class="col-xs-offset-0 col-xs-0"> -->
+          <div ui-view></div>
+        </div>
+      </div>
+    </div>
+
     <script type="text/javascript" src="modules/resources/scripts/angular.min.js"></script>
     <script type="text/javascript" src="modules/resources/scripts/angular-ui-router.min.js"></script>
     <!-- <script type="text/javascript" src="modules/resources/scripts/angular-route.min.js"></script> -->
@@ -29,6 +40,7 @@
     <script src="scripts/app.js"></script>
     <script src="modules/authentication/LoginService.js"></script>
     <script src="modules/authentication/LoginController.js"></script>
+    <script src="modules/authentication/CreateUserController.js"></script>
     <script src="modules/dashboard/DashboardController.js"></script>
     <script src="modules/dashboard/DashboardService.js"></script>
     <script src="modules/TransactionRequest/TransactionRequestController.js"></script>

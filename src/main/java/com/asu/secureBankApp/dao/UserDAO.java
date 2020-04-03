@@ -45,6 +45,14 @@ public class UserDAO {
 	
 	private String address;
 	
+	@Override
+	public String toString() {
+		return "UserDAO [id=" + id + ", username=" + username + ", password=" + password + ", name=" + name + ", dob="
+				+ dob + ", contact=" + contact + ", emailId=" + emailId + ", address=" + address + ", authRole="
+				+ authRole + ", accounts=" + accounts + ", created=" + created + "]";
+	}
+
+	
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@JoinColumn(name = "auth_role_id", nullable = false, foreignKey = @ForeignKey(name="FK_user_role"))
 	@ManyToOne(fetch = FetchType.LAZY)

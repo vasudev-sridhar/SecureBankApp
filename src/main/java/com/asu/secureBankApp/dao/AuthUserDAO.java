@@ -20,7 +20,7 @@ public class AuthUserDAO {
 
 	@Id
 	@Column(name = "auth_user_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@ManyToOne

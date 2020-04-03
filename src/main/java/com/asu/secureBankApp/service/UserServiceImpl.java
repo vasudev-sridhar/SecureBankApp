@@ -7,11 +7,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.asu.secureBankApp.Repository.AuthRoleRepository;
 import com.asu.secureBankApp.Repository.UserRepository;
 import com.asu.secureBankApp.Request.UserDOBRequest;
 import com.asu.secureBankApp.Request.UserRequest;
@@ -31,6 +34,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private PasswordEncoder encoder;
+	
+	@Autowired
+	private AuthRoleRepository authRoleRepository;
 
 //    @Autowired
 //    private  AuthUserRepository authUserRepository;
@@ -142,9 +148,11 @@ public class UserServiceImpl implements UserService {
 			return "1";
 	}
 
+	@Transactional
 	public StatusResponse signup(UserDAO newUser) {
 		AuthRoleDAO authRole = new AuthRoleDAO();
 		authRole.setId(4);
+		authRole = authRoleRepository.findById(4).orElseGet(null);
 		newUser.setId(null);
 		MessageDigest md = null;
 		try {
@@ -162,6 +170,7 @@ public class UserServiceImpl implements UserService {
 		newUser.setAuthRole(authRole);
 		newUser.setAccounts(null);
 		newUser.setCreated(Calendar.getInstance().getTime());
+		System.out.println(newUser.toString());
 		userRepository.save(newUser);
 		StatusResponse response = new StatusResponse();
 		response.setIsSuccess(true);
