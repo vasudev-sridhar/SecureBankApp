@@ -9,13 +9,13 @@ angular.module('AdminLog')
 
             service.GetTransactionsPendingApproval = function (callback) {
 
-                $http.get('/api/cheque/listIssueApprovals')
+                $http.get('/api/log/list')
                     .success(function (response) {
                         console.log(response);
 
                         // Handle the case of an unsucessful HTTP get response.
-                        if (!response.isSuccess) {
-                            response.message = 'Error locating Cheques from customer.';
+                        if (!response) {
+                            response.message = 'Error locating logs.';
                         }
 
                         // Call the callback function.

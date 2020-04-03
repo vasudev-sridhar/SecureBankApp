@@ -8,7 +8,7 @@ angular.module('AdminLog')
         		$scope.transactionResponseError = "";
                 // Do stuff
         		if(!$rootScope.isEmployee) {
-        			alert("Invalid Access! Only for Employees")
+        			alert("Invalid Access! Only for Admin")
         			$state.go('Dashboard')
         		}
 				// Get pending transactions for approval.
@@ -21,10 +21,10 @@ angular.module('AdminLog')
 
 						if (response) {
 							$scope.transactionList = response;
-							for(var i=0; i < $scope.transactionList.length; i++) {
-							  var t = $scope.transactionList[i].transactionTimestamp;
-							  $scope.transactionList[i].transactionTimestamp = $rootScope.formatDate(t);
-							}
+							// for(var i=0; i < $scope.transactionList.length; i++) {
+							//   var t = $scope.transactionList[i].transactionTimestamp;
+							//   $scope.transactionList[i].transactionTimestamp = $rootScope.formatDate(t);
+							// }
 						}
 
 						$scope.dataLoading = false;
