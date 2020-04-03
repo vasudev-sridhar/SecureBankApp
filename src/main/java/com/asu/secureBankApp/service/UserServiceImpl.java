@@ -141,6 +141,7 @@ public class UserServiceImpl implements UserService {
     }
 
 	public String checkIfUsernameExist(String username) {
+		//StatusResponse response = new StatusResponse();
 		UserDAO user = userRepository.findByUsername(username);
 		if(null != user)
 			return "0";

@@ -112,14 +112,15 @@ angular.module('Authentication')
         // Check if username is already taken.
         service.CheckUserNameAvailability = function (username) {
             // Log in the new user.
-            $http.post('/api/user/signup', {  username: username })
+            $http.get('/api/user/doesUsernameExist/'+ username )
                 .success(function (response) {
-                    console.log(response);
-                    if (!response.isSuccess) {
-                        response.message = 'Username already taken.';
+                    console.log(response);                    
+                    if(response == '0') {
+                    	return false;
+                    }               
+                    else {
+                    	return true;
                     }
-
-                    return response.isSuccess;
                 });
         };
  
