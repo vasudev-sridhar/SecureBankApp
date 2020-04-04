@@ -199,7 +199,7 @@ public class AccountServiceImpl implements AccountService {
 		Date createdAt = new Date(ts.getTime());
 		accountRequest.setCreatedAt(createdAt);
 		accountRequest.setType(Constants.NEW_ACCOUNT_REQUEST_TYPE);
-		accountRequest.setRole(2);
+		accountRequest.setRole(3);
 		accountRequest.setStatusId(Constants.STATUS_PENDING);
 		return accountRequest;
 	}

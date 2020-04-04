@@ -52,7 +52,7 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 	UserRepository userRepository;
 
 	@Override
-	public HashMap<String, Object> getList(int page, Authentication authentication) {
+	public HashMap<String, Object> getList(Authentication authentication) {
 		
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -78,21 +78,22 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
             response.put("modelAndView", "account_request");
         }
 
-        PageRequest pageable = PageRequest.of(page - 1, 10);
-        Page<AccountRequestDAO> requestPage = getPaginated(pageable, role);
-        int totalPages = requestPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNums = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
-            response.put("pageNums", pageNums);
-        }
+//        //PageRequest pageable = PageRequest.of(page - 1, 10);
+//        Page<AccountRequestDAO> requestPage = getPaginated(pageable, role);
+//        int totalPages = requestPage.getTotalPages();
+//        if (totalPages > 0) {
+//            List<Integer> pageNums = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
+//            response.put("pageNums", pageNums);
+//        }
+		List<AccountRequestDAO> requestList = getApprovalsByRole(role);
         response.put("role", role);
         response.put("activeRequestList", true);
-        response.put("requestList", requestPage.getContent());
+        response.put("requestList", requestList);
         return response;
     }
 	
-	Page<AccountRequestDAO> getPaginated(Pageable pageable, Integer role){
-		return accountRequestRepository.findAll(pageable, role);
+	List<AccountRequestDAO> getApprovalsByRole(Integer role){
+		return accountRequestRepository.findAllByRole(role);
 	}
 
 	@Override

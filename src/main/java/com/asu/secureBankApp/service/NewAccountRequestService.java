@@ -11,7 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 @Service
 public interface NewAccountRequestService {
 
-	HashMap<String, Object> getList(int page, Authentication authentication);
+	HashMap<String, Object> getList(Authentication authentication);
 	
 	HashMap<String, Object> getApproval(AccountRequestDAO accountRequest, Authentication authentication);
 	

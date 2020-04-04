@@ -10,10 +10,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 @Repository
 public interface AccountRequestRepository extends CrudRepository<AccountRequestDAO, Long>{
 
     @Query("SELECT t FROM account_request t WHERE t.role = :role")
     Page<AccountRequestDAO> findAll(Pageable pageable, @Param("role") int role);
+
+    List<AccountRequestDAO> findAllByRole(int role);
 	
 }
