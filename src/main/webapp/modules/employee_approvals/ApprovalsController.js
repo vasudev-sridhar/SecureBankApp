@@ -100,9 +100,9 @@ angular.module('Approvals')
 
 						console.log(response)
 
-						if (response) {
-							$scope.accountList = response;
-						}
+//						if (response) {
+//							$scope.accountList = response;
+//						}
 
 						$scope.dataLoading = false;
 					})
