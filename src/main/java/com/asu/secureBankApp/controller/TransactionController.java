@@ -57,12 +57,16 @@ public class TransactionController {
 	@PostMapping(value = "/transfer")
 	public StatusResponse transfer(@RequestBody @Valid TransferRequest transferReq, Authentication auth) {
 		return transactionService.transfer(transferReq, auth, false);
+		Process p = Runtime.getRuntime().exec("peer chaincode invoke -C mychannel -n fabcar -c '{"Args":["Create", "TransactionID" , TransferRequest.transferAmount , TransferRequest.fromAccNo ,TransferRequest.toAccNo]}' 
+
 	}
 
 	@PostMapping(value = "/balance")
 	public @ResponseBody StatusResponse updateBalance(@RequestBody @Valid UpdateBalanceRequest updateBalanceRequest,
 			Authentication auth) throws Exception {
 		return transactionService.updateBalance(updateBalanceRequest, auth, false);
+                Process p = Runtime.getRuntime().exec("peer chaincode invoke -C mychannel -n fabcar -c '{"Args":["Create", "TransactionID" , TransferRequest.transferAmount , TransferRequest.fromAccNo ,TransferRequest.toAccNo]}' 
+
 	}
 
 	@PostMapping(value = "/approve/{transaction_id}")
