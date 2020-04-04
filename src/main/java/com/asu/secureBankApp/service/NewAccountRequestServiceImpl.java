@@ -52,7 +52,7 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 	UserRepository userRepository;
 
 	@Override
-	public HashMap<String, Object> getList(int page, Authentication authentication) {
+	public HashMap<String, Object> getList(Authentication authentication) {
 		
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -78,28 +78,29 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
             response.put("modelAndView", "account_request");
         }
 
-        PageRequest pageable = PageRequest.of(page - 1, 10);
-        Page<AccountRequestDAO> requestPage = getPaginated(pageable, role);
-        int totalPages = requestPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNums = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
-            response.put("pageNums", pageNums);
-        }
+//        //PageRequest pageable = PageRequest.of(page - 1, 10);
+//        Page<AccountRequestDAO> requestPage = getPaginated(pageable, role);
+//        int totalPages = requestPage.getTotalPages();
+//        if (totalPages > 0) {
+//            List<Integer> pageNums = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
+//            response.put("pageNums", pageNums);
+//        }
+		List<AccountRequestDAO> requestList = getApprovalsByRole(role);
         response.put("role", role);
         response.put("activeRequestList", true);
-        response.put("requestList", requestPage.getContent());
+        response.put("requestList", requestList);
         return response;
     }
 	
-	Page<AccountRequestDAO> getPaginated(Pageable pageable, Integer role){
-		return accountRequestRepository.findAll(pageable, role);
+	List<AccountRequestDAO> getApprovalsByRole(Integer role){
+		return accountRequestRepository.findAllByRoleAndStatusId(role, 0);
 	}
 
 	@Override
 	public HashMap<String, Object> getApproval(AccountRequestDAO accountRequest, Authentication authentication) {
 		
 		
-		UserDAO user = userRepository.findByUsername(authentication.getName());
+		UserDAO approvingUser = userRepository.findByUsername(authentication.getName());
 		HashMap<String, Object> response = new HashMap<>();
 //		Long userId =  employeeService.findUserByEmail(authentication.getName());
 //        String name = employeeService.getEmployeeById(userId).getEmployee_name();
@@ -108,12 +109,12 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
         	Map<String, Object> attributes;
 			try {
 				attributes = accountService.stringToAccount(accountString);
+				Integer userId =((Integer) attributes.get("userId"));
+				UserDAO user = userRepository.findById(userId).get();
 	            AccountDAO account = new AccountDAO();
 	            account.setUser(user);
-//	            int balance = (int) attributes.get("balance");
 	            account.setBalance(new Double(attributes.get("balance").toString()));
 	            account.setAccountType((Integer)attributes.get("accountType"));
-//	            int attrInterest = (int) attributes.get("interest");
 	            double interest = (new Double(attributes.get("interest").toString()));
 	            account.setInterest((double)interest);
 	            Timestamp ts=new Timestamp(System.currentTimeMillis());  
@@ -121,6 +122,7 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 	            account.setCreated(date);
 	            account.setUpdated(date);
 	            AccountDAO new_account = accountService.saveOrUpdate(account);
+				systemLoggerService.log(user.getId(), "Approved Request for id:"+accountRequest.getRequest_id(), "ACCOUNT_CREATED");
 			} catch (JsonProcessingException e) {
 				response.put("modelAndView", "Failed");
 			}
@@ -128,10 +130,9 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
         Timestamp ts=new Timestamp(System.currentTimeMillis());
         Date date = new Date(ts.getTime());
         accountRequest.setApprovedAt(date);
-        accountRequest.setApprovedBy(user.getName());
+        accountRequest.setApprovedBy(approvingUser.getName());
         accountRequest.setStatusId(Constants.STATUS_APPROVED);
         saveOrUpdate(accountRequest);
-        systemLoggerService.log(user.getId(), "Approved Request for id:"+accountRequest.getRequest_id(), "Account Approved");
         response.put("modelAndView", "redirect:/account-request/list/1");
         return response;
 	}
@@ -156,7 +157,7 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 		accountRequest.setApprovedBy(user.getName());
 		accountRequest.setStatusId(Constants.STATUS_DECLINED);
 		saveOrUpdate(accountRequest);
-        systemLoggerService.log(user.getId(), "Declined Request for id:"+accountRequest.getRequest_id(), "Declined");
+        systemLoggerService.log(user.getId(), "Declined Request for id:"+accountRequest.getRequest_id(), "NEW_ACCOUNT_DENIED");
         response.put("modelAndView", "redirect:/account-request/list/1");
         return response;
 	}

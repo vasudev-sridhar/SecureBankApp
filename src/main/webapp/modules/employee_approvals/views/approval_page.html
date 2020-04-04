@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html ng-app"SecureBankApp">
   <head>
     <title>Approval Page</title>
@@ -67,41 +67,59 @@
           </div>
       </div>
 
-      <div>
+
+
+
+
+
+
+      <div ng-show = "isTier2">
+        <div  id="table-wrapper" class="w3-twothird " style = "position:relative; left:350px;width: 100%;"> <!-- FixedHeightContainer -->
           <!-- Unnamed (Rectangle) -->
-          <div id="u19" class="ax_default label">
-              <div id="u19_div" class=""></div>
-              <div id="u19_text" class="text ">
-                  <p><span>Account Approvals</span></p>
-              </div>
-          </div>
-          <div>
-              <table>
+          <header class="w3-container" style="padding-top:22px">
+		    <h5><b><i class="fa fa-dashboard"></i>Account Approval</b></h5>
+		  </header>
+          <div  id="table-scroll">  <!-- class="Content" -->
+              <table class="w3-table w3-striped w3-white table-bordered table-condensed" style="width:70%">
                   <thead>
                       <tr>
+                          <th style="text-align:center">Request ID</th>
                           <th style="text-align:center">Type</th>
                           <th style="text-align:center">Status</th>
-                          <th style="text-align:center">Time</th>
+                          <th style="text-align:center">Created At</th>
                           <th style="text-align:center">Approve</th>
                           <th style="text-align:center">Deny</th>
                       </tr>
                   </thead>
                   <tbody>
                       <tr ng-repeat="item in accountList">
-                          <td style="text-align:right;padding-right: 25px;"><i class="fa w3-text-blue w3-large"></i>{{item.type}}</td>
-                          <td style="text-align:center">{{item.status}}</td>
-                          <td style="text-align:center">{{item.transactionTimestamp}}</td>
-                          <td style="text-align:center">
-                              <button ng-click="RespondToPendingAccounts(item.id,True)">Approve</button>
+                          <!-- <td style="text-align:right;padding-right: 25px;"><i class="fa w3-text-blue w3-large"></i>{{item.transactionAmount}}</td> -->
+                          <td style="text-align:center">{{item.request_id}}</td>
+                          <td style="text-align:center">{{item.type}}</td>
+                          <td style="text-align:center">{{item.statusId}}</td>
+                          <td style="text-align:center">{{item.createdAt}}</td>
+                          <td style="text-align:center" ng-hide="item.statusId==0" colspan="2">{{item.status}}</td>
+                          <td style="text-align:center" ng-show="item.statusId==0">
+                              <button ng-click="RespondToPendingAccounts(item.request_id,true)">Approve</button>
                           </td>
-                          <td style="text-align:center">
-                              <button ng-click="RespondToPendingAccounts(item.id,False)">Deny</button>
+                          <td style="text-align:center" ng-show="item.statusId==0">
+                              <button ng-click="RespondToPendingAccounts(item.request_id,false)">Deny</button>
                           </td>
                       </tr>
                   </tbody>
               </table>
+              <label class="alert alert-danger" ng-show="transactionResponseError">{{transactionResponseError}}</label><br>
           </div>
-      </div>
+          </div>
+
+
+
+
+
+
+
+
+
       </div>
       </div>
     <script src="modules/resources/scripts/axure/ios.js"></script>

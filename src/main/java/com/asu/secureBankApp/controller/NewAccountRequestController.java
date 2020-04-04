@@ -14,17 +14,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value="/accountRequest")
+@RequestMapping(value="/api/accountRequest")
 public class NewAccountRequestController {
 	
 	@Autowired
 	NewAccountRequestService accountRequestService;
 	
 	
-	@RequestMapping(value="/list/{page}", method= RequestMethod.GET)
-	public HashMap<String, Object> list(@PathVariable("page") int page, Authentication authentication) {
-		
-		HashMap<String, Object> response = accountRequestService.getList(page, authentication);
+	@RequestMapping(value="/list", method= RequestMethod.GET)
+	public HashMap<String, Object> list(Authentication authentication) {
+		HashMap<String, Object> response = accountRequestService.getList(authentication);
 		return response;
 	}
 	

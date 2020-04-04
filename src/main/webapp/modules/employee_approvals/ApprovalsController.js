@@ -6,7 +6,8 @@ angular.module('Approvals')
     .controller('ApprovalsController',
         ['$scope', '$rootScope', '$state','$location', 'ApprovalsService',
             function ($scope, $rootScope, $state, $location, ApprovalsService) {
-        		$scope.transactionResponseError = "";
+				$scope.transactionResponseError = "";
+				$rootScope.isTier2 = false;
                 // Do stuff
         		if(!$rootScope.isEmployee) {
         			alert("Invalid Access! Only for Employees")
@@ -21,6 +22,10 @@ angular.module('Approvals')
 					ApprovalsService.GetTransactionsPendingApproval(isCritical, function (response) {
 						console.log(response)
 
+						if(role == 'TIER2')
+						{
+							$rootScope.isTier2 = true;
+						}
 						if (response) {
 							$scope.transactionList = response;
 							for(var i=0; i < $scope.transactionList.length; i++) {
@@ -42,7 +47,7 @@ angular.module('Approvals')
 						console.log(response)
 
 						if (response) {
-							$scope.accountList = response;
+							$scope.accountList = response.requestList;
 						}
 
 						$scope.dataLoading = false;
@@ -74,20 +79,35 @@ angular.module('Approvals')
 				}
 
 				// Respond to pending account actions by approving or denying.
-				$scope.RespondToPendingAccounts = function () {
-
+				$scope.RespondToPendingAccounts = function (id, approve) {
 					$scope.dataLoading = true;
 					ApprovalsService.RepondToAccountApproval(id, approve, function (response) {
 
-						console.log(response)
 
 						if (response) {
-							$scope.accountList = response;
+							// $scope.transactionResponseError = "";
+							for(var i=0; i < $scope.accountList.length; i++) {
+								if(id==$scope.accountList[i].request_id) {
+									$scope.accountList[i].statusId = (approve)? "Approved" : "Declined";
+									break;
+								}
+							}
+						} else {
+							$scope.accountResponseError = "Something went wrong";
 						}
+
+
+
+						console.log(response)
+
+						// if (response) {
+						// 	$scope.accountList = response;
+						// }
 
 						$scope.dataLoading = false;
 					})
 				}
 				
 				$scope.GetPendingTransactions();
+				$scope.GetPendingAccounts();
             }]);
