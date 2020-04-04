@@ -48,10 +48,10 @@
 		  
 		  
 
-		<label>Select Account for Viewing Chqeues From Account:   </label>
+		<label>Select Account for Cheque Deposit   </label>
   		<select style="padding: 0 5em 1em 0;" ng-model="fromAccountDeposit" ng-options="account.id for account in fromAccountList" ng-change="getCheques()"></select>
 		<br>
-		<label>Select Cheque for Account number: {{fromAccountDeposit.id}}   </label>
+		<label>Cheques availabe for {{fromAccountDeposit.id}}   </label>
 		<select style="padding: 0 5em 1em 0;" ng-model="chequeNumber" ng-options="cheque.checkId for cheque in chequeList"></select>
 		<div class="w3-panel">
 	    <!-- <label for="fname">Enter Amount:</label><br>
