@@ -80,7 +80,6 @@ angular.module('Approvals')
 
 				// Respond to pending account actions by approving or denying.
 				$scope.RespondToPendingAccounts = function (id, approve) {
-
 					$scope.dataLoading = true;
 					ApprovalsService.RepondToAccountApproval(id, approve, function (response) {
 
