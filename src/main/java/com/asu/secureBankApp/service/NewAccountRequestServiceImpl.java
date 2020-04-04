@@ -100,7 +100,7 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 	public HashMap<String, Object> getApproval(AccountRequestDAO accountRequest, Authentication authentication) {
 		
 		
-		UserDAO user = userRepository.findByUsername(authentication.getName());
+		UserDAO approvingUser = userRepository.findByUsername(authentication.getName());
 		HashMap<String, Object> response = new HashMap<>();
 //		Long userId =  employeeService.findUserByEmail(authentication.getName());
 //        String name = employeeService.getEmployeeById(userId).getEmployee_name();
@@ -109,12 +109,12 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
         	Map<String, Object> attributes;
 			try {
 				attributes = accountService.stringToAccount(accountString);
+				Integer userId = Integer.parseInt((String) attributes.get("userId"));
+				UserDAO user = userRepository.findById(userId).get();
 	            AccountDAO account = new AccountDAO();
 	            account.setUser(user);
-//	            int balance = (int) attributes.get("balance");
 	            account.setBalance(new Double(attributes.get("balance").toString()));
 	            account.setAccountType((Integer)attributes.get("accountType"));
-//	            int attrInterest = (int) attributes.get("interest");
 	            double interest = (new Double(attributes.get("interest").toString()));
 	            account.setInterest((double)interest);
 	            Timestamp ts=new Timestamp(System.currentTimeMillis());  
@@ -122,6 +122,7 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 	            account.setCreated(date);
 	            account.setUpdated(date);
 	            AccountDAO new_account = accountService.saveOrUpdate(account);
+				systemLoggerService.log(user.getId(), "Approved Request for id:"+accountRequest.getRequest_id(), "ACCOUNT_CREATED");
 			} catch (JsonProcessingException e) {
 				response.put("modelAndView", "Failed");
 			}
@@ -129,10 +130,9 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
         Timestamp ts=new Timestamp(System.currentTimeMillis());
         Date date = new Date(ts.getTime());
         accountRequest.setApprovedAt(date);
-        accountRequest.setApprovedBy(user.getName());
+        accountRequest.setApprovedBy(approvingUser.getName());
         accountRequest.setStatusId(Constants.STATUS_APPROVED);
         saveOrUpdate(accountRequest);
-        systemLoggerService.log(user.getId(), "Approved Request for id:"+accountRequest.getRequest_id(), "Account Approved");
         response.put("modelAndView", "redirect:/account-request/list/1");
         return response;
 	}
