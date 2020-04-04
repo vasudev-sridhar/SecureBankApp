@@ -28,14 +28,6 @@ CREATE TABLE sample.user (
   CONSTRAINT FK_user_role FOREIGN KEY (auth_role_id) REFERENCES auth_role (auth_role_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `sample`.`user` (`user_id`, `auth_role_id`,`username`,`password`,`name`,`dob`, `contact`, `email_id`, `address`, `created`) VALUES 
-(1, 1, 'bhargavi', '8989e805956d8fdeeeaf0007ac273217', 'Bhargavi Hopper', NOW(),'4802863456', 'bhargavineti@gmail.com', 'Agave', NOW());
-INSERT INTO `sample`.`user` (`user_id`, `auth_role_id`,`username`,`password`,`name`,`dob`, `contact`, `email_id`, `address`, `created`) VALUES 
-(2, 4, 'vasu', '827ccb0eea8a706c4c34a16891f84e7b', 'Vasudev', NOW(),'4802743516', 'vsridh20@asu.edu', 'Thrive', NOW());
-INSERT INTO `sample`.`user` (`user_id`, `auth_role_id`,`username`,`password`,`name`,`dob`, `contact`, `email_id`, `address`, `created`) VALUES 
-(3, 2, 'madhu', '84811fed582a9c7b8cb41f68f0ed6147', 'Madhu Madhavan', NOW(),'4806523083', 'msridh11@asu.edu', 'UPark', NOW());
-INSERT INTO `sample`.`user` (`user_id`, `auth_role_id`,`username`,`password`,`name`,`dob`, `contact`, `email_id`, `address`, `created`) VALUES 
-(4, 3, 'shankar', 'e36746428c0084e5444890f46c97b6b8', 'Shankar', NOW(),'4803957366', 'skris106@asu.edu', 'Omnia', NOW());
 
 CREATE TABLE sample.auth_user (
   auth_user_id int(11) NOT NULL AUTO_INCREMENT,
@@ -87,9 +79,6 @@ CONSTRAINT FK_Appointment FOREIGN KEY (user_id) REFERENCES user(user_id)
 
 #ALTER TABLE sample.account AUTO_INCREMENT=1000000;
 
-INSERT INTO `sample`.`ACCOUNT` (`account_no`, `user_id`, `balance`, `account_type`, `interest`, `created`, `updated`) VALUES (1, 1, 998.10, 0, 0, NOW(), NOW());
-INSERT INTO `sample`.`ACCOUNT` (`account_no`, `user_id`, `balance`, `account_type`, `interest`, `created`, `updated`) VALUES (2, 1, 15, 0, 0, NOW(), NOW());
-INSERT INTO `sample`.`ACCOUNT` (`account_no`, `user_id`, `balance`, `account_type`, `interest`, `created`, `updated`) VALUES (3, 2, 100, 0, 0, NOW(), NOW());
 
 INSERT INTO `sample`.`auth_permission` (`perm_name`) VALUES ('VIEW_CUSTOMER_ACCOUNT');
 INSERT INTO `sample`.`auth_permission` (`perm_name`) VALUES ('VIEW_CUSTOMER_ACCOUNT');
@@ -134,10 +123,9 @@ INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id
 INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (3, 5);
 INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (3, 6);
 INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (3, 7);
-INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (3, 14);
 
 INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (4, 14);
-INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (4, 15);
+#INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (4, 15);
 
 INSERT INTO `sample`.`auth_role_permission` (`auth_role_id`, `auth_permission_id`) VALUES (5, 14);
 
