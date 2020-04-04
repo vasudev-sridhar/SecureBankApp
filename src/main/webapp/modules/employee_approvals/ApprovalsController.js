@@ -88,7 +88,7 @@ angular.module('Approvals')
 							// $scope.transactionResponseError = "";
 							for(var i=0; i < $scope.accountList.length; i++) {
 								if(id==$scope.accountList[i].request_id) {
-									$scope.accountList[i].status = (approve)? "Approved" : "Declined";
+									$scope.accountList[i].statusId = (approve)? "Approved" : "Declined";
 									break;
 								}
 							}
@@ -100,9 +100,9 @@ angular.module('Approvals')
 
 						console.log(response)
 
-//						if (response) {
-//							$scope.accountList = response;
-//						}
+						// if (response) {
+						// 	$scope.accountList = response;
+						// }
 
 						$scope.dataLoading = false;
 					})
