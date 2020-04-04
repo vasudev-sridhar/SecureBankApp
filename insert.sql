@@ -22,3 +22,8 @@ INSERT INTO `sample`.`user` (`user_id`, `auth_role_id`,`username`,`password`,`na
 INSERT INTO `sample`.`user` (`user_id`, `auth_role_id`,`username`,`password`,`name`,`dob`, `contact`, `email_id`, `address`, `created`) VALUES 
 (30007, 4, 'avinash', 'dcecae9ce26a42a362ecd06eebe2395f', 'Avinash Khatwani', NOW(),'4803743516', 'akhatwa1@asu.edu', 'Fleetwood', NOW());
 #pw = avinashk
+INSERT INTO `sample`.`ACCOUNT` (`account_no`, `user_id`, `balance`, `account_type`, `interest`, `created`, `updated`) VALUES (1001, 30000, 998.10, 0, 0, NOW(), NOW());
+INSERT INTO `sample`.`ACCOUNT` (`account_no`, `user_id`, `balance`, `account_type`, `interest`, `created`, `updated`) VALUES (1002, 30000, 15, 0, 0, NOW(), NOW());
+INSERT INTO `sample`.`ACCOUNT` (`account_no`, `user_id`, `balance`, `account_type`, `interest`, `created`, `updated`) VALUES (3001, 30002, 100, 0, 0, NOW(), NOW());
+INSERT INTO `sample`.`ACCOUNT` (`account_no`, `user_id`, `balance`, `account_type`, `interest`, `created`, `updated`) VALUES (4001, 30006, 1500, 0, 0, NOW(), NOW());
+INSERT INTO `sample`.`ACCOUNT` (`account_no`, `user_id`, `balance`, `account_type`, `interest`, `created`, `updated`) VALUES (5001, 30007, 350, 0, 0, NOW(), NOW());
