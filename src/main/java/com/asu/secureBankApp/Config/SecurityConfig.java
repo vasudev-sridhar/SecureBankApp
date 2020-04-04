@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/user/doesUsernameExist/*").permitAll()
 			.antMatchers("/api/accountRequest/list").hasAnyAuthority("AUTHORIZE_CRITICAL_TRANSACTIONS")
             .antMatchers("/api/cheque/issue").hasAnyAuthority("CREATE_ACCOUNT_REQUEST")
-			.antMatchers("api/cheque/listIssueApprovals").hasAnyAuthority("AUTHORIZE_NON_CRITICAL_TRANSACTIONS")
+			.antMatchers("/api/cheque/listIssueApprovals").hasAnyAuthority("AUTHORIZE_NON_CRITICAL_TRANSACTIONS")
 			.antMatchers("/api/cheque/approve/*").hasAnyAuthority("AUTHORIZE_NON_CRITICAL_TRANSACTIONS")
 			.antMatchers("/api/cheque/reject/*").hasAnyAuthority("AUTHORIZE_NON_CRITICAL_TRANSACTIONS")
 			.antMatchers("/api/cheque/listAvailableCheques/*").hasAnyAuthority("AUTHORIZE_NON_CRITICAL_TRANSACTIONS")

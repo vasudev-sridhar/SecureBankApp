@@ -18,6 +18,6 @@ public interface AccountRequestRepository extends CrudRepository<AccountRequestD
     @Query("SELECT t FROM account_request t WHERE t.role = :role")
     Page<AccountRequestDAO> findAll(Pageable pageable, @Param("role") int role);
 
-    List<AccountRequestDAO> findAllByRole(int role);
+    List<AccountRequestDAO> findAllByRoleAndStatusId(int role, int statusId);
 	
 }

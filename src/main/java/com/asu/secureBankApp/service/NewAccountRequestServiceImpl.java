@@ -93,7 +93,7 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
     }
 	
 	List<AccountRequestDAO> getApprovalsByRole(Integer role){
-		return accountRequestRepository.findAllByRole(role);
+		return accountRequestRepository.findAllByRoleAndStatusId(role, 0);
 	}
 
 	@Override
