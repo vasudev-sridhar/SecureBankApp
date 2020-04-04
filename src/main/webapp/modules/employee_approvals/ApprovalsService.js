@@ -127,14 +127,14 @@ angular.module('Approvals')
                 // Get existing request records for the customer.
                 //      Status = 3 refers to any requests that are pending approval.
                 //var query = ($rootScope.isTAC) ? "?userName=" + $rootScope.userName + "&status=3" : "";
-                $http.get('/api/account/get')
+                $http.get('api/accountRequest/list')
                     .success(function (response) {
                         console.log(response);
 
                         // Handle the case of an unsucessful HTTP get response.
-                        if (!response.isSuccess) {
-                            response.message = 'Error locating requests for customer.';
-                        }
+                        // if (!response.isSuccess) {
+                        //     response.message = 'Error locating requests for customer.';
+                        // }
 
                         // Call the callback function.
                         callback(response);

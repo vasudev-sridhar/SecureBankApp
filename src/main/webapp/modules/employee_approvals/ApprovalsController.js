@@ -6,7 +6,8 @@ angular.module('Approvals')
     .controller('ApprovalsController',
         ['$scope', '$rootScope', '$state','$location', 'ApprovalsService',
             function ($scope, $rootScope, $state, $location, ApprovalsService) {
-        		$scope.transactionResponseError = "";
+				$scope.transactionResponseError = "";
+				$rootScope.isTier2 = false;
                 // Do stuff
         		if(!$rootScope.isEmployee) {
         			alert("Invalid Access! Only for Employees")
@@ -21,6 +22,10 @@ angular.module('Approvals')
 					ApprovalsService.GetTransactionsPendingApproval(isCritical, function (response) {
 						console.log(response)
 
+						if(role == 'TIER2')
+						{
+							$rootScope.isTier2 = true;
+						}
 						if (response) {
 							$scope.transactionList = response;
 							for(var i=0; i < $scope.transactionList.length; i++) {
@@ -39,7 +44,7 @@ angular.module('Approvals')
 					$scope.dataLoading = true;
 					ApprovalsService.GetAccountPendingApproval(function (response) {
 
-						console.log(response)
+						console.log(response.requestList)
 
 						if (response) {
 							$scope.accountList = response;
@@ -90,4 +95,5 @@ angular.module('Approvals')
 				}
 				
 				$scope.GetPendingTransactions();
+				$scope.GetPendingAccounts();
             }]);
