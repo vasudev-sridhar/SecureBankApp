@@ -51,7 +51,7 @@ public class LoginServiceImpl implements LoginService {
 		cal.add(Calendar.MINUTE, 10);
 		authUser.setExpiry(cal.getTime());
 		authUserRepository.save(authUser);
-		systemLoggerService.log(user.getId(), "User logged in", "TIME OF LOGIN");
+		systemLoggerService.log(user.getId(), "User logged in", "TIME_OF_LOGIN");
 		response.setIsSuccess(true);
 		response.setUserId(user.getId());
 		return response;
