@@ -157,7 +157,7 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
 		accountRequest.setApprovedBy(user.getName());
 		accountRequest.setStatusId(Constants.STATUS_DECLINED);
 		saveOrUpdate(accountRequest);
-        systemLoggerService.log(user.getId(), "Declined Request for id:"+accountRequest.getRequest_id(), "Declined");
+        systemLoggerService.log(user.getId(), "Declined Request for id:"+accountRequest.getRequest_id(), "NEW_ACCOUNT_DENIED");
         response.put("modelAndView", "redirect:/account-request/list/1");
         return response;
 	}
