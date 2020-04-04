@@ -109,7 +109,7 @@ public class NewAccountRequestServiceImpl implements NewAccountRequestService {
         	Map<String, Object> attributes;
 			try {
 				attributes = accountService.stringToAccount(accountString);
-				Integer userId = Integer.parseInt((String) attributes.get("userId"));
+				Integer userId =((Integer) attributes.get("userId"));
 				UserDAO user = userRepository.findById(userId).get();
 	            AccountDAO account = new AccountDAO();
 	            account.setUser(user);
