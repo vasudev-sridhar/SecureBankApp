@@ -44,10 +44,10 @@ angular.module('Approvals')
 					$scope.dataLoading = true;
 					ApprovalsService.GetAccountPendingApproval(function (response) {
 
-						console.log(response.requestList)
+						console.log(response)
 
 						if (response) {
-							$scope.accountList = response;
+							$scope.accountList = response.requestList;
 						}
 
 						$scope.dataLoading = false;
@@ -79,10 +79,25 @@ angular.module('Approvals')
 				}
 
 				// Respond to pending account actions by approving or denying.
-				$scope.RespondToPendingAccounts = function () {
+				$scope.RespondToPendingAccounts = function (id, approve) {
 
 					$scope.dataLoading = true;
 					ApprovalsService.RepondToAccountApproval(id, approve, function (response) {
+
+
+						if (response) {
+							// $scope.transactionResponseError = "";
+							for(var i=0; i < $scope.accountList.length; i++) {
+								if(id==$scope.accountList[i].request_id) {
+									$scope.accountList[i].status = (approve)? "Approved" : "Declined";
+									break;
+								}
+							}
+						} else {
+							$scope.accountResponseError = "Something went wrong";
+						}
+
+
 
 						console.log(response)
 
